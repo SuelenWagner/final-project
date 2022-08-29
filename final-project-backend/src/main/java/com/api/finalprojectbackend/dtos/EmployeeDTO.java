@@ -16,10 +16,9 @@ public class EmployeeDTO {
     @Size(max = 150)
     private String name;
 
-    @NotBlank
     private Date birthDate;
 
-    @NotBlank
+    @NotNull
     private String email;
 
     private Date startDate;
@@ -28,16 +27,18 @@ public class EmployeeDTO {
     @Size(max = 1000)
     private String interesting;
 
-    @NotBlank
     private Integer status;
 
     @NotNull
     private RoleEntity role;
 
+    @NotNull
     private List<TechEntity> techs;
 
+    @NotNull
     private ClientEntity client;
 
+    @NotNull
     private ProjectEntity project;
 
     public String getName() {

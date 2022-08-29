@@ -14,7 +14,6 @@ public class ProjectDTO {
     @Size(max = 40)
     private String name;
 
-    @NotBlank
     @Size(max = 1000)
     private String description;
 
@@ -25,8 +24,10 @@ public class ProjectDTO {
 
     private Integer status;
 
+    @NotNull
     private ClientEntity client;
 
+    @NotNull
     private List<EmployeeEntity> employees;
 
     public String getName() {

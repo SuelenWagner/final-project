@@ -1,12 +1,11 @@
 package com.api.finalprojectbackend.entities;
 
-import javax.persistence.Column;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.io.Serializable;
 import java.util.UUID;
 
+@Entity
+@Table(name = "tb_role")
 public class RoleEntity implements Serializable {
 
     private static final long serialVersionUID = 1L;

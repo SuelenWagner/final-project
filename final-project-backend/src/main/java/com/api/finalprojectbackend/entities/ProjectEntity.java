@@ -7,6 +7,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
+@Entity
+@Table(name = "tb_project")
 public class ProjectEntity implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -28,16 +30,17 @@ public class ProjectEntity implements Serializable {
     @Temporal(TemporalType.DATE)
     private Date finishDate;
 
+    @Column(nullable = false)
     private ProjectStatus status;
 
     //Ler abaixo como: Muitos projetos para um cliente
     @ManyToOne
-    @JoinColumn(name = "CLIENT_ID")
+    @JoinColumn(name = "client_id")
     private ClientEntity client;
 
 
     //Ler abaixo como: Um projeto para muitos colaboradores
-    @OneToMany(mappedBy="project")
+    @OneToMany(mappedBy="project", fetch = FetchType.LAZY)
     private List<EmployeeEntity> employees;
 
 

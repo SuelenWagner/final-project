@@ -1,12 +1,16 @@
 package com.api.finalprojectbackend.entities;
 
 import com.api.finalprojectbackend.enums.EmployeeStatus;
+import org.hibernate.annotations.Cascade;
+
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
+@Entity
+@Table(name = "tb_employee")
 public class EmployeeEntity implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -37,23 +41,23 @@ public class EmployeeEntity implements Serializable {
 
     //Ler abaixo como: Um colaborador possui um cargo
     @OneToOne
-    @JoinColumn(name = "ROLE_ID")
+    @JoinColumn(name = "role_id")
     private RoleEntity role;
 
     //Ler abaixo como: Um colaborador possui muitas techs
     @ManyToMany
-    @JoinTable(name = "TB_EMPLOYEE", joinColumns = @JoinColumn(name = "ID"),
-            inverseJoinColumns = @JoinColumn(name = "TECH_ID"))
+    @JoinTable(name = "tb_employee", joinColumns = @JoinColumn(name = "id"),
+            inverseJoinColumns = @JoinColumn(name = "tech_id"))
     private List<TechEntity> techs;
 
     //Ler abaixo como: Muitos colaboradores para um cliente
     @ManyToOne
-    @JoinColumn(name = "CLIENT_ID")
+    @JoinColumn(name = "client_id")
     private ClientEntity client;
 
     //Ler abaixo como: Muitos colaboradores para um projeto
     @ManyToOne
-    @JoinColumn(name = "PROJECT_ID")
+    @JoinColumn(name = "project_id")
     private ProjectEntity project;
 
     public EmployeeEntity() {

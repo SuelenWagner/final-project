@@ -1,11 +1,11 @@
 package com.api.finalprojectbackend.entities;
 
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.io.Serializable;
 import java.util.UUID;
 
+@Entity
+@Table(name = "tb_tech")
 public class TechEntity implements Serializable {
 
     private static final long serialVersionUID = 1L;

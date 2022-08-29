@@ -5,6 +5,8 @@ import java.io.Serializable;
 import java.util.List;
 import java.util.UUID;
 
+@Entity
+@Table(name = "tb_client")
 public class ClientEntity implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -20,11 +22,11 @@ public class ClientEntity implements Serializable {
     private String description;
 
     //Ler abaixo como: Um cliente para muitos projetos
-    @OneToMany(mappedBy="client")
+    @OneToMany(mappedBy="client", fetch = FetchType.LAZY)
     private List<ProjectEntity> projects;
 
     //Ler abaixo como: Um cliente para muitos colaboradores
-    @OneToMany(mappedBy="client")
+    @OneToMany(mappedBy="client", fetch = FetchType.LAZY)
     private List<EmployeeEntity> employees;
 
     public ClientEntity() {
