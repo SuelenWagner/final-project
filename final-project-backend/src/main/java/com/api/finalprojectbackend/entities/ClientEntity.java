@@ -22,11 +22,11 @@ public class ClientEntity implements Serializable {
     private String description;
 
     //Ler abaixo como: Um cliente para muitos projetos
-    @OneToMany(mappedBy="client", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy="client")
     private List<ProjectEntity> projects;
 
     //Ler abaixo como: Um cliente para muitos colaboradores
-    @OneToMany(mappedBy="client", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy="client")
     private List<EmployeeEntity> employees;
 
     public ClientEntity() {

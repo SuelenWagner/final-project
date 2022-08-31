@@ -40,7 +40,7 @@ public class ProjectEntity implements Serializable {
 
 
     //Ler abaixo como: Um projeto para muitos colaboradores
-    @OneToMany(mappedBy="project", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy="project")
     private List<EmployeeEntity> employees;
 
 
