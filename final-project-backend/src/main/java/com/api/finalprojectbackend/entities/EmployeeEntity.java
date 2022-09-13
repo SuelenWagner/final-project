@@ -1,8 +1,6 @@
 package com.api.finalprojectbackend.entities;
 
 import com.api.finalprojectbackend.enums.EmployeeStatus;
-import org.hibernate.annotations.Cascade;
-
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
@@ -19,7 +17,7 @@ public class EmployeeEntity implements Serializable {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private UUID id;
 
-    @Column(nullable = false, unique = true, length = 150)
+    @Column(nullable = false, length = 150)
     private String name;
 
     @Column(nullable = false)
@@ -45,18 +43,27 @@ public class EmployeeEntity implements Serializable {
     private RoleEntity role;
 
     //Ler abaixo como: Um colaborador possui muitas techs
-    @ManyToMany
+    /*@ManyToMany
     @JoinTable(name = "tb_employee", joinColumns = @JoinColumn(name = "id"),
             inverseJoinColumns = @JoinColumn(name = "tech_id"))
+    private List<TechEntity> techs;*/
+
+
+    @ManyToMany(cascade=CascadeType.PERSIST)
+    @JoinTable(name = "tb_employee_techs", joinColumns = @JoinColumn(
+            name = "employee_id", referencedColumnName = "id"),
+            inverseJoinColumns = @JoinColumn(name = "tech_id", referencedColumnName = "id"))
     private List<TechEntity> techs;
 
+
+
     //Ler abaixo como: Muitos colaboradores para um cliente
-    @ManyToOne
+    @ManyToOne(cascade=CascadeType.PERSIST)
     @JoinColumn(name = "client_id")
     private ClientEntity client;
 
     //Ler abaixo como: Muitos colaboradores para um projeto
-    @ManyToOne
+    @ManyToOne(cascade=CascadeType.PERSIST)
     @JoinColumn(name = "project_id")
     private ProjectEntity project;
 

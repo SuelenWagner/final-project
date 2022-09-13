@@ -2,6 +2,7 @@ package com.api.finalprojectbackend.entities;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.List;
 import java.util.UUID;
 
 @Entity
@@ -14,7 +15,11 @@ public class TechEntity implements Serializable {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private UUID id;
 
+    @Column(nullable = false, unique = true)
     private String name;
+
+    @ManyToMany
+    private List<EmployeeEntity> employees;
 
     public TechEntity() {
     }

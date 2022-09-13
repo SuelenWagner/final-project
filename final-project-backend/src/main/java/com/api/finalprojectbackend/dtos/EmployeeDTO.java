@@ -32,7 +32,6 @@ public class EmployeeDTO {
     @NotNull
     private RoleEntity role;
 
-    @NotNull
     private List<TechEntity> techs;
 
     @NotNull

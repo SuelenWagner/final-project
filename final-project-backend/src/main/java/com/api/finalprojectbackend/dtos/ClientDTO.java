@@ -3,7 +3,6 @@ package com.api.finalprojectbackend.dtos;
 import com.api.finalprojectbackend.entities.EmployeeEntity;
 import com.api.finalprojectbackend.entities.ProjectEntity;
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.util.List;
 
@@ -15,12 +14,10 @@ public class ClientDTO {
 
     @NotBlank
     @Size(max = 1000)
-    private String description;
+    private String clientDescription;
 
-    @NotNull
     private List<ProjectEntity> projects;
 
-    @NotNull
     private List<EmployeeEntity> employees;
 
     public String getName() {
@@ -31,12 +28,12 @@ public class ClientDTO {
         this.name = name;
     }
 
-    public String getDescription() {
-        return description;
+    public String getClientDescription() {
+        return clientDescription;
     }
 
-    public void setDescription(String description) {
-        this.description = description;
+    public void setClientDescription(String clientDescription) {
+        this.clientDescription = clientDescription;
     }
 
     public List<ProjectEntity> getProjects() {

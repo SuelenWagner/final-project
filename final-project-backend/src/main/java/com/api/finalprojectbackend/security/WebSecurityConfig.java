@@ -1,4 +1,4 @@
-package com.api.finalprojectbackend.configs;
+package com.api.finalprojectbackend.security;
 
 import java.util.Arrays;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +17,7 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 @Configuration
 @EnableWebSecurity
-public class SecurityConfig extends WebSecurityConfigurerAdapter {
+public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
     private Environment env;

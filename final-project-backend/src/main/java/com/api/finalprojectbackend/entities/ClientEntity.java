@@ -19,7 +19,7 @@ public class ClientEntity implements Serializable {
     private String name;
 
     @Column(nullable = false, length = 1000)
-    private String description;
+    private String clientDescription;
 
     //Ler abaixo como: Um cliente para muitos projetos
     @OneToMany(mappedBy="client")
@@ -32,10 +32,10 @@ public class ClientEntity implements Serializable {
     public ClientEntity() {
     }
 
-    public ClientEntity(UUID id, String name, String description, List<ProjectEntity> projects, List<EmployeeEntity> employees) {
+    public ClientEntity(UUID id, String name, String clientDescription, List<ProjectEntity> projects, List<EmployeeEntity> employees) {
         this.id = id;
         this.name = name;
-        this.description = description;
+        this.clientDescription = clientDescription;
         this.projects = projects;
         this.employees = employees;
     }
@@ -56,12 +56,12 @@ public class ClientEntity implements Serializable {
         this.name = name;
     }
 
-    public String getDescription() {
-        return description;
+    public String getClientDescription() {
+        return clientDescription;
     }
 
-    public void setDescription(String description) {
-        this.description = description;
+    public void setClientDescription(String clientDescription) {
+        this.clientDescription = clientDescription;
     }
 
     public List<ProjectEntity> getProjects() {

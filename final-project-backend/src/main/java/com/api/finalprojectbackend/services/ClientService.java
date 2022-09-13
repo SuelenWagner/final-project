@@ -6,6 +6,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -30,12 +32,22 @@ public class ClientService {
     }
 
     public Page<ClientEntity> findAll(Pageable pageable) {
-        return clientRepository.findAll(pageable);
+        return clientRepository.findAll(pageable).map(clientEntity -> {
+            Optional.ofNullable(clientEntity.getProjects()).orElseGet(Collections::emptyList);
+            clientEntity.setProjects(new ArrayList<>());
+            clientEntity.setEmployees(new ArrayList<>());
+            return clientEntity;
+        });
     }
 
     @Transactional
     public Optional<ClientEntity> findById(UUID id) {
-        return clientRepository.findById(id);
+        return clientRepository.findById(id).map(clientEntity -> {
+            Optional.ofNullable(clientEntity.getProjects()).orElseGet(Collections::emptyList);
+            clientEntity.setProjects(new ArrayList<>());
+            clientEntity.setEmployees(new ArrayList<>());
+            return clientEntity;
+        });
     }
 
     @Transactional

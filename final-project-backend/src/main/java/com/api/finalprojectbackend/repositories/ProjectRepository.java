@@ -7,4 +7,5 @@ import java.util.UUID;
 public interface ProjectRepository extends JpaRepository<ProjectEntity, UUID> {
 
     boolean existsByName(String name);
+
 }

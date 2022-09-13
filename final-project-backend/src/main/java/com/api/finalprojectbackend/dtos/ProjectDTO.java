@@ -14,10 +14,10 @@ public class ProjectDTO {
     @Size(max = 40)
     private String name;
 
+    @NotBlank
     @Size(max = 1000)
     private String description;
 
-    @NotNull
     private Date startDate;
 
     private Date finishDate;
@@ -27,7 +27,6 @@ public class ProjectDTO {
     @NotNull
     private ClientEntity client;
 
-    @NotNull
     private List<EmployeeEntity> employees;
 
     public String getName() {

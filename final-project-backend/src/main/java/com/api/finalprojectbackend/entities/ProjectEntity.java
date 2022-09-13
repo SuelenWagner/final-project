@@ -23,7 +23,6 @@ public class ProjectEntity implements Serializable {
     @Column(nullable = false, length = 1000)
     private String description;
 
-    @Column(nullable = false)
     @Temporal(TemporalType.DATE)
     private Date startDate;
 
@@ -34,7 +33,7 @@ public class ProjectEntity implements Serializable {
     private ProjectStatus status;
 
     //Ler abaixo como: Muitos projetos para um cliente
-    @ManyToOne
+    @ManyToOne(cascade=CascadeType.PERSIST)
     @JoinColumn(name = "client_id")
     private ClientEntity client;
 
