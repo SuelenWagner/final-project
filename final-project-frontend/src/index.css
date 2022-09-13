@@ -1,13 +1,22 @@
-body {
+@import url("https://fonts.googleapis.com/css2?family=Playball&family=Quicksand:wght@300;400;500;600;700&family=Roboto&display=swap");
+
+* {
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
+  padding: 0;
+  outline: 0;
+  box-sizing: border-box;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  list-style: none;
+  
 }
 
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
+.navbar-item {
+  color: #666666;
+  text-decoration: none;
+}
+
+.active {
+  color: #2FA4FF;
+  text-decoration: none;
 }
