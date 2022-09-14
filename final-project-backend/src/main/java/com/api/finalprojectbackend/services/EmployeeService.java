@@ -1,6 +1,5 @@
 package com.api.finalprojectbackend.services;
 
-import com.api.finalprojectbackend.entities.ClientEntity;
 import com.api.finalprojectbackend.entities.EmployeeEntity;
 import com.api.finalprojectbackend.entities.ProjectEntity;
 import com.api.finalprojectbackend.repositories.EmployeeRepository;
@@ -38,10 +37,8 @@ public class EmployeeService {
     public Page<EmployeeEntity> findAll(Pageable pageable) {
         return employeeRepository.findAll(pageable).map(employeeEntity -> {
             Optional.ofNullable(employeeEntity.getProject());
-            Optional.ofNullable(employeeEntity.getClient());
-            Optional.ofNullable(employeeEntity.getTechs()).orElseGet(Collections::emptyList);
             employeeEntity.setProject(new ProjectEntity());
-            employeeEntity.setClient(new ClientEntity());
+            Optional.ofNullable(employeeEntity.getTechs()).orElseGet(Collections::emptyList);
             employeeEntity.setTechs(new ArrayList<>());
             return employeeEntity;
         });
@@ -51,10 +48,8 @@ public class EmployeeService {
     public Optional<EmployeeEntity> findById(UUID id) {
         return employeeRepository.findById(id).map(employeeEntity -> {
             Optional.ofNullable(employeeEntity.getProject());
-            Optional.ofNullable(employeeEntity.getClient());
-            Optional.ofNullable(employeeEntity.getTechs()).orElseGet(Collections::emptyList);
             employeeEntity.setProject(new ProjectEntity());
-            employeeEntity.setClient(new ClientEntity());
+            Optional.ofNullable(employeeEntity.getTechs()).orElseGet(Collections::emptyList);
             employeeEntity.setTechs(new ArrayList<>());
             return employeeEntity;
         });

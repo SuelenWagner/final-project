@@ -33,13 +33,15 @@ public class ProjectEntity implements Serializable {
     private ProjectStatus status;
 
     //Ler abaixo como: Muitos projetos para um cliente
-    @ManyToOne(cascade=CascadeType.PERSIST)
+    //@ManyToOne(cascade=CascadeType.PERSIST)
+    @OneToOne(cascade=CascadeType.REFRESH)
     @JoinColumn(name = "client_id")
     private ClientEntity client;
 
 
     //Ler abaixo como: Um projeto para muitos colaboradores
-    @OneToMany(mappedBy="project")
+    @OneToMany(cascade=CascadeType.ALL)
+    @JoinColumn(name = "project_id")
     private List<EmployeeEntity> employees;
 
 

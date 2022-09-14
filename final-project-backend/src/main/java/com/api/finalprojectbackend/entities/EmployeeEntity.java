@@ -56,23 +56,16 @@ public class EmployeeEntity implements Serializable {
     private List<TechEntity> techs;
 
 
-
-    //Ler abaixo como: Muitos colaboradores para um cliente
-    @ManyToOne(cascade=CascadeType.PERSIST)
-    @JoinColumn(name = "client_id")
-    private ClientEntity client;
-
     //Ler abaixo como: Muitos colaboradores para um projeto
-    @ManyToOne(cascade=CascadeType.PERSIST)
-    @JoinColumn(name = "project_id")
+
+    //@JoinColumn(name = "project_id")
     private ProjectEntity project;
 
     public EmployeeEntity() {
     }
 
     public EmployeeEntity(UUID id, String name, Date birthDate, String email, Date startDate, String interesting,
-                          EmployeeStatus status, RoleEntity role, List<TechEntity> techs, ClientEntity client,
-                          ProjectEntity project) {
+                          EmployeeStatus status, RoleEntity role, List<TechEntity> techs, ProjectEntity project) {
         this.id = id;
         this.name = name;
         this.birthDate = birthDate;
@@ -82,7 +75,6 @@ public class EmployeeEntity implements Serializable {
         this.status = status;
         this.role = role;
         this.techs = techs;
-        this.client = client;
         this.project = project;
     }
 
@@ -156,14 +148,6 @@ public class EmployeeEntity implements Serializable {
 
     public void setTechs(List<TechEntity> techs) {
         this.techs = techs;
-    }
-
-    public ClientEntity getClient() {
-        return client;
-    }
-
-    public void setClient(ClientEntity client) {
-        this.client = client;
     }
 
     public ProjectEntity getProject() {

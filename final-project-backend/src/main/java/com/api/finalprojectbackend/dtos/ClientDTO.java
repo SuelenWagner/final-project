@@ -18,8 +18,6 @@ public class ClientDTO {
 
     private List<ProjectEntity> projects;
 
-    private List<EmployeeEntity> employees;
-
     public String getName() {
         return name;
     }
@@ -42,13 +40,5 @@ public class ClientDTO {
 
     public void setProjects(List<ProjectEntity> projects) {
         this.projects = projects;
-    }
-
-    public List<EmployeeEntity> getEmployees() {
-        return employees;
-    }
-
-    public void setEmployees(List<EmployeeEntity> employees) {
-        this.employees = employees;
     }
 }

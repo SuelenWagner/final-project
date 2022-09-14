@@ -22,22 +22,17 @@ public class ClientEntity implements Serializable {
     private String clientDescription;
 
     //Ler abaixo como: Um cliente para muitos projetos
-    @OneToMany(mappedBy="client")
+    //@OneToMany(mappedBy="client")
     private List<ProjectEntity> projects;
-
-    //Ler abaixo como: Um cliente para muitos colaboradores
-    @OneToMany(mappedBy="client")
-    private List<EmployeeEntity> employees;
 
     public ClientEntity() {
     }
 
-    public ClientEntity(UUID id, String name, String clientDescription, List<ProjectEntity> projects, List<EmployeeEntity> employees) {
+    public ClientEntity(UUID id, String name, String clientDescription, List<ProjectEntity> projects) {
         this.id = id;
         this.name = name;
         this.clientDescription = clientDescription;
         this.projects = projects;
-        this.employees = employees;
     }
 
     public UUID getId() {
@@ -70,13 +65,5 @@ public class ClientEntity implements Serializable {
 
     public void setProjects(List<ProjectEntity> projects) {
         this.projects = projects;
-    }
-
-    public List<EmployeeEntity> getEmployees() {
-        return employees;
-    }
-
-    public void setEmployees(List<EmployeeEntity> employees) {
-        this.employees = employees;
     }
 }

@@ -35,7 +35,6 @@ public class ClientService {
         return clientRepository.findAll(pageable).map(clientEntity -> {
             Optional.ofNullable(clientEntity.getProjects()).orElseGet(Collections::emptyList);
             clientEntity.setProjects(new ArrayList<>());
-            clientEntity.setEmployees(new ArrayList<>());
             return clientEntity;
         });
     }
@@ -45,7 +44,6 @@ public class ClientService {
         return clientRepository.findById(id).map(clientEntity -> {
             Optional.ofNullable(clientEntity.getProjects()).orElseGet(Collections::emptyList);
             clientEntity.setProjects(new ArrayList<>());
-            clientEntity.setEmployees(new ArrayList<>());
             return clientEntity;
         });
     }

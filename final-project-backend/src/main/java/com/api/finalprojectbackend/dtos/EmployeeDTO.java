@@ -1,6 +1,5 @@
 package com.api.finalprojectbackend.dtos;
 
-import com.api.finalprojectbackend.entities.ClientEntity;
 import com.api.finalprojectbackend.entities.ProjectEntity;
 import com.api.finalprojectbackend.entities.RoleEntity;
 import com.api.finalprojectbackend.entities.TechEntity;
@@ -34,10 +33,6 @@ public class EmployeeDTO {
 
     private List<TechEntity> techs;
 
-    @NotNull
-    private ClientEntity client;
-
-    @NotNull
     private ProjectEntity project;
 
     public String getName() {
@@ -102,14 +97,6 @@ public class EmployeeDTO {
 
     public void setTechs(List<TechEntity> techs) {
         this.techs = techs;
-    }
-
-    public ClientEntity getClient() {
-        return client;
-    }
-
-    public void setClient(ClientEntity client) {
-        this.client = client;
     }
 
     public ProjectEntity getProject() {

@@ -66,7 +66,6 @@ public class ClientController {
         //clientEntity.setName(clientDTO.getName());
         //clientEntity.setDescription(clientDTO.getDescription());
         //clientEntity.setProjects(clientDTO.getProjects());
-        //clientEntity.setEmployees(clientDTO.getEmployees());
 
         //Opção 2: inserir apenas o id que o restante dos campos são atualizados:
         ClientEntity clientEntity = new ClientEntity();
