@@ -117,7 +117,7 @@ export default function Employee() {
       <NavBar />
       <Container maxWidth="lg" className={classes.page}>
         <Typography className={classes.pageTitle} color="secondary">
-          Colaboradores
+          Colaborador
         </Typography>
         <Grid>
           <form noValidate autoComplete="off" onSubmit={handleSubmit}>

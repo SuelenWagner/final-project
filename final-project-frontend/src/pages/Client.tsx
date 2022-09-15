@@ -158,52 +158,65 @@ export default function Client() {
       <NavBar />
       <Container maxWidth="lg" className={classes.page}>
         <Typography color="secondary" className={classes.pageTitle}>
-          Clientes parceiros
+          Cliente parceiro
         </Typography>
         <form noValidate autoComplete="off" onSubmit={handleSubmit}>
-          <Grid container spacing={6}>
-            <Grid item xs={12} md={6} direction="column">
-              <TextField
-                onChange={(e) => setTitle(e.target.value)}
-                label="Nome do Cliente"
-                variant="outlined"
-                className={classes.textfield}
-                color="primary"
-                fullWidth
-                required
-              />
+          <Grid container item xs={12} md={9}>
+            {/*             <Grid item xs={12} md={6} direction="column"> */}
+            <TextField
+              onChange={(e) => setTitle(e.target.value)}
+              label="Nome do Cliente"
+              variant="outlined"
+              className={classes.textfield}
+              color="primary"
+              fullWidth
+              required
+            />
 
-              <Typography color="secondary">Projetos deste cliente</Typography>
+            <TextField
+              onChange={(e) => setDetails(e.target.value)}
+              className={classes.textfield}
+              label="Descrição"
+              placeholder="Insira aqui uma descrição sobre o cliente"
+              variant="outlined"
+              color="primary"
+              multiline
+              rows={4}
+              fullWidth
+              required
+            />
 
-              <List className={classes.listEmployees}>
-                <ListItem alignItems="flex-start">
-                  <ListItemText primary="Projeto 01" />
-                </ListItem>
-                <Divider variant="inset" component="li" />
-                <ListItem alignItems="flex-start">
-                  <ListItemText primary="Projeto 02" />
-                </ListItem>
-                <Divider variant="inset" component="li" />
-                <ListItem alignItems="flex-start">
-                  <ListItemText primary="Projeto 03" />
-                </ListItem>
-                <Divider variant="inset" component="li" />
-                <ListItem alignItems="flex-start">
-                  <ListItemText primary="Projeto 04" />
-                </ListItem>
-                <Divider variant="inset" component="li" />
-                <ListItem alignItems="flex-start">
-                  <ListItemText primary="Projeto 05" />
-                </ListItem>
-              </List>
-            </Grid>
+            <Typography color="secondary">Projetos deste cliente</Typography>
 
-            <Grid item xs={12} md={6} direction="column">
+            <List className={classes.listEmployees}>
+              <ListItem alignItems="flex-start">
+                <ListItemText primary="Projeto 01" />
+              </ListItem>
+              <Divider variant="fullWidth" component="li" />
+              <ListItem alignItems="flex-start">
+                <ListItemText primary="Projeto 02" />
+              </ListItem>
+              <Divider variant="fullWidth" component="li" />
+              <ListItem alignItems="flex-start">
+                <ListItemText primary="Projeto 03" />
+              </ListItem>
+              <Divider variant="fullWidth" component="li" />
+              <ListItem alignItems="flex-start">
+                <ListItemText primary="Projeto 04" />
+              </ListItem>
+              <Divider variant="fullWidth" component="li" />
+              <ListItem alignItems="flex-start">
+                <ListItemText primary="Projeto 05" />
+              </ListItem>
+            </List>
+          </Grid>
+
+          {/*             <Grid item xs={12} md={6} direction="column">
               <Typography color="secondary">
                 Colaboradores que trabalham neste cliente
-              </Typography>
+              </Typography> */}
 
-              <List className={classes.listEmployees}>
+          {/*               <List className={classes.listEmployees}>
                 <ListItem alignItems="flex-start">
                   <ListItemAvatar>
                     <Avatar alt="Remy Sharp" src="/avatar-example.jpg" />
@@ -320,15 +333,15 @@ export default function Client() {
                     }
                   />
                 </ListItem>
-              </List>
+              </List> */}
 
-              <Grid container className={classes.buttonSubmit}>
-                <Button type="submit" variant="outlined" color="secondary">
-                  Salvar
-                </Button>
-              </Grid>
-            </Grid>
+          <Grid container className={classes.buttonSubmit}>
+            <Button type="submit" variant="outlined" color="secondary">
+              Salvar
+            </Button>
           </Grid>
+          {/*           </Grid> */}
+          {/*           /</Grid> */}
         </form>
       </Container>
     </div>

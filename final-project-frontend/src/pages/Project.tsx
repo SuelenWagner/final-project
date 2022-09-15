@@ -158,7 +158,7 @@ export default function Project() {
       <NavBar />
       <Container maxWidth="lg" className={classes.page}>
         <Typography color="secondary" className={classes.pageTitle}>
-          Projetos
+          Projeto
         </Typography>
         <form noValidate autoComplete="off" onSubmit={handleSubmit}>
           <Grid container spacing={6}>
