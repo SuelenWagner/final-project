@@ -1,6 +1,7 @@
 package com.api.finalprojectbackend.controllers;
 
 import com.api.finalprojectbackend.dtos.ProjectDTO;
+import com.api.finalprojectbackend.entities.ClientEntity;
 import com.api.finalprojectbackend.entities.ProjectEntity;
 import com.api.finalprojectbackend.services.ProjectService;
 import org.springframework.beans.BeanUtils;
@@ -12,6 +13,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -26,7 +28,7 @@ public class ProjectController {
         this.projectService = projectService;
     }
 
-    @PostMapping
+    /*@PostMapping
     public ResponseEntity<Object> saveProject(@RequestBody @Valid ProjectDTO projectDTO) {
 
         //Seria legal criar uma classe de validação para as mensagens da aplicação
@@ -38,21 +40,38 @@ public class ProjectController {
         ProjectEntity projectEntity = new ProjectEntity();
         BeanUtils.copyProperties(projectDTO, projectEntity);
         return ResponseEntity.status(HttpStatus.CREATED).body(projectService.save(projectEntity));
+    }*/
+
+    @PostMapping
+    public ResponseEntity<Object> saveProject(@RequestBody @Valid ProjectEntity projectEntity) {
+        return projectService.save(projectEntity);
     }
 
-    @GetMapping
+    /*@GetMapping
     public ResponseEntity<Page<ProjectEntity>> getAllProjects(@PageableDefault(page = 0, size = 10, sort = "id", direction = Sort.Direction.ASC) Pageable pageable) {
         return ResponseEntity.status(HttpStatus.OK).body(projectService.findAll(pageable));
+    }*/
+
+    @GetMapping
+    public Page<ProjectEntity> getProjects(Pageable pageable) {
+        return projectService.findAll(pageable);
     }
 
     @GetMapping("/{id}")
+    public ProjectEntity getProjectById(@PathVariable(value = "id") UUID id) {
+        if(projectService.findById(id).isPresent())
+            return projectService.findById(id).get();
+        else return null;
+    }
+
+    /*@GetMapping("/{id}")
     public ResponseEntity<Object> getProjectById(@PathVariable(value = "id") UUID id) {
         Optional<ProjectEntity> projectModelOptional = projectService.findById(id);
         if(!projectModelOptional.isPresent()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Project not found.");
         }
         return ResponseEntity.status(HttpStatus.OK).body(projectModelOptional.get());
-    }
+    }*/
 
     @PutMapping("/{id}")
     public ResponseEntity<Object> updateProject(@PathVariable(value = "id") UUID id, @RequestBody @Valid ProjectDTO projectDTO) {

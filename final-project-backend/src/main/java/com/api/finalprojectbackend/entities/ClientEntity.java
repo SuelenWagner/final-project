@@ -2,6 +2,7 @@ package com.api.finalprojectbackend.entities;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -14,24 +15,26 @@ public class ClientEntity implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private UUID id;
+    //@GeneratedValue(strategy = GenerationType.IDENTITY)
+    //private Long id;
 
     @Column(nullable = false, unique = true, length = 40)
     private String name;
 
     @Column(nullable = false, length = 1000)
-    private String clientDescription;
+    private String description;
 
     //Ler abaixo como: Um cliente para muitos projetos
-    //@OneToMany(mappedBy="client")
+    @OneToMany(targetEntity = ProjectEntity.class, cascade = CascadeType.PERSIST)
     private List<ProjectEntity> projects;
 
     public ClientEntity() {
     }
 
-    public ClientEntity(UUID id, String name, String clientDescription, List<ProjectEntity> projects) {
+    public ClientEntity(UUID id, String name, String description, List<ProjectEntity> projects) {
         this.id = id;
         this.name = name;
-        this.clientDescription = clientDescription;
+        this.description = description;
         this.projects = projects;
     }
 
@@ -51,12 +54,12 @@ public class ClientEntity implements Serializable {
         this.name = name;
     }
 
-    public String getClientDescription() {
-        return clientDescription;
+    public String getDescription() {
+        return description;
     }
 
-    public void setClientDescription(String clientDescription) {
-        this.clientDescription = clientDescription;
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public List<ProjectEntity> getProjects() {

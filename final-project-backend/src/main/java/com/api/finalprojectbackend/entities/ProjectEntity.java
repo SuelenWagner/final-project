@@ -29,18 +29,17 @@ public class ProjectEntity implements Serializable {
     @Temporal(TemporalType.DATE)
     private Date finishDate;
 
-    @Column(nullable = false)
     private ProjectStatus status;
 
     //Ler abaixo como: Muitos projetos para um cliente
-    //@ManyToOne(cascade=CascadeType.PERSIST)
-    @OneToOne(cascade=CascadeType.REFRESH)
+    @ManyToOne(targetEntity = ClientEntity.class, cascade = CascadeType.MERGE)
     @JoinColumn(name = "client_id")
+    //@OneToOne(cascade=CascadeType.REFRESH)
     private ClientEntity client;
 
 
     //Ler abaixo como: Um projeto para muitos colaboradores
-    @OneToMany(cascade=CascadeType.ALL)
+    @OneToMany(fetch = FetchType.LAZY)
     @JoinColumn(name = "project_id")
     private List<EmployeeEntity> employees;
 

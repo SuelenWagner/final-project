@@ -27,6 +27,11 @@ public class ClientController {
     }
 
     @PostMapping
+    public ResponseEntity<Object> saveClient(@RequestBody @Valid ClientEntity clientEntity) {
+        return clientService.save(clientEntity);
+    }
+
+    /*@PostMapping
     public ResponseEntity<Object> saveClient(@RequestBody @Valid ClientDTO clientDTO) {
 
         //Seria legal criar uma classe de validação para as mensagens da aplicação
@@ -38,7 +43,7 @@ public class ClientController {
         ClientEntity clientEntity = new ClientEntity();
         BeanUtils.copyProperties(clientDTO, clientEntity);
         return ResponseEntity.status(HttpStatus.CREATED).body(clientService.save(clientEntity));
-    }
+    }*/
 
     @GetMapping
     public ResponseEntity<Page<ClientEntity>> getAllClients(@PageableDefault(page = 0, size = 10, sort = "id", direction = Sort.Direction.ASC) Pageable pageable) {

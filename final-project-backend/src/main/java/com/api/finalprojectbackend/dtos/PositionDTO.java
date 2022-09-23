@@ -3,7 +3,7 @@ package com.api.finalprojectbackend.dtos;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 
-public class RoleDTO {
+public class PositionDTO {
 
     @NotBlank
     @Size(max = 40)

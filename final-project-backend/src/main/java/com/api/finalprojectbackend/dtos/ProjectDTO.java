@@ -22,6 +22,7 @@ public class ProjectDTO {
 
     private Date finishDate;
 
+    @NotNull
     private Integer status;
 
     @NotNull

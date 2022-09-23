@@ -5,8 +5,8 @@ import java.io.Serializable;
 import java.util.UUID;
 
 @Entity
-@Table(name = "tb_role")
-public class RoleEntity implements Serializable {
+@Table(name = "tb_position")
+public class PositionEntity implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
@@ -17,10 +17,10 @@ public class RoleEntity implements Serializable {
     @Column(nullable = false, unique = true, length = 40)
     private String name;
 
-    public RoleEntity() {
+    public PositionEntity() {
     }
 
-    public RoleEntity(UUID id, String name) {
+    public PositionEntity(UUID id, String name) {
         this.id = id;
         this.name = name;
     }

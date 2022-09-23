@@ -1,7 +1,7 @@
 package com.api.finalprojectbackend.dtos;
 
 import com.api.finalprojectbackend.entities.ProjectEntity;
-import com.api.finalprojectbackend.entities.RoleEntity;
+import com.api.finalprojectbackend.entities.PositionEntity;
 import com.api.finalprojectbackend.entities.TechEntity;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
@@ -29,7 +29,7 @@ public class EmployeeDTO {
     private Integer status;
 
     @NotNull
-    private RoleEntity role;
+    private PositionEntity role;
 
     private List<TechEntity> techs;
 
@@ -83,11 +83,11 @@ public class EmployeeDTO {
         this.status = status;
     }
 
-    public RoleEntity getRole() {
+    public PositionEntity getRole() {
         return role;
     }
 
-    public void setRole(RoleEntity role) {
+    public void setRole(PositionEntity role) {
         this.role = role;
     }
 

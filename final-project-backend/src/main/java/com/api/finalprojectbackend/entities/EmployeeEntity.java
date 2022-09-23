@@ -39,8 +39,8 @@ public class EmployeeEntity implements Serializable {
 
     //Ler abaixo como: Um colaborador possui um cargo
     @OneToOne
-    @JoinColumn(name = "role_id")
-    private RoleEntity role;
+    @JoinColumn(name = "position_id")
+    private PositionEntity position;
 
     //Ler abaixo como: Um colaborador possui muitas techs
     /*@ManyToMany
@@ -57,15 +57,15 @@ public class EmployeeEntity implements Serializable {
 
 
     //Ler abaixo como: Muitos colaboradores para um projeto
-
-    //@JoinColumn(name = "project_id")
+    @ManyToOne(cascade=CascadeType.REFRESH)
+    @JoinColumn(name = "project_id")
     private ProjectEntity project;
 
     public EmployeeEntity() {
     }
 
     public EmployeeEntity(UUID id, String name, Date birthDate, String email, Date startDate, String interesting,
-                          EmployeeStatus status, RoleEntity role, List<TechEntity> techs, ProjectEntity project) {
+                          EmployeeStatus status, PositionEntity role, List<TechEntity> techs, ProjectEntity project) {
         this.id = id;
         this.name = name;
         this.birthDate = birthDate;
@@ -73,7 +73,7 @@ public class EmployeeEntity implements Serializable {
         this.startDate = startDate;
         this.interesting = interesting;
         this.status = status;
-        this.role = role;
+        this.position = role;
         this.techs = techs;
         this.project = project;
     }
@@ -134,12 +134,12 @@ public class EmployeeEntity implements Serializable {
         this.status = status;
     }
 
-    public RoleEntity getRole() {
-        return role;
+    public PositionEntity getPosition() {
+        return position;
     }
 
-    public void setRole(RoleEntity role) {
-        this.role = role;
+    public void setPosition(PositionEntity position) {
+        this.position = position;
     }
 
     public List<TechEntity> getTechs() {
