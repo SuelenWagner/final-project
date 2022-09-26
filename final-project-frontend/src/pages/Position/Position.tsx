@@ -1,5 +1,5 @@
-import React, { useEffect, useState, useCallback } from "react";
-import NavBar from "../components/NavBar";
+import React, { useEffect, useState } from "react";
+import NavBar from "../../components/NavBar";
 import MuiAlert from "@material-ui/lab/Alert";
 
 import {
@@ -7,16 +7,8 @@ import {
   Container,
   Typography,
   TextField,
-  FormControl,
-  FormLabel,
-  FormControlLabel,
-  Radio,
-  RadioGroup,
   Button,
   Grid,
-  InputLabel,
-  Select,
-  MenuItem,
   List,
   ListItem,
   Snackbar,
@@ -28,8 +20,8 @@ import {
   getAllPositions,
   createPosition,
   deletePosition,
-} from "../services/positions-api";
-import { iPositions } from "../models/Positions";
+} from "../../services/positions-api";
+import { iPositions } from "../../models/Positions";
 import DeleteOutlineIcon from "@material-ui/icons/DeleteOutline";
 
 function Alert(props: any) {
@@ -39,7 +31,7 @@ function Alert(props: any) {
 const useStyles = makeStyles((theme) => {
   return {
     page: {
-      //backgroundColor: "pink",
+      backgroundColor: "pink",
       marginTop: 30,
     },
     pageTitle: {
@@ -128,22 +120,17 @@ const useStyles = makeStyles((theme) => {
   };
 });
 
-export default function Client() {
+export default function Position() {
   const classes = useStyles();
   const [name, setName] = useState("");
-  const [details, setDetails] = useState("");
-  const [titleError, setTitleError] = useState(false);
-  const [detailsError, setDetailsError] = useState(false);
-  const [status, setStatus] = useState("");
-  const [client, setClient] = useState("");
-  const [manager, setManager] = useState("");
   const [isSnackbarOpen, setIsSnackbarOpen] = useState(false);
   const [positions, setPositions] = useState([] as iPositions[]);
 
+  console.log(positions);
   async function getPositions() {
     try {
-      const response = await getAllPositions();
-      const newPositions = response.data.content.sort((a: any, b: any) =>
+      const { data } = await getAllPositions();
+      const newPositions = data.sort((a: any, b: any) =>
         a.name.localeCompare(b.name)
       );
 
@@ -156,20 +143,6 @@ export default function Client() {
   useEffect(() => {
     getPositions();
   }, []);
-
-  const handleStatusChange = (event: React.ChangeEvent<{ value: unknown }>) => {
-    setStatus(event.target.value as string);
-  };
-
-  const handleClientChange = (event: React.ChangeEvent<{ value: unknown }>) => {
-    setClient(event.target.value as string);
-  };
-
-  const handleManagerChange = (
-    event: React.ChangeEvent<{ value: unknown }>
-  ) => {
-    setManager(event.target.value as string);
-  };
 
   const handleSubmit = async (e: { preventDefault: () => void }) => {
     e.preventDefault();
@@ -203,7 +176,7 @@ export default function Client() {
       <NavBar />
       <Container maxWidth="lg" className={classes.page}>
         <Typography color="secondary" className={classes.pageTitle}>
-          Funções - Papéis de trabalho
+          Cargos de trabalho
         </Typography>
         <form noValidate autoComplete="off" onSubmit={handleSubmit}>
           <Grid container item xs={12} md={9}>
@@ -211,7 +184,7 @@ export default function Client() {
               <TextField
                 onChange={(e) => setName(e.target.value)}
                 value={name}
-                label="Nome do papel"
+                label="Cadastrar novo cargo"
                 variant="outlined"
                 className={classes.textfield}
                 color="primary"

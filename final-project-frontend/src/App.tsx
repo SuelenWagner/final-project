@@ -6,7 +6,8 @@ import "./App.css";
 import Project from "./pages/Project";
 import Employee from "./pages/Employee";
 import Client from "./pages/Client";
-import Position from "./pages/Position";
+import Position from "./pages/Position/Position";
+import Tech from "./pages/Tech/Tech";
 
 const theme = createTheme({
   palette: {
@@ -55,6 +56,9 @@ function App() {
           </Route>
           <Route exact path="/position">
             <Position />
+          </Route>
+          <Route exact path="/tech">
+            <Tech />
           </Route>
         </Switch>
       </Router>

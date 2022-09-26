@@ -4,5 +4,5 @@ export interface iPositions {
 }
 
 export interface iPositionsData {
-    content: iPositions[];
+    data: iPositions[];
 }

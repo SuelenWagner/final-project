@@ -158,6 +158,24 @@ const NavBar = () => {
                   Clientes
                 </NavLink>
               </MenuItem>
+              <MenuItem className={classes.menuItem}>
+                <NavLink
+                  to="/position"
+                  activeClassName="active"
+                  className="navbar-item"
+                >
+                  Funções
+                </NavLink>
+              </MenuItem>
+              <MenuItem className={classes.menuItem}>
+                <NavLink
+                  to="/tech"
+                  activeClassName="active"
+                  className="navbar-item"
+                >
+                  Tecnologias
+                </NavLink>
+              </MenuItem>
             </Grid>
           </Box>
 
