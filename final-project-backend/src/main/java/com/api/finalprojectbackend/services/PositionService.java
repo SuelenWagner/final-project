@@ -7,6 +7,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -31,8 +32,12 @@ public class PositionService {
         return positionRepository.existsByName(name);
     }
 
-    public Page<PositionEntity> findAll(Pageable pageable) {
+    /*public Page<PositionEntity> findAll(Pageable pageable) {
         return positionRepository.findAll(pageable);
+    }*/
+
+    public List<PositionEntity> findAll() {
+        return positionRepository.findAll();
     }
 
     public Optional<PositionEntity> findById(UUID id) {

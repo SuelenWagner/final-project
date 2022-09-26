@@ -12,6 +12,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -40,9 +41,14 @@ public class PositionController {
         return ResponseEntity.status(HttpStatus.CREATED).body(positionService.save(positionEntity));
     }
 
-    @GetMapping
+   /* @GetMapping
     public ResponseEntity<Page<PositionEntity>> getAllRoles(@PageableDefault(page = 0, size = 10, sort = "id", direction = Sort.Direction.ASC) Pageable pageable) {
         return ResponseEntity.status(HttpStatus.OK).body(positionService.findAll(pageable));
+    }*/
+
+    @GetMapping
+    public ResponseEntity<List<PositionEntity>> getAllRoles() {
+        return ResponseEntity.status(HttpStatus.OK).body(positionService.findAll());
     }
 
     @GetMapping("/{id}")
