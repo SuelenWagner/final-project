@@ -18,7 +18,7 @@ public class TechEntity implements Serializable {
     @Column(nullable = false, unique = true)
     private String name;
 
-    @ManyToMany
+    @ManyToMany(mappedBy = "techs")
     private List<EmployeeEntity> employees;
 
     public TechEntity() {
