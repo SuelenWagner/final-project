@@ -57,50 +57,6 @@ const useStyles = makeStyles((theme) => {
         color: "#666",
       },
     },
-    dateTextfield: {
-      width: 220,
-      marginBottom: 40,
-      marginRight: 40,
-      marginLeft: 4,
-      "& label": {
-        color: "#666",
-      },
-      "& label.Mui-focused": {
-        color: "#666",
-      },
-      "& .MuiOutlinedInput-root": {
-        "& fieldset": {
-          borderColor: "#666",
-        },
-        "&:hover fieldset": {
-          borderColor: "#666",
-        },
-        "&.Mui-focused fieldset": {
-          borderColor: "#666",
-        },
-      },
-    },
-    selectStatus: {
-      width: 220,
-      marginBottom: 40,
-      "& label": {
-        color: "#666",
-      },
-      "& label.Mui-focused": {
-        color: "#666",
-      },
-      "& .MuiOutlinedInput-root": {
-        "& fieldset": {
-          borderColor: "#666",
-        },
-        "&:hover fieldset": {
-          borderColor: "#666",
-        },
-        "&.Mui-focused fieldset": {
-          borderColor: "#666",
-        },
-      },
-    },
     listData: {
       width: "100%",
       //backgroundColor: "pink",
@@ -121,6 +77,7 @@ export default function Tech() {
   const [name, setName] = useState("");
   const [isSnackbarOpen, setIsSnackbarOpen] = useState(false);
   const [techs, setTechs] = useState([] as iTechs[]);
+  const [filteredTechs, setFilteredTechs] = useState([] as iTechs[]);
 
   console.log(techs);
   async function getTechs() {
@@ -131,6 +88,7 @@ export default function Tech() {
       );
 
       setTechs(newTechs);
+      setFilteredTechs(newTechs);
     } catch (err) {
       console.error(err);
     }
@@ -167,20 +125,34 @@ export default function Tech() {
     }
   };
 
+  const handleTechs = (name: string) => {
+    if (name.length > 0) {
+      const filteredTechnologies = techs.filter((t) =>
+        t.name.trim().toLowerCase().includes(name)
+      );
+      const technologies = filteredTechnologies;
+      setFilteredTechs(technologies);
+    } else {
+      setFilteredTechs(techs);
+    }
+
+    setName(name);
+  };
+
   return (
     <div>
       <NavBar />
       <Container maxWidth="lg" className={classes.page}>
-        <Typography color="secondary" className={classes.pageTitle}>
+        <Typography color="primary" className={classes.pageTitle}>
           Tecnologias
         </Typography>
         <form noValidate autoComplete="off" onSubmit={handleSubmit}>
-          <Grid container item xs={12} md={9}>
+          <Grid container item xs={12} md={12}>
             <Grid container className={classes.buttonSubmit}>
               <TextField
-                onChange={(e) => setName(e.target.value)}
+                onChange={(e) => handleTechs(e.target.value)}
                 value={name}
-                label="Cadastrar tecnologias, skills, idiomas entre outros"
+                label="Cadastre ou filtre por tecnologias, skills, idiomas entre outros"
                 variant="outlined"
                 className={classes.textfield}
                 color="primary"
@@ -190,7 +162,7 @@ export default function Tech() {
               <Button
                 type="submit"
                 variant="outlined"
-                color="secondary"
+                color="primary"
                 disabled={name === ""}
               >
                 Salvar
@@ -199,9 +171,9 @@ export default function Tech() {
 
             <List className={classes.listData}>
               {techs &&
-                techs.map((tech: iTechs) => (
+                filteredTechs.map((tech: iTechs) => (
                   <div key={tech.id}>
-                    <ListItem alignItems="flex-start">
+                    <ListItem alignItems="center">
                       <ListItemText primary={tech.name} />
                       <IconButton onClick={() => handleDeleteTech(tech.id)}>
                         <DeleteOutlineIcon />

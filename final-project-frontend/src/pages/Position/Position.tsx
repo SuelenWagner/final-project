@@ -31,7 +31,7 @@ function Alert(props: any) {
 const useStyles = makeStyles((theme) => {
   return {
     page: {
-      backgroundColor: "pink",
+      //backgroundColor: "pink",
       marginTop: 30,
     },
     pageTitle: {
@@ -61,57 +61,9 @@ const useStyles = makeStyles((theme) => {
         color: "#666",
       },
     },
-    dateTextfield: {
-      width: 220,
-      marginBottom: 40,
-      marginRight: 40,
-      marginLeft: 4,
-      "& label": {
-        color: "#666",
-      },
-      "& label.Mui-focused": {
-        color: "#666",
-      },
-      "& .MuiOutlinedInput-root": {
-        "& fieldset": {
-          borderColor: "#666",
-        },
-        "&:hover fieldset": {
-          borderColor: "#666",
-        },
-        "&.Mui-focused fieldset": {
-          borderColor: "#666",
-        },
-      },
-    },
-    selectStatus: {
-      width: 220,
-      marginBottom: 40,
-      "& label": {
-        color: "#666",
-      },
-      "& label.Mui-focused": {
-        color: "#666",
-      },
-      "& .MuiOutlinedInput-root": {
-        "& fieldset": {
-          borderColor: "#666",
-        },
-        "&:hover fieldset": {
-          borderColor: "#666",
-        },
-        "&.Mui-focused fieldset": {
-          borderColor: "#666",
-        },
-      },
-    },
-    listEmployees: {
+    listData: {
       width: "100%",
       //backgroundColor: "pink",
-    },
-    listEmployeesName: {
-      display: "inline",
-      color: "#666",
     },
     buttonSubmit: {
       fontSize: 14,
@@ -125,6 +77,9 @@ export default function Position() {
   const [name, setName] = useState("");
   const [isSnackbarOpen, setIsSnackbarOpen] = useState(false);
   const [positions, setPositions] = useState([] as iPositions[]);
+  const [filteredPositions, setFilteredPositions] = useState(
+    [] as iPositions[]
+  );
 
   console.log(positions);
   async function getPositions() {
@@ -135,6 +90,7 @@ export default function Position() {
       );
 
       setPositions(newPositions);
+      setFilteredPositions(newPositions);
     } catch (err) {
       console.error(err);
     }
@@ -171,20 +127,34 @@ export default function Position() {
     }
   };
 
+  const handlePositions = (name: string) => {
+    if (name.length > 0) {
+      const filteredPositions = positions.filter((p) =>
+        p.name.trim().toLowerCase().includes(name)
+      );
+      const pos = filteredPositions;
+      setFilteredPositions(pos);
+    } else {
+      setFilteredPositions(positions);
+    }
+
+    setName(name);
+  };
+
   return (
     <div>
       <NavBar />
       <Container maxWidth="lg" className={classes.page}>
-        <Typography color="secondary" className={classes.pageTitle}>
+        <Typography color="primary" className={classes.pageTitle}>
           Cargos de trabalho
         </Typography>
         <form noValidate autoComplete="off" onSubmit={handleSubmit}>
-          <Grid container item xs={12} md={9}>
+          <Grid container item xs={12} md={12}>
             <Grid container className={classes.buttonSubmit}>
               <TextField
-                onChange={(e) => setName(e.target.value)}
+                onChange={(e) => handlePositions(e.target.value)}
                 value={name}
-                label="Cadastrar novo cargo"
+                label="Cadastre ou filtre por um cargo"
                 variant="outlined"
                 className={classes.textfield}
                 color="primary"
@@ -194,18 +164,18 @@ export default function Position() {
               <Button
                 type="submit"
                 variant="outlined"
-                color="secondary"
+                color="primary"
                 disabled={name === ""}
               >
                 Salvar
               </Button>
             </Grid>
 
-            <List className={classes.listEmployees}>
+            <List className={classes.listData}>
               {positions &&
-                positions.map((position: iPositions) => (
+                filteredPositions.map((position: iPositions) => (
                   <div key={position.id}>
-                    <ListItem alignItems="flex-start">
+                    <ListItem alignItems="center">
                       <ListItemText primary={position.name} />
                       <IconButton
                         onClick={() => handleDeletePosition(position.id)}
@@ -227,7 +197,7 @@ export default function Position() {
         onClose={handleSnackbar}
       >
         <Alert onClose={handleSnackbar} severity="error">
-          Erro ao cadastrar novo papel
+          Erro ao cadastrar novo cargo
         </Alert>
       </Snackbar>
     </div>

@@ -164,7 +164,7 @@ const NavBar = () => {
                   activeClassName="active"
                   className="navbar-item"
                 >
-                  Funções
+                  Cargos
                 </NavLink>
               </MenuItem>
               <MenuItem className={classes.menuItem}>
