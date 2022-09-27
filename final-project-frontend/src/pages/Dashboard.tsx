@@ -22,7 +22,7 @@ import EditIcon from "@material-ui/icons/Edit";
 const useStyles = makeStyles((theme) => {
   return {
     page: {
-      //backgroundColor: "pink",
+      //backgroundColor: "lightYellow",
       height: "100%",
       width: "100%",
     },
@@ -33,11 +33,11 @@ const useStyles = makeStyles((theme) => {
       //backgroundColor: "pink",
     },
     search: {
-      paddingTop: 80,
+      paddingTop: 85,
       marginBottom: 40,
       display: "flex",
       justifyContent: "center",
-      //AJUSTAR PRA BARRA FICAR DENTRO DA GRID PREENCHENDO O WIDTH DOS CARDS
+      //backgroundColor: "pink",
     },
     textfield: {
       "& label": {
@@ -85,25 +85,24 @@ export default function Dashboard() {
     <div>
       <NavBar />
       <Container maxWidth="lg" className={classes.page}>
+        <div className={classes.search}>
+          <TextField
+            className={classes.textfield}
+            label="Pesquisar"
+            placeholder="Pesquise por tecnologias, colaboradores, projetos ou clientes"
+            variant="outlined"
+            color="primary"
+            fullWidth
+            InputProps={{
+              startAdornment: (
+                <InputAdornment position="start">
+                  <SearchRoundedIcon />
+                </InputAdornment>
+              ),
+            }}
+          />
+        </div>
         <Grid container spacing={2} className={classes.pageItems}>
-          <div className={classes.search}>
-            <TextField
-              className={classes.textfield}
-              label="Pesquisar"
-              placeholder="Pesquise por tecnologias, colaboradores, projetos ou clientes"
-              variant="outlined"
-              color="primary"
-              fullWidth
-              InputProps={{
-                startAdornment: (
-                  <InputAdornment position="start">
-                    <SearchRoundedIcon />
-                  </InputAdornment>
-                ),
-              }}
-            />
-          </div>
-
           <Grid item xs={9} md={3} direction="column">
             <Button
               variant="outlined"
