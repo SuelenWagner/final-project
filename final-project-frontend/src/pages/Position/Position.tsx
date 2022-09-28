@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import NavBar from "../../components/NavBar";
-import MuiAlert from "@material-ui/lab/Alert";
+import { EToastSeverity } from "../../models/ToastSeverity";
 
 import {
   makeStyles,
@@ -11,7 +11,6 @@ import {
   Grid,
   List,
   ListItem,
-  Snackbar,
   ListItemText,
   Divider,
   IconButton,
@@ -23,10 +22,7 @@ import {
 } from "../../services/positions-api";
 import { iPositions } from "../../models/Positions";
 import DeleteOutlineIcon from "@material-ui/icons/DeleteOutline";
-
-function Alert(props: any) {
-  return <MuiAlert elevation={6} variant="filled" {...props} />;
-}
+import Toast from "../../components/shared/Toast/Toast";
 
 const useStyles = makeStyles((theme) => {
   return {
@@ -75,11 +71,15 @@ const useStyles = makeStyles((theme) => {
 export default function Position() {
   const classes = useStyles();
   const [name, setName] = useState("");
-  const [isSnackbarOpen, setIsSnackbarOpen] = useState(false);
   const [positions, setPositions] = useState([] as iPositions[]);
   const [filteredPositions, setFilteredPositions] = useState(
     [] as iPositions[]
   );
+  const [isSnackbarOpen, setIsSnackbarOpen] = useState(false);
+  const [snackbarSeverity, setSnackbarSeverity] = useState(
+    EToastSeverity.SUCCESS
+  );
+  const [snackbarMessage, setSnackbarMessage] = useState("");
 
   console.log(positions);
   async function getPositions() {
@@ -108,29 +108,40 @@ export default function Position() {
       await createPosition(newPosition);
       setName("");
       getPositions();
+      handleSnackbar(
+        EToastSeverity.SUCCESS,
+        "Novo cargo cadastrado com sucesso!"
+      );
     } catch (err) {
-      handleSnackbar();
+      handleSnackbar(EToastSeverity.ERROR, "Erro ao cadastrar cargo");
       console.error(err);
     }
-  };
-
-  const handleSnackbar = () => {
-    setIsSnackbarOpen(!isSnackbarOpen);
   };
 
   const handleDeletePosition = async (id: string) => {
     try {
       await deletePosition(id);
+      handleSnackbar(EToastSeverity.WARNING, "Cargo deletado com sucesso!");
       getPositions();
     } catch (err) {
       console.error(err);
     }
   };
 
+  const handleSnackbar = (severity: EToastSeverity, message: string) => {
+    setSnackbarSeverity(severity);
+    setSnackbarMessage(message);
+    handleOpenSnackBar();
+  };
+
+  const handleOpenSnackBar = () => {
+    setIsSnackbarOpen(!isSnackbarOpen);
+  };
+
   const handlePositions = (name: string) => {
     if (name.length > 0) {
       const filteredPositions = positions.filter((p) =>
-        p.name.trim().toLowerCase().includes(name)
+        p.name.trim().includes(name)
       );
       const pos = filteredPositions;
       setFilteredPositions(pos);
@@ -191,15 +202,12 @@ export default function Position() {
         </form>
       </Container>
 
-      <Snackbar
-        open={isSnackbarOpen}
-        autoHideDuration={6000}
-        onClose={handleSnackbar}
-      >
-        <Alert onClose={handleSnackbar} severity="error">
-          Erro ao cadastrar novo cargo
-        </Alert>
-      </Snackbar>
+      <Toast
+        severity={snackbarSeverity}
+        message={snackbarMessage}
+        isOpen={isSnackbarOpen}
+        handleSnackbar={handleOpenSnackBar}
+      />
     </div>
   );
 }

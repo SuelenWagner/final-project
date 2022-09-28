@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import NavBar from "../../components/NavBar";
-import MuiAlert from "@material-ui/lab/Alert";
+import { EToastSeverity } from "../../models/ToastSeverity";
 
 import {
   makeStyles,
@@ -11,7 +11,6 @@ import {
   Grid,
   List,
   ListItem,
-  Snackbar,
   ListItemText,
   Divider,
   IconButton,
@@ -19,10 +18,7 @@ import {
 import { getAllTechs, createTech, deleteTech } from "../../services/techs-api";
 import { iTechs } from "../../models/Techs";
 import DeleteOutlineIcon from "@material-ui/icons/DeleteOutline";
-
-function Alert(props: any) {
-  return <MuiAlert elevation={6} variant="filled" {...props} />;
-}
+import Toast from "../../components/shared/Toast/Toast";
 
 const useStyles = makeStyles((theme) => {
   return {
@@ -75,9 +71,13 @@ const useStyles = makeStyles((theme) => {
 export default function Tech() {
   const classes = useStyles();
   const [name, setName] = useState("");
-  const [isSnackbarOpen, setIsSnackbarOpen] = useState(false);
   const [techs, setTechs] = useState([] as iTechs[]);
   const [filteredTechs, setFilteredTechs] = useState([] as iTechs[]);
+  const [isSnackbarOpen, setIsSnackbarOpen] = useState(false);
+  const [snackbarSeverity, setSnackbarSeverity] = useState(
+    EToastSeverity.SUCCESS
+  );
+  const [snackbarMessage, setSnackbarMessage] = useState("");
 
   console.log(techs);
   async function getTechs() {
@@ -106,29 +106,43 @@ export default function Tech() {
       await createTech(newTechs);
       setName("");
       getTechs();
+      handleSnackbar(
+        EToastSeverity.SUCCESS,
+        "Nova tecnologia cadastrada com sucesso!"
+      );
     } catch (err) {
-      handleSnackbar();
+      handleSnackbar(EToastSeverity.ERROR, "Erro ao cadastrar tecnologia");
       console.error(err);
     }
-  };
-
-  const handleSnackbar = () => {
-    setIsSnackbarOpen(!isSnackbarOpen);
   };
 
   const handleDeleteTech = async (id: string) => {
     try {
       await deleteTech(id);
+      handleSnackbar(
+        EToastSeverity.WARNING,
+        "Tecnologia deletada com sucesso!"
+      );
       getTechs();
     } catch (err) {
       console.error(err);
     }
   };
 
+  const handleSnackbar = (severity: EToastSeverity, message: string) => {
+    setSnackbarSeverity(severity);
+    setSnackbarMessage(message);
+    handleOpenSnackBar();
+  };
+
+  const handleOpenSnackBar = () => {
+    setIsSnackbarOpen(!isSnackbarOpen);
+  };
+
   const handleTechs = (name: string) => {
     if (name.length > 0) {
       const filteredTechnologies = techs.filter((t) =>
-        t.name.trim().toLowerCase().includes(name)
+        t.name.trim().includes(name)
       );
       const technologies = filteredTechnologies;
       setFilteredTechs(technologies);
@@ -187,15 +201,12 @@ export default function Tech() {
         </form>
       </Container>
 
-      <Snackbar
-        open={isSnackbarOpen}
-        autoHideDuration={6000}
-        onClose={handleSnackbar}
-      >
-        <Alert onClose={handleSnackbar} severity="error">
-          Erro ao cadastrar nova tecnologia
-        </Alert>
-      </Snackbar>
+      <Toast
+        severity={snackbarSeverity}
+        message={snackbarMessage}
+        isOpen={isSnackbarOpen}
+        handleSnackbar={handleOpenSnackBar}
+      />
     </div>
   );
 }

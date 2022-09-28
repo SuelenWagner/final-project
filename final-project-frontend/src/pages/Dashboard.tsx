@@ -14,10 +14,14 @@ import {
   Typography,
   CardContent,
   Divider,
+  List,
+  ListItem,
+  ListItemText,
 } from "@material-ui/core";
 import SearchRoundedIcon from "@material-ui/icons/SearchRounded";
 import AddRoundedIcon from "@material-ui/icons/AddRounded";
 import EditIcon from "@material-ui/icons/Edit";
+import StarOutlineOutlinedIcon from "@material-ui/icons/StarOutlineOutlined";
 
 const useStyles = makeStyles((theme) => {
   return {
@@ -67,13 +71,20 @@ const useStyles = makeStyles((theme) => {
       marginBottom: 10,
     },
     card: {
-      backgroundColor: "#DEE8F3",
+      //backgroundColor: "#DEE8F3",
+      border: "1px solid #2FA4FF",
       marginBottom: 15,
-      minHeight: 200,
+      minHeight: 100,
     },
     divider: {
       marginTop: 5,
       marginBottom: 5,
+    },
+    listData: {
+      color: "pink",
+    },
+    star: {
+      color: "#ffc107",
     },
   };
 });
@@ -104,7 +115,7 @@ export default function Dashboard() {
         </div>
         <Grid container spacing={2} className={classes.pageItems}>
           <Grid item xs={9} md={3} direction="column">
-            <Button
+            {/* <Button
               variant="outlined"
               size="small"
               color="primary"
@@ -113,18 +124,24 @@ export default function Dashboard() {
               title="Add novo cliente"
             >
               Cliente
-            </Button>
-            <Card elevation={1} className={classes.card}>
-              <CardHeader
-                action={
-                  <IconButton>
-                    <EditIcon />
-                  </IconButton>
-                }
-                title="Nome do Cliente"
-                subheader="Nome do Cliente"
-              />
-            </Card>
+            </Button> */}
+            <List className={classes.listData}>
+              <ListItem alignItems="center">
+                <ListItemText primary="Cliente 01" />
+              </ListItem>
+              <Divider variant="fullWidth" component="li" />
+              <ListItem alignItems="center">
+                <ListItemText primary="Cliente 02" />
+              </ListItem>
+              <Divider variant="fullWidth" component="li" />
+              <ListItem alignItems="center">
+                <ListItemText primary="Cliente 03" />
+              </ListItem>
+              <Divider variant="fullWidth" component="li" />
+              <ListItem alignItems="center">
+                <ListItemText primary="Cliente 04" />
+              </ListItem>
+            </List>
             <Card elevation={1} className={classes.card}>
               <CardHeader
                 action={
@@ -174,7 +191,7 @@ export default function Dashboard() {
               <CardHeader
                 action={
                   <IconButton>
-                    <EditIcon color="secondary" />
+                    <StarOutlineOutlinedIcon className={classes.star} />
                   </IconButton>
                 }
                 title="Nome do Projeto"

@@ -20,6 +20,12 @@ export const createPosition = (name: string) => {
     });
 };
 
+// export const updatePosition = (name : string) => {
+//     return http.put(`/positions/${id}`, {
+//         name
+//     })
+// }
+
 export const deletePosition = (id: string) => {
     return http.delete(`/positions/${id}`);
 };
