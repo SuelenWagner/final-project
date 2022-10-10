@@ -2,6 +2,7 @@ package com.api.finalprojectbackend.entities;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.List;
 import java.util.UUID;
 
 @Entity
@@ -17,12 +18,20 @@ public class PositionEntity implements Serializable {
     @Column(nullable = false, unique = true, length = 40)
     private String name;
 
+    //@ManyToOne
+    //@JoinColumn(name = "employee_id")
+    //private List<EmployeeEntity> employees;
+
+    @OneToMany(mappedBy = "position")
+    private List<EmployeeEntity> employees;
+
     public PositionEntity() {
     }
 
-    public PositionEntity(UUID id, String name) {
+    public PositionEntity(UUID id, String name, List<EmployeeEntity> employees) {
         this.id = id;
         this.name = name;
+        this.employees = employees;
     }
 
     public UUID getId() {
@@ -39,5 +48,13 @@ public class PositionEntity implements Serializable {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public List<EmployeeEntity> getEmployees() {
+        return employees;
+    }
+
+    public void setEmployees(List<EmployeeEntity> employees) {
+        this.employees = employees;
     }
 }

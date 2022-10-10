@@ -3,6 +3,9 @@ package com.api.finalprojectbackend.dtos;
 import com.api.finalprojectbackend.entities.ProjectEntity;
 import com.api.finalprojectbackend.entities.PositionEntity;
 import com.api.finalprojectbackend.entities.TechEntity;
+import com.api.finalprojectbackend.enums.EmployeeStatus;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
@@ -26,10 +29,14 @@ public class EmployeeDTO {
     @Size(max = 1000)
     private String interesting;
 
-    private Integer status;
+    @NotNull
+    private boolean isManager;
+
+    @Enumerated(EnumType.STRING)
+    private EmployeeStatus status;
 
     @NotNull
-    private PositionEntity role;
+    private PositionEntity position;
 
     private List<TechEntity> techs;
 
@@ -75,20 +82,28 @@ public class EmployeeDTO {
         this.interesting = interesting;
     }
 
-    public Integer getStatus() {
+    public boolean isManager() {
+        return isManager;
+    }
+
+    public void setManager(boolean manager) {
+        isManager = manager;
+    }
+
+    public EmployeeStatus getStatus() {
         return status;
     }
 
-    public void setStatus(Integer status) {
+    public void setStatus(EmployeeStatus status) {
         this.status = status;
     }
 
-    public PositionEntity getRole() {
-        return role;
+    public PositionEntity getPosition() {
+        return position;
     }
 
-    public void setRole(PositionEntity role) {
-        this.role = role;
+    public void setPosition(PositionEntity position) {
+        this.position = position;
     }
 
     public List<TechEntity> getTechs() {

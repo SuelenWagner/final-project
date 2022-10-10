@@ -2,6 +2,9 @@ package com.api.finalprojectbackend.dtos;
 
 import com.api.finalprojectbackend.entities.ClientEntity;
 import com.api.finalprojectbackend.entities.EmployeeEntity;
+import com.api.finalprojectbackend.enums.ProjectStatus;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
@@ -22,8 +25,11 @@ public class ProjectDTO {
 
     private Date finishDate;
 
+    private boolean isFavorite;
+
     @NotNull
-    private Integer status;
+    @Enumerated(EnumType.STRING)
+    private ProjectStatus status;
 
     @NotNull
     private ClientEntity client;
@@ -62,11 +68,19 @@ public class ProjectDTO {
         this.finishDate = finishDate;
     }
 
-    public Integer getStatus() {
+    public boolean isFavorite() {
+        return isFavorite;
+    }
+
+    public void setFavorite(boolean favorite) {
+        isFavorite = favorite;
+    }
+
+    public ProjectStatus getStatus() {
         return status;
     }
 
-    public void setStatus(Integer status) {
+    public void setStatus(ProjectStatus status) {
         this.status = status;
     }
 

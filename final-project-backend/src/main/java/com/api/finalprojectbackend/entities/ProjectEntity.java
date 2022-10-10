@@ -29,30 +29,35 @@ public class ProjectEntity implements Serializable {
     @Temporal(TemporalType.DATE)
     private Date finishDate;
 
+    private boolean isFavorite;
+
+    @Enumerated(EnumType.STRING)
     private ProjectStatus status;
 
-    //Ler abaixo como: Muitos projetos para um cliente
+    //Muitos projetos para um cliente
     @ManyToOne(targetEntity = ClientEntity.class, cascade = CascadeType.MERGE)
     @JoinColumn(name = "client_id")
     //@OneToOne(cascade=CascadeType.REFRESH)
     private ClientEntity client;
 
 
-    //Ler abaixo como: Um projeto para muitos colaboradores
+    //Um projeto para muitos colaboradores
     @OneToMany(fetch = FetchType.LAZY)
     @JoinColumn(name = "project_id")
     private List<EmployeeEntity> employees;
 
-
     public ProjectEntity() {
     }
 
-    public ProjectEntity(UUID id, String name, String description, Date startDate, Date finishDate, ProjectStatus status, ClientEntity client, List<EmployeeEntity> employees) {
+    public ProjectEntity(UUID id, String name, String description, Date startDate, Date finishDate,
+                         Boolean isFavorite, ProjectStatus status, ClientEntity client,
+                         List<EmployeeEntity> employees) {
         this.id = id;
         this.name = name;
         this.description = description;
         this.startDate = startDate;
         this.finishDate = finishDate;
+        this.isFavorite = isFavorite;
         this.status = status;
         this.client = client;
         this.employees = employees;
@@ -96,6 +101,14 @@ public class ProjectEntity implements Serializable {
 
     public void setFinishDate(Date finishDate) {
         this.finishDate = finishDate;
+    }
+
+    public boolean isFavorite() {
+        return isFavorite;
+    }
+
+    public void setFavorite(boolean favorite) {
+        isFavorite = favorite;
     }
 
     public ProjectStatus getStatus() {

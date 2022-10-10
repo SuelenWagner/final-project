@@ -2,7 +2,6 @@ package com.api.finalprojectbackend.entities;
 
 import javax.persistence.*;
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -15,8 +14,6 @@ public class ClientEntity implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private UUID id;
-    //@GeneratedValue(strategy = GenerationType.IDENTITY)
-    //private Long id;
 
     @Column(nullable = false, unique = true, length = 40)
     private String name;
@@ -24,8 +21,8 @@ public class ClientEntity implements Serializable {
     @Column(nullable = false, length = 1000)
     private String description;
 
-    //Ler abaixo como: Um cliente para muitos projetos
-    @OneToMany(targetEntity = ProjectEntity.class, cascade = CascadeType.PERSIST)
+    //Um cliente para muitos projetos
+    @OneToMany(targetEntity = ProjectEntity.class, cascade = CascadeType.PERSIST, mappedBy = "client")
     private List<ProjectEntity> projects;
 
     public ClientEntity() {

@@ -35,10 +35,14 @@ public class EmployeeEntity implements Serializable {
     private String interesting;
 
     @Column(nullable = false)
+    private boolean isManager;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
     private EmployeeStatus status;
 
-    //Ler abaixo como: Um colaborador possui um cargo
-    @OneToOne
+    //Um colaborador possui um cargo
+    @ManyToOne
     @JoinColumn(name = "position_id")
     private PositionEntity position;
 
@@ -56,7 +60,7 @@ public class EmployeeEntity implements Serializable {
     private List<TechEntity> techs;
 
 
-    //Ler abaixo como: Muitos colaboradores para um projeto
+    //Muitos colaboradores para um projeto
     @ManyToOne(cascade=CascadeType.REFRESH)
     @JoinColumn(name = "project_id")
     private ProjectEntity project;
@@ -65,15 +69,17 @@ public class EmployeeEntity implements Serializable {
     }
 
     public EmployeeEntity(UUID id, String name, Date birthDate, String email, Date startDate, String interesting,
-                          EmployeeStatus status, PositionEntity role, List<TechEntity> techs, ProjectEntity project) {
+                          boolean isManager, EmployeeStatus status, PositionEntity position, List<TechEntity> techs,
+                          ProjectEntity project) {
         this.id = id;
         this.name = name;
         this.birthDate = birthDate;
         this.email = email;
         this.startDate = startDate;
         this.interesting = interesting;
+        this.isManager = isManager;
         this.status = status;
-        this.position = role;
+        this.position = position;
         this.techs = techs;
         this.project = project;
     }
@@ -124,6 +130,14 @@ public class EmployeeEntity implements Serializable {
 
     public void setInteresting(String interesting) {
         this.interesting = interesting;
+    }
+
+    public boolean isManager() {
+        return isManager;
+    }
+
+    public void setManager(boolean manager) {
+        isManager = manager;
     }
 
     public EmployeeStatus getStatus() {
