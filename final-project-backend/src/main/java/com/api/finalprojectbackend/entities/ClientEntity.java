@@ -22,7 +22,7 @@ public class ClientEntity implements Serializable {
     private String description;
 
     //Um cliente para muitos projetos
-    @OneToMany(targetEntity = ProjectEntity.class, cascade = CascadeType.PERSIST, mappedBy = "client")
+    @OneToMany(targetEntity = ProjectEntity.class, mappedBy = "client")
     private List<ProjectEntity> projects;
 
     public ClientEntity() {
