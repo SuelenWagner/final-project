@@ -1,18 +1,13 @@
 package com.api.finalprojectbackend.services;
 
-import ch.qos.logback.core.net.server.Client;
 import com.api.finalprojectbackend.entities.ClientEntity;
 import com.api.finalprojectbackend.repositories.ClientRepository;
-import com.api.finalprojectbackend.repositories.ProjectRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 @Service
 public class ClientService {
@@ -20,14 +15,18 @@ public class ClientService {
     //service precisa acionar o repository
     final ClientRepository clientRepository;
 
-    final ProjectRepository projectRepository;
-
-    public ClientService(ClientRepository clientRepository, ProjectRepository projectRepository) {
+    public ClientService(ClientRepository clientRepository) {
         this.clientRepository = clientRepository;
-        this.projectRepository = projectRepository;
     }
 
-    @Transactional
+    //final ProjectRepository projectRepository;
+
+    /*public ClientService(ClientRepository clientRepository, ProjectRepository projectRepository) {
+        this.clientRepository = clientRepository;
+        this.projectRepository = projectRepository;
+    }*/
+
+    /*@Transactional
     public ResponseEntity<Object> save(ClientEntity clientEntity) {
 
         ClientEntity newClient = new ClientEntity();
@@ -40,12 +39,13 @@ public class ClientService {
         } else
             return ResponseEntity.unprocessableEntity().body("Failed to create client");
         //return clientRepository.save(clientEntity);
-    }
+    }*/
 
-    /*@Transactional
+
+    @Transactional
     public ClientEntity save(ClientEntity clientEntity) {
         return clientRepository.save(clientEntity);
-    }*/
+    }
 
     //método declarado no repository
     public boolean existsByName(String name) {
@@ -53,22 +53,31 @@ public class ClientService {
     }
 
 
-    public Page<ClientEntity> findAll(Pageable pageable) {
+    /*public Page<ClientEntity> findAll(Pageable pageable) {
         return clientRepository.findAll(pageable).map(clientEntity -> {
             Optional.ofNullable(clientEntity.getProjects()).orElseGet(Collections::emptyList);
             clientEntity.setProjects(new ArrayList<>());
             return clientEntity;
         });
-    }
-
+    }*/
 
     @Transactional
+    public List<ClientEntity> findAll() {
+        return clientRepository.findAll();
+    }
+
+    /*@Transactional
     public Optional<ClientEntity> findById(UUID id) {
         return clientRepository.findById(id).map(clientEntity -> {
             Optional.ofNullable(clientEntity.getProjects()).orElseGet(Collections::emptyList);
             clientEntity.setProjects(new ArrayList<>());
             return clientEntity;
         });
+    }*/
+
+    @Transactional
+    public Optional<ClientEntity> findById(UUID id) {
+        return clientRepository.findById(id);
     }
 
     @Transactional

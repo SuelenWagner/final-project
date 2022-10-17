@@ -1,5 +1,7 @@
 package com.api.finalprojectbackend.entities;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.List;
@@ -21,8 +23,7 @@ public class ClientEntity implements Serializable {
     @Column(nullable = false, length = 1000)
     private String description;
 
-    //Um cliente para muitos projetos
-    @OneToMany(targetEntity = ProjectEntity.class, mappedBy = "client")
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "client")
     private List<ProjectEntity> projects;
 
     public ClientEntity() {
@@ -59,6 +60,7 @@ public class ClientEntity implements Serializable {
         this.description = description;
     }
 
+    @JsonManagedReference(value="client-project")
     public List<ProjectEntity> getProjects() {
         return projects;
     }

@@ -1,6 +1,8 @@
 package com.api.finalprojectbackend.entities;
 
 import com.api.finalprojectbackend.enums.ProjectStatus;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
@@ -34,16 +36,13 @@ public class ProjectEntity implements Serializable {
     @Enumerated(EnumType.STRING)
     private ProjectStatus status;
 
-    //Muitos projetos para um cliente
-    @ManyToOne(targetEntity = ClientEntity.class, cascade = CascadeType.MERGE)
+    //@ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.MERGE)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "client_id")
-    //@OneToOne(cascade=CascadeType.REFRESH)
     private ClientEntity client;
 
-
     //Um projeto para muitos colaboradores
-    @OneToMany(fetch = FetchType.LAZY)
-    @JoinColumn(name = "project_id")
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "project")
     private List<EmployeeEntity> employees;
 
     public ProjectEntity() {
@@ -119,6 +118,7 @@ public class ProjectEntity implements Serializable {
         this.status = status;
     }
 
+    @JsonBackReference(value="client-project")
     public ClientEntity getClient() {
         return client;
     }
@@ -127,6 +127,7 @@ public class ProjectEntity implements Serializable {
         this.client = client;
     }
 
+    @JsonManagedReference(value="project-employee")
     public List<EmployeeEntity> getEmployees() {
         return employees;
     }

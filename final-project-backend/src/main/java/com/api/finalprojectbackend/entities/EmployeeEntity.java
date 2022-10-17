@@ -1,6 +1,8 @@
 package com.api.finalprojectbackend.entities;
 
 import com.api.finalprojectbackend.enums.EmployeeStatus;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
@@ -41,29 +43,23 @@ public class EmployeeEntity implements Serializable {
     @Column(nullable = false)
     private EmployeeStatus status;
 
+    //Muitos colaboradores para um projeto
+    //@ManyToOne(cascade=CascadeType.REFRESH)
+    @ManyToOne
+    @JoinColumn(name = "project_id")
+    private ProjectEntity project;
+
     //Um colaborador possui um cargo
     @ManyToOne
     @JoinColumn(name = "position_id")
     private PositionEntity position;
 
-    //Ler abaixo como: Um colaborador possui muitas techs
-    /*@ManyToMany
-    @JoinTable(name = "tb_employee", joinColumns = @JoinColumn(name = "id"),
-            inverseJoinColumns = @JoinColumn(name = "tech_id"))
-    private List<TechEntity> techs;*/
-
-
-    @ManyToMany(cascade=CascadeType.PERSIST)
+    //Um colaborador possui muitas techs
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "tb_employee_techs", joinColumns = @JoinColumn(
             name = "employee_id", referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(name = "tech_id", referencedColumnName = "id"))
     private List<TechEntity> techs;
-
-
-    //Muitos colaboradores para um projeto
-    @ManyToOne(cascade=CascadeType.REFRESH)
-    @JoinColumn(name = "project_id")
-    private ProjectEntity project;
 
     public EmployeeEntity() {
     }
@@ -148,6 +144,7 @@ public class EmployeeEntity implements Serializable {
         this.status = status;
     }
 
+    @JsonBackReference(value="employee-position")
     public PositionEntity getPosition() {
         return position;
     }
@@ -156,6 +153,7 @@ public class EmployeeEntity implements Serializable {
         this.position = position;
     }
 
+    @JsonIgnore
     public List<TechEntity> getTechs() {
         return techs;
     }
@@ -164,6 +162,7 @@ public class EmployeeEntity implements Serializable {
         this.techs = techs;
     }
 
+    @JsonBackReference(value="project-employee")
     public ProjectEntity getProject() {
         return project;
     }

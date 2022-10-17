@@ -12,6 +12,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -26,12 +27,12 @@ public class ClientController {
         this.clientService = clientService;
     }
 
-    @PostMapping
+    /*@PostMapping
     public ResponseEntity<Object> saveClient(@RequestBody @Valid ClientEntity clientEntity) {
         return clientService.save(clientEntity);
-    }
+    }*/
 
-    /*@PostMapping
+    @PostMapping
     public ResponseEntity<Object> saveClient(@RequestBody @Valid ClientDTO clientDTO) {
 
         //Seria legal criar uma classe de validação para as mensagens da aplicação
@@ -43,11 +44,11 @@ public class ClientController {
         ClientEntity clientEntity = new ClientEntity();
         BeanUtils.copyProperties(clientDTO, clientEntity);
         return ResponseEntity.status(HttpStatus.CREATED).body(clientService.save(clientEntity));
-    }*/
+    }
 
     @GetMapping
-    public ResponseEntity<Page<ClientEntity>> getAllClients(@PageableDefault(page = 0, size = 10, sort = "id", direction = Sort.Direction.ASC) Pageable pageable) {
-        return ResponseEntity.status(HttpStatus.OK).body(clientService.findAll(pageable));
+    public ResponseEntity<List<ClientEntity>> getAllClients() {
+        return ResponseEntity.status(HttpStatus.OK).body(clientService.findAll());
     }
 
     @GetMapping("/{id}")

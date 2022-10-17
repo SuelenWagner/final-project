@@ -1,5 +1,6 @@
 package com.api.finalprojectbackend.controllers;
 
+import com.api.finalprojectbackend.dtos.ClientDTO;
 import com.api.finalprojectbackend.dtos.ProjectDTO;
 import com.api.finalprojectbackend.entities.ClientEntity;
 import com.api.finalprojectbackend.entities.ProjectEntity;
@@ -28,7 +29,7 @@ public class ProjectController {
         this.projectService = projectService;
     }
 
-    /*@PostMapping
+    @PostMapping
     public ResponseEntity<Object> saveProject(@RequestBody @Valid ProjectDTO projectDTO) {
 
         //Seria legal criar uma classe de validação para as mensagens da aplicação
@@ -40,12 +41,8 @@ public class ProjectController {
         ProjectEntity projectEntity = new ProjectEntity();
         BeanUtils.copyProperties(projectDTO, projectEntity);
         return ResponseEntity.status(HttpStatus.CREATED).body(projectService.save(projectEntity));
-    }*/
-
-    @PostMapping
-    public ResponseEntity<Object> saveProject(@RequestBody @Valid ProjectEntity projectEntity) {
-        return projectService.save(projectEntity);
     }
+
 
     /*@GetMapping
     public ResponseEntity<Page<ProjectEntity>> getAllProjects(@PageableDefault(page = 0, size = 10, sort = "id", direction = Sort.Direction.ASC) Pageable pageable) {
@@ -53,8 +50,8 @@ public class ProjectController {
     }*/
 
     @GetMapping
-    public Page<ProjectEntity> getProjects(Pageable pageable) {
-        return projectService.findAll(pageable);
+    public List<ProjectEntity> getProjects() {
+        return projectService.findAll();
     }
 
     @GetMapping("/{id}")

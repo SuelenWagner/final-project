@@ -8,10 +8,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 @Service
 public class EmployeeService {
@@ -34,7 +31,7 @@ public class EmployeeService {
         return employeeRepository.existsByName(name);
     }
 
-    public Page<EmployeeEntity> findAll(Pageable pageable) {
+    /*public Page<EmployeeEntity> findAll(Pageable pageable) {
         return employeeRepository.findAll(pageable).map(employeeEntity -> {
             Optional.ofNullable(employeeEntity.getProject());
             employeeEntity.setProject(new ProjectEntity());
@@ -43,9 +40,14 @@ public class EmployeeService {
             return employeeEntity;
         });
         //return employeeRepository.findAll(pageable);
+    }*/
+
+    @Transactional
+    public List<EmployeeEntity> findAll() {
+        return employeeRepository.findAll();
     }
 
-    public Optional<EmployeeEntity> findById(UUID id) {
+    /*public Optional<EmployeeEntity> findById(UUID id) {
         return employeeRepository.findById(id).map(employeeEntity -> {
             Optional.ofNullable(employeeEntity.getProject());
             employeeEntity.setProject(new ProjectEntity());
@@ -53,6 +55,11 @@ public class EmployeeService {
             employeeEntity.setTechs(new ArrayList<>());
             return employeeEntity;
         });
+    }*/
+
+    @Transactional
+    public Optional<EmployeeEntity> findById(UUID id) {
+        return employeeRepository.findById(id);
     }
 
     @Transactional

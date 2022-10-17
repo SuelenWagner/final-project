@@ -25,7 +25,6 @@ public class EmployeeDTO {
 
     private Date startDate;
 
-    @NotBlank
     @Size(max = 1000)
     private String interesting;
 
@@ -35,7 +34,6 @@ public class EmployeeDTO {
     @Enumerated(EnumType.STRING)
     private EmployeeStatus status;
 
-    @NotNull
     private PositionEntity position;
 
     private List<TechEntity> techs;

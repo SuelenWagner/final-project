@@ -1,5 +1,7 @@
 package com.api.finalprojectbackend.entities;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.List;
@@ -22,7 +24,7 @@ public class PositionEntity implements Serializable {
     //@JoinColumn(name = "employee_id")
     //private List<EmployeeEntity> employees;
 
-    @OneToMany(mappedBy = "position")
+    @OneToMany(mappedBy = "position", fetch = FetchType.EAGER)
     private List<EmployeeEntity> employees;
 
     public PositionEntity() {
@@ -50,6 +52,7 @@ public class PositionEntity implements Serializable {
         this.name = name;
     }
 
+    @JsonManagedReference(value="employee-position")
     public List<EmployeeEntity> getEmployees() {
         return employees;
     }
