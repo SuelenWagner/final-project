@@ -25,8 +25,6 @@ public class ProjectDTO {
 
     private Date finishDate;
 
-    private boolean isFavorite;
-
     @NotNull
     @Enumerated(EnumType.STRING)
     private ProjectStatus status;
@@ -67,15 +65,7 @@ public class ProjectDTO {
     public void setFinishDate(Date finishDate) {
         this.finishDate = finishDate;
     }
-
-    public boolean isFavorite() {
-        return isFavorite;
-    }
-
-    public void setFavorite(boolean favorite) {
-        isFavorite = favorite;
-    }
-
+    
     public ProjectStatus getStatus() {
         return status;
     }

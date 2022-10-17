@@ -28,9 +28,6 @@ public class EmployeeDTO {
     @Size(max = 1000)
     private String interesting;
 
-    @NotNull
-    private boolean isManager;
-
     @Enumerated(EnumType.STRING)
     private EmployeeStatus status;
 
@@ -78,14 +75,6 @@ public class EmployeeDTO {
 
     public void setInteresting(String interesting) {
         this.interesting = interesting;
-    }
-
-    public boolean isManager() {
-        return isManager;
-    }
-
-    public void setManager(boolean manager) {
-        isManager = manager;
     }
 
     public EmployeeStatus getStatus() {

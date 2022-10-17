@@ -36,9 +36,6 @@ public class EmployeeEntity implements Serializable {
     @Column(length = 1000)
     private String interesting;
 
-    @Column(nullable = false)
-    private boolean isManager;
-
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private EmployeeStatus status;
@@ -65,7 +62,7 @@ public class EmployeeEntity implements Serializable {
     }
 
     public EmployeeEntity(UUID id, String name, Date birthDate, String email, Date startDate, String interesting,
-                          boolean isManager, EmployeeStatus status, PositionEntity position, List<TechEntity> techs,
+                          EmployeeStatus status, PositionEntity position, List<TechEntity> techs,
                           ProjectEntity project) {
         this.id = id;
         this.name = name;
@@ -73,7 +70,6 @@ public class EmployeeEntity implements Serializable {
         this.email = email;
         this.startDate = startDate;
         this.interesting = interesting;
-        this.isManager = isManager;
         this.status = status;
         this.position = position;
         this.techs = techs;
@@ -126,14 +122,6 @@ public class EmployeeEntity implements Serializable {
 
     public void setInteresting(String interesting) {
         this.interesting = interesting;
-    }
-
-    public boolean isManager() {
-        return isManager;
-    }
-
-    public void setManager(boolean manager) {
-        isManager = manager;
     }
 
     public EmployeeStatus getStatus() {

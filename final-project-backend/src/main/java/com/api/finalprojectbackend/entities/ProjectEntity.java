@@ -31,8 +31,6 @@ public class ProjectEntity implements Serializable {
     @Temporal(TemporalType.DATE)
     private Date finishDate;
 
-    private boolean isFavorite;
-
     @Enumerated(EnumType.STRING)
     private ProjectStatus status;
 
@@ -49,14 +47,12 @@ public class ProjectEntity implements Serializable {
     }
 
     public ProjectEntity(UUID id, String name, String description, Date startDate, Date finishDate,
-                         Boolean isFavorite, ProjectStatus status, ClientEntity client,
-                         List<EmployeeEntity> employees) {
+                         ProjectStatus status, ClientEntity client, List<EmployeeEntity> employees) {
         this.id = id;
         this.name = name;
         this.description = description;
         this.startDate = startDate;
         this.finishDate = finishDate;
-        this.isFavorite = isFavorite;
         this.status = status;
         this.client = client;
         this.employees = employees;
@@ -100,14 +96,6 @@ public class ProjectEntity implements Serializable {
 
     public void setFinishDate(Date finishDate) {
         this.finishDate = finishDate;
-    }
-
-    public boolean isFavorite() {
-        return isFavorite;
-    }
-
-    public void setFavorite(boolean favorite) {
-        isFavorite = favorite;
     }
 
     public ProjectStatus getStatus() {
