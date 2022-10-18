@@ -47,7 +47,7 @@ public class EmployeeEntity implements Serializable {
     private ProjectEntity project;
 
     //Um colaborador possui um cargo
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "position_id")
     private PositionEntity position;
 

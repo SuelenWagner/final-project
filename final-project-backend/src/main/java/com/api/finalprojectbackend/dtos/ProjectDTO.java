@@ -29,7 +29,6 @@ public class ProjectDTO {
     @Enumerated(EnumType.STRING)
     private ProjectStatus status;
 
-    @NotNull
     private ClientEntity client;
 
     private List<EmployeeEntity> employees;
