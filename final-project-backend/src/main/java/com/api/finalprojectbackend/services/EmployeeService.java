@@ -1,11 +1,8 @@
 package com.api.finalprojectbackend.services;
 
 import com.api.finalprojectbackend.entities.EmployeeEntity;
-import com.api.finalprojectbackend.entities.ProjectEntity;
 import com.api.finalprojectbackend.repositories.EmployeeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
 import java.util.*;
@@ -27,8 +24,8 @@ public class EmployeeService {
     }
 
     //método declarado no repository
-    public boolean existsByName(String name) {
-        return employeeRepository.existsByName(name);
+    public boolean existsByEmail(String email) {
+        return employeeRepository.existsByEmail(email);
     }
 
     /*public Page<EmployeeEntity> findAll(Pageable pageable) {

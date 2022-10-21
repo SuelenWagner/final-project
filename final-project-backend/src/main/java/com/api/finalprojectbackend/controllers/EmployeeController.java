@@ -6,6 +6,7 @@ import com.api.finalprojectbackend.services.EmployeeService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.util.List;
@@ -28,7 +29,7 @@ public class EmployeeController {
 
         //Seria legal criar uma classe de validação para as mensagens da aplicação
         //TODO: ver a questão de letras maiúsculas e minúsculas
-        if(employeeService.existsByName(employeeDTO.getName())) {
+        if(employeeService.existsByEmail(employeeDTO.getEmail())) {
             return ResponseEntity.status(HttpStatus.CONFLICT).body("Conflict: Employee is already registered!");
         }
 

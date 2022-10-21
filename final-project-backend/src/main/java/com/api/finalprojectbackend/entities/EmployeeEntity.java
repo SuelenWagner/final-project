@@ -3,15 +3,15 @@ package com.api.finalprojectbackend.entities;
 import com.api.finalprojectbackend.enums.EmployeeStatus;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 import javax.persistence.*;
 import java.io.Serializable;
-import java.util.Date;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 @Entity
 @Table(name = "tb_employee")
-public class EmployeeEntity implements Serializable {
+public class EmployeeEntity implements UserDetails, Serializable {
 
     private static final long serialVersionUID = 1L;
 
@@ -19,8 +19,14 @@ public class EmployeeEntity implements Serializable {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private UUID id;
 
+    @Column(nullable = false, unique = true)
+    private String username;
+
+    @Column(nullable = false)
+    private String password;
+
     @Column(nullable = false, length = 150)
-    private String name;
+    private String fullName;
 
     @Column(nullable = false)
     @Temporal(TemporalType.DATE)
@@ -41,7 +47,6 @@ public class EmployeeEntity implements Serializable {
     private EmployeeStatus status;
 
     //Muitos colaboradores para um projeto
-    //@ManyToOne(cascade=CascadeType.REFRESH)
     @ManyToOne
     @JoinColumn(name = "project_id")
     private ProjectEntity project;
@@ -51,29 +56,73 @@ public class EmployeeEntity implements Serializable {
     @JoinColumn(name = "position_id")
     private PositionEntity position;
 
+    @ManyToOne
+    @JoinColumn(name = "role_id")
+    private RoleEntity role;
+
     //Um colaborador possui muitas techs
-    @ManyToMany(fetch = FetchType.EAGER)
+    @ManyToMany
     @JoinTable(name = "tb_employee_techs", joinColumns = @JoinColumn(
             name = "employee_id", referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(name = "tech_id", referencedColumnName = "id"))
     private List<TechEntity> techs;
 
+
     public EmployeeEntity() {
     }
 
-    public EmployeeEntity(UUID id, String name, Date birthDate, String email, Date startDate, String interesting,
-                          EmployeeStatus status, PositionEntity position, List<TechEntity> techs,
-                          ProjectEntity project) {
+    public EmployeeEntity(UUID id, String username, String password, String fullName, Date birthDate,
+                          String email, Date startDate, String interesting, EmployeeStatus status,
+                          ProjectEntity project, PositionEntity position, RoleEntity role,
+                          List<TechEntity> techs) {
         this.id = id;
-        this.name = name;
+        this.username = username;
+        this.password = password;
+        this.fullName = fullName;
         this.birthDate = birthDate;
         this.email = email;
         this.startDate = startDate;
         this.interesting = interesting;
         this.status = status;
-        this.position = position;
-        this.techs = techs;
         this.project = project;
+        this.position = position;
+        this.role = role;
+        this.techs = techs;
+    }
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return Collections.singleton(this.role);
+    }
+
+    @Override
+    public String getUsername() {
+        return this.username;
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return true;
+    }
+
+    @Override
+    public String getPassword() {
+        return this.password;
     }
 
     public UUID getId() {
@@ -84,12 +133,20 @@ public class EmployeeEntity implements Serializable {
         this.id = id;
     }
 
-    public String getName() {
-        return name;
+    public void setUsername(String username) {
+        this.username = username;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public String getFullName() {
+        return fullName;
+    }
+
+    public void setFullName(String fullName) {
+        this.fullName = fullName;
     }
 
     public Date getBirthDate() {
@@ -132,6 +189,15 @@ public class EmployeeEntity implements Serializable {
         this.status = status;
     }
 
+    @JsonBackReference(value="project-employee")
+    public ProjectEntity getProject() {
+        return project;
+    }
+
+    public void setProject(ProjectEntity project) {
+        this.project = project;
+    }
+
     @JsonBackReference(value="employee-position")
     public PositionEntity getPosition() {
         return position;
@@ -141,6 +207,14 @@ public class EmployeeEntity implements Serializable {
         this.position = position;
     }
 
+    public RoleEntity getRole() {
+        return role;
+    }
+
+    public void setRole(RoleEntity role) {
+        this.role = role;
+    }
+
     @JsonIgnore
     public List<TechEntity> getTechs() {
         return techs;
@@ -148,14 +222,5 @@ public class EmployeeEntity implements Serializable {
 
     public void setTechs(List<TechEntity> techs) {
         this.techs = techs;
-    }
-
-    @JsonBackReference(value="project-employee")
-    public ProjectEntity getProject() {
-        return project;
-    }
-
-    public void setProject(ProjectEntity project) {
-        this.project = project;
     }
 }

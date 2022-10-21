@@ -10,6 +10,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 @Service
+@Transactional
 public class TechService {
 
     //service precisa acionar o repository

@@ -10,6 +10,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.util.List;
@@ -27,6 +28,7 @@ public class PositionController {
         this.positionService = positionService;
     }
 
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PostMapping
     public ResponseEntity<Object> saveRole(@RequestBody @Valid PositionDTO positionDTO) {
 
@@ -46,11 +48,13 @@ public class PositionController {
         return ResponseEntity.status(HttpStatus.OK).body(positionService.findAll(pageable));
     }*/
 
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_USER')")
     @GetMapping
     public ResponseEntity<List<PositionEntity>> getAllRoles() {
         return ResponseEntity.status(HttpStatus.OK).body(positionService.findAll());
     }
 
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_USER')")
     @GetMapping("/{id}")
     public ResponseEntity<Object> getRoleById(@PathVariable(value = "id") UUID id) {
         Optional<PositionEntity> roleModelOptional = positionService.findById(id);
@@ -60,6 +64,7 @@ public class PositionController {
         return ResponseEntity.status(HttpStatus.OK).body(roleModelOptional.get());
     }
 
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PutMapping("/{id}")
     public ResponseEntity<Object> updateRole(@PathVariable(value = "id") UUID id, @RequestBody @Valid PositionDTO positionDTO) {
         Optional<PositionEntity> roleModelOptional = positionService.findById(id);
@@ -77,6 +82,7 @@ public class PositionController {
         return ResponseEntity.status(HttpStatus.OK).body(positionService.save(positionEntity));
     }
 
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @DeleteMapping("/{id}")
     public ResponseEntity<Object> deleteRole(@PathVariable(value = "id") UUID id) {
         Optional<PositionEntity> roleModelOptional = positionService.findById(id);

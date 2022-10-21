@@ -2,6 +2,7 @@ package com.api.finalprojectbackend.dtos;
 
 import com.api.finalprojectbackend.entities.ProjectEntity;
 import com.api.finalprojectbackend.entities.PositionEntity;
+import com.api.finalprojectbackend.entities.RoleEntity;
 import com.api.finalprojectbackend.entities.TechEntity;
 import com.api.finalprojectbackend.enums.EmployeeStatus;
 import javax.persistence.EnumType;
@@ -14,9 +15,18 @@ import java.util.List;
 
 public class EmployeeDTO {
 
+    @NotNull
+    @NotBlank
+    private String username;
+
+    @NotNull
+    @NotBlank
+    private String password;
+
+    @NotNull
     @NotBlank
     @Size(max = 150)
-    private String name;
+    private String fullName;
 
     private Date birthDate;
 
@@ -37,12 +47,31 @@ public class EmployeeDTO {
 
     private ProjectEntity project;
 
-    public String getName() {
-        return name;
+    private RoleEntity role;
+
+
+    public String getUsername() {
+        return username;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setUserName(String username) {
+        this.username = username;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public String getFullName() {
+        return fullName;
+    }
+
+    public void setFullName(String fullName) {
+        this.fullName = fullName;
     }
 
     public Date getBirthDate() {
@@ -107,5 +136,13 @@ public class EmployeeDTO {
 
     public void setProject(ProjectEntity project) {
         this.project = project;
+    }
+
+    public RoleEntity getRole() {
+        return role;
+    }
+
+    public void setRole(RoleEntity role) {
+        this.role = role;
     }
 }

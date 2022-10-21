@@ -43,6 +43,7 @@ public class ProjectEntity implements Serializable {
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "project")
     private List<EmployeeEntity> employees;
 
+
     public ProjectEntity() {
     }
 
