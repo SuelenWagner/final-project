@@ -1,17 +1,12 @@
 package com.api.finalprojectbackend.controllers;
 
-import com.api.finalprojectbackend.dtos.ClientDTO;
 import com.api.finalprojectbackend.dtos.ProjectDTO;
-import com.api.finalprojectbackend.entities.ClientEntity;
 import com.api.finalprojectbackend.entities.ProjectEntity;
 import com.api.finalprojectbackend.services.ProjectService;
 import org.springframework.beans.BeanUtils;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
-import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.util.List;
@@ -29,6 +24,7 @@ public class ProjectController {
         this.projectService = projectService;
     }
 
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PostMapping
     public ResponseEntity<Object> saveProject(@RequestBody @Valid ProjectDTO projectDTO) {
 
@@ -49,11 +45,13 @@ public class ProjectController {
         return ResponseEntity.status(HttpStatus.OK).body(projectService.findAll(pageable));
     }*/
 
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_USER')")
     @GetMapping
     public List<ProjectEntity> getProjects() {
         return projectService.findAll();
     }
 
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_USER')")
     @GetMapping("/{id}")
     public ProjectEntity getProjectById(@PathVariable(value = "id") UUID id) {
         if(projectService.findById(id).isPresent())
@@ -70,6 +68,7 @@ public class ProjectController {
         return ResponseEntity.status(HttpStatus.OK).body(projectModelOptional.get());
     }*/
 
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PutMapping("/{id}")
     public ResponseEntity<Object> updateProject(@PathVariable(value = "id") UUID id, @RequestBody @Valid ProjectDTO projectDTO) {
         Optional<ProjectEntity> projectModelOptional = projectService.findById(id);
@@ -87,6 +86,7 @@ public class ProjectController {
         return ResponseEntity.status(HttpStatus.OK).body(projectService.save(projectEntity));
     }
 
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @DeleteMapping("/{id}")
     public ResponseEntity<Object> deleteProject(@PathVariable(value = "id") UUID id) {
         Optional<ProjectEntity> projectModelOptional = projectService.findById(id);

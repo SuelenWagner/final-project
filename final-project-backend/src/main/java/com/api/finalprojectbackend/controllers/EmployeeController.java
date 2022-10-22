@@ -24,6 +24,7 @@ public class EmployeeController {
         this.employeeService = employeeService;
     }
 
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PostMapping
     public ResponseEntity<Object> saveEmployee(@RequestBody @Valid EmployeeDTO employeeDTO) {
 
@@ -43,11 +44,13 @@ public class EmployeeController {
         return ResponseEntity.status(HttpStatus.OK).body(employeeService.findAll(pageable));
     }*/
 
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_USER')")
     @GetMapping
     public ResponseEntity<List<EmployeeEntity>> getAllEmployees() {
         return ResponseEntity.status(HttpStatus.OK).body(employeeService.findAll());
     }
 
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_USER')")
     @GetMapping("/{id}")
     public ResponseEntity<Object> getEmployeeById(@PathVariable(value = "id") UUID id) {
         Optional<EmployeeEntity> employeeModelOptional = employeeService.findById(id);
@@ -57,6 +60,7 @@ public class EmployeeController {
         return ResponseEntity.status(HttpStatus.OK).body(employeeModelOptional.get());
     }
 
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PutMapping("/{id}")
     public ResponseEntity<Object> updateEmployee(@PathVariable(value = "id") UUID id, @RequestBody @Valid EmployeeDTO employeeDTO) {
         Optional<EmployeeEntity> employeeModelOptional = employeeService.findById(id);
@@ -74,6 +78,7 @@ public class EmployeeController {
         return ResponseEntity.status(HttpStatus.OK).body(employeeService.save(employeeEntity));
     }
 
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @DeleteMapping("/{id}")
     public ResponseEntity<Object> deleteEmployee(@PathVariable(value = "id") UUID id) {
         Optional<EmployeeEntity> employeeModelOptional = employeeService.findById(id);

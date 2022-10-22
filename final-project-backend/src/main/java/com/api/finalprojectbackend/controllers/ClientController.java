@@ -6,6 +6,7 @@ import com.api.finalprojectbackend.services.ClientService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.util.List;
@@ -28,6 +29,7 @@ public class ClientController {
         return clientService.save(clientEntity);
     }*/
 
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PostMapping
     public ResponseEntity<Object> saveClient(@RequestBody @Valid ClientDTO clientDTO) {
 
@@ -42,11 +44,13 @@ public class ClientController {
         return ResponseEntity.status(HttpStatus.CREATED).body(clientService.save(clientEntity));
     }
 
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_USER')")
     @GetMapping
     public ResponseEntity<List<ClientEntity>> getAllClients() {
         return ResponseEntity.status(HttpStatus.OK).body(clientService.findAll());
     }
 
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_USER')")
     @GetMapping("/{id}")
     public ResponseEntity<Object> getClientById(@PathVariable(value = "id") UUID id) {
         Optional<ClientEntity> clientModelOptional = clientService.findById(id);
@@ -56,6 +60,7 @@ public class ClientController {
         return ResponseEntity.status(HttpStatus.OK).body(clientModelOptional.get());
     }
 
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PutMapping("/{id}")
     public ResponseEntity<Object> updateClient(@PathVariable(value = "id") UUID id, @RequestBody @Valid ClientDTO clientDTO) {
         Optional<ClientEntity> clientEntityOptional = clientService.findById(id);
@@ -77,6 +82,7 @@ public class ClientController {
         return ResponseEntity.status(HttpStatus.OK).body(clientService.save(clientEntity));
     }
 
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @DeleteMapping("/{id}")
     public ResponseEntity<Object> deleteClient(@PathVariable(value = "id") UUID id) {
         Optional<ClientEntity> clientModelOptional = clientService.findById(id);

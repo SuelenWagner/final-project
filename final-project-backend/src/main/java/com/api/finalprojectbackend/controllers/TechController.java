@@ -6,6 +6,7 @@ import com.api.finalprojectbackend.services.TechService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.util.List;
@@ -23,6 +24,7 @@ public class TechController {
         this.techService = techService;
     }
 
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PostMapping
     public ResponseEntity<Object> saveTech(@RequestBody @Valid TechDTO techDTO) {
 
@@ -37,11 +39,13 @@ public class TechController {
         return ResponseEntity.status(HttpStatus.CREATED).body(techService.save(techEntity));
     }
 
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_USER')")
     @GetMapping
     public ResponseEntity<List<TechEntity>> getAllTechs() {
         return ResponseEntity.status(HttpStatus.OK).body(techService.findAll());
     }
 
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_USER')")
     @GetMapping("/{id}")
     public ResponseEntity<Object> getTechById(@PathVariable(value = "id") UUID id) {
         Optional<TechEntity> techModelOptional = techService.findById(id);
@@ -51,6 +55,7 @@ public class TechController {
         return ResponseEntity.status(HttpStatus.OK).body(techModelOptional.get());
     }
 
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PutMapping("/{id}")
     public ResponseEntity<Object> updateTech(@PathVariable(value = "id") UUID id, @RequestBody @Valid TechDTO techDTO) {
         Optional<TechEntity> techModelOptional = techService.findById(id);
@@ -64,6 +69,7 @@ public class TechController {
         return ResponseEntity.status(HttpStatus.OK).body(techService.save(techEntity));
     }
 
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @DeleteMapping("/{id}")
     public ResponseEntity<Object> deleteTech(@PathVariable(value = "id") UUID id) {
         Optional<TechEntity> techModelOptional = techService.findById(id);
