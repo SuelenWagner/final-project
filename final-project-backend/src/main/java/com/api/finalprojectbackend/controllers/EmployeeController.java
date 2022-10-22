@@ -27,9 +27,6 @@ public class EmployeeController {
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PostMapping
     public ResponseEntity<Object> saveEmployee(@RequestBody @Valid EmployeeDTO employeeDTO) {
-
-        //Seria legal criar uma classe de validação para as mensagens da aplicação
-        //TODO: ver a questão de letras maiúsculas e minúsculas
         if(employeeService.existsByEmail(employeeDTO.getEmail())) {
             return ResponseEntity.status(HttpStatus.CONFLICT).body("Conflict: Employee is already registered!");
         }
@@ -38,11 +35,6 @@ public class EmployeeController {
         BeanUtils.copyProperties(employeeDTO, employeeEntity);
         return ResponseEntity.status(HttpStatus.CREATED).body(employeeService.save(employeeEntity));
     }
-
-    /*@GetMapping
-    public ResponseEntity<Page<EmployeeEntity>> getAllEmployees(@PageableDefault(page = 0, size = 10, sort = "id", direction = Sort.Direction.ASC) Pageable pageable) {
-        return ResponseEntity.status(HttpStatus.OK).body(employeeService.findAll(pageable));
-    }*/
 
     @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_USER')")
     @GetMapping
@@ -68,10 +60,6 @@ public class EmployeeController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Employee not found.");
         }
         EmployeeEntity employeeEntity = employeeModelOptional.get();
-        //Opção 1: abaixo setar os campos que podem ser modificados!
-        //roleModel.setRoleTitle(roleDTO.getRoleTitle());
-
-        //Opção 2: inserir apenas o id que o restante dos campos são atualizados:
         BeanUtils.copyProperties(employeeDTO, employeeEntity);
         employeeEntity.setId(employeeModelOptional.get().getId());
 

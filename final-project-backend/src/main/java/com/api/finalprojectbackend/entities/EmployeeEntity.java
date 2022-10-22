@@ -46,34 +46,32 @@ public class EmployeeEntity implements UserDetails, Serializable {
     @Column(nullable = false)
     private EmployeeStatus status;
 
-    //Muitos colaboradores para um projeto
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "project_id")
     private ProjectEntity project;
 
-    //Um colaborador possui um cargo
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "position_id")
     private PositionEntity position;
 
-    @ManyToOne
-    @JoinColumn(name = "role_id")
-    private RoleEntity role;
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(name = "tb_employees_roles",
+            joinColumns = @JoinColumn(name = "employee_id"),
+            inverseJoinColumns = @JoinColumn(name = "role_id"))
+    private List<RoleEntity> roles;
 
-    //Um colaborador possui muitas techs
     @ManyToMany
     @JoinTable(name = "tb_employee_techs", joinColumns = @JoinColumn(
             name = "employee_id", referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(name = "tech_id", referencedColumnName = "id"))
     private List<TechEntity> techs;
 
-
     public EmployeeEntity() {
     }
 
     public EmployeeEntity(UUID id, String username, String password, String fullName, Date birthDate,
                           String email, Date startDate, String interesting, EmployeeStatus status,
-                          ProjectEntity project, PositionEntity position, RoleEntity role,
+                          ProjectEntity project, PositionEntity position, List<RoleEntity> roles,
                           List<TechEntity> techs) {
         this.id = id;
         this.username = username;
@@ -86,13 +84,13 @@ public class EmployeeEntity implements UserDetails, Serializable {
         this.status = status;
         this.project = project;
         this.position = position;
-        this.role = role;
+        this.roles = roles;
         this.techs = techs;
     }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return Collections.singleton(this.role);
+        return this.roles;
     }
 
     @Override
@@ -207,12 +205,13 @@ public class EmployeeEntity implements UserDetails, Serializable {
         this.position = position;
     }
 
-    public RoleEntity getRole() {
-        return role;
+    @JsonIgnore
+    public List<RoleEntity> getRoles() {
+        return roles;
     }
 
-    public void setRole(RoleEntity role) {
-        this.role = role;
+    public void setRoles(List<RoleEntity> roles) {
+        this.roles = roles;
     }
 
     @JsonIgnore

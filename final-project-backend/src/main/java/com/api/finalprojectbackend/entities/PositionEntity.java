@@ -1,7 +1,6 @@
 package com.api.finalprojectbackend.entities;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
-
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.List;
@@ -19,10 +18,6 @@ public class PositionEntity implements Serializable {
 
     @Column(nullable = false, unique = true, length = 40)
     private String name;
-
-    //@ManyToOne
-    //@JoinColumn(name = "employee_id")
-    //private List<EmployeeEntity> employees;
 
     @OneToMany(mappedBy = "position", fetch = FetchType.EAGER)
     private List<EmployeeEntity> employees;

@@ -4,10 +4,6 @@ import com.api.finalprojectbackend.dtos.PositionDTO;
 import com.api.finalprojectbackend.entities.PositionEntity;
 import com.api.finalprojectbackend.services.PositionService;
 import org.springframework.beans.BeanUtils;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
-import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -30,10 +26,7 @@ public class PositionController {
 
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PostMapping
-    public ResponseEntity<Object> saveRole(@RequestBody @Valid PositionDTO positionDTO) {
-
-        //Seria legal criar uma classe de validação para as mensagens da aplicação
-        //TODO: ver a questão de letras maiúsculas e minúsculas
+    public ResponseEntity<Object> savePosition(@RequestBody @Valid PositionDTO positionDTO) {
         if(positionService.existsByName(positionDTO.getname())) {
             return ResponseEntity.status(HttpStatus.CONFLICT).body("Conflict: Position is already registered!");
         }
@@ -43,53 +36,44 @@ public class PositionController {
         return ResponseEntity.status(HttpStatus.CREATED).body(positionService.save(positionEntity));
     }
 
-   /* @GetMapping
-    public ResponseEntity<Page<PositionEntity>> getAllRoles(@PageableDefault(page = 0, size = 10, sort = "id", direction = Sort.Direction.ASC) Pageable pageable) {
-        return ResponseEntity.status(HttpStatus.OK).body(positionService.findAll(pageable));
-    }*/
-
     @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_USER')")
     @GetMapping
-    public ResponseEntity<List<PositionEntity>> getAllRoles() {
+    public ResponseEntity<List<PositionEntity>> getAllPositions() {
         return ResponseEntity.status(HttpStatus.OK).body(positionService.findAll());
     }
 
     @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_USER')")
     @GetMapping("/{id}")
-    public ResponseEntity<Object> getRoleById(@PathVariable(value = "id") UUID id) {
-        Optional<PositionEntity> roleModelOptional = positionService.findById(id);
-        if(!roleModelOptional.isPresent()) {
+    public ResponseEntity<Object> getPositionById(@PathVariable(value = "id") UUID id) {
+        Optional<PositionEntity> positionModelOptional = positionService.findById(id);
+        if(!positionModelOptional.isPresent()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Position not found.");
         }
-        return ResponseEntity.status(HttpStatus.OK).body(roleModelOptional.get());
+        return ResponseEntity.status(HttpStatus.OK).body(positionModelOptional.get());
     }
 
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PutMapping("/{id}")
-    public ResponseEntity<Object> updateRole(@PathVariable(value = "id") UUID id, @RequestBody @Valid PositionDTO positionDTO) {
-        Optional<PositionEntity> roleModelOptional = positionService.findById(id);
-        if(!roleModelOptional.isPresent()) {
+    public ResponseEntity<Object> updatePosition(@PathVariable(value = "id") UUID id, @RequestBody @Valid PositionDTO positionDTO) {
+        Optional<PositionEntity> positionModelOptional = positionService.findById(id);
+        if(!positionModelOptional.isPresent()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Position not found.");
         }
-        PositionEntity positionEntity = roleModelOptional.get();
-        //Opção 1: abaixo setar os campos que podem ser modificados!
-        //roleModel.setRoleTitle(roleDTO.getRoleTitle());
-
-        //Opção 2: inserir apenas o id que o restante dos campos são atualizados:
+        PositionEntity positionEntity = positionModelOptional.get();
         BeanUtils.copyProperties(positionDTO, positionEntity);
-        positionEntity.setId(roleModelOptional.get().getId());
+        positionEntity.setId(positionModelOptional.get().getId());
 
         return ResponseEntity.status(HttpStatus.OK).body(positionService.save(positionEntity));
     }
 
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @DeleteMapping("/{id}")
-    public ResponseEntity<Object> deleteRole(@PathVariable(value = "id") UUID id) {
-        Optional<PositionEntity> roleModelOptional = positionService.findById(id);
-        if(!roleModelOptional.isPresent()) {
+    public ResponseEntity<Object> deletePosition(@PathVariable(value = "id") UUID id) {
+        Optional<PositionEntity> positionModelOptional = positionService.findById(id);
+        if(!positionModelOptional.isPresent()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Position not found.");
         }
-        positionService.delete(roleModelOptional.get());
+        positionService.delete(positionModelOptional.get());
         return ResponseEntity.status(HttpStatus.OK).body("Position deleted successfully!");
     }
 }

@@ -1,6 +1,7 @@
 package com.api.finalprojectbackend.entities;
 
 import com.api.finalprojectbackend.enums.Role;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.springframework.security.core.GrantedAuthority;
 import javax.persistence.*;
 import java.io.Serializable;
@@ -21,7 +22,7 @@ public class RoleEntity implements GrantedAuthority, Serializable {
     @Column(nullable = false, unique = true)
     private Role role;
 
-    @OneToMany(mappedBy = "role", fetch=FetchType.EAGER)
+    @ManyToMany(mappedBy = "roles", fetch=FetchType.EAGER)
     private List<EmployeeEntity> employees;
 
     @Override
@@ -45,6 +46,7 @@ public class RoleEntity implements GrantedAuthority, Serializable {
         this.role = role;
     }
 
+    @JsonIgnore
     public List<EmployeeEntity> getEmployees() {
         return employees;
     }

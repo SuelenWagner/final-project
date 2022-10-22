@@ -13,7 +13,6 @@ import java.util.UUID;
 @Transactional
 public class TechService {
 
-    //service precisa acionar o repository
     @Autowired
     private TechRepository techRepository;
 
@@ -26,7 +25,6 @@ public class TechService {
         return techRepository.save(techEntity);
     }
 
-    //método declarado no repository
     public boolean existsByName(String name) {
         return techRepository.existsByName(name);
     }

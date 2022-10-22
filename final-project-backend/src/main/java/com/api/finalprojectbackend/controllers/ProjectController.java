@@ -27,9 +27,6 @@ public class ProjectController {
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PostMapping
     public ResponseEntity<Object> saveProject(@RequestBody @Valid ProjectDTO projectDTO) {
-
-        //Seria legal criar uma classe de validação para as mensagens da aplicação
-        //TODO: ver a questão de letras maiúsculas e minúsculas
         if(projectService.existsByName(projectDTO.getName())) {
             return ResponseEntity.status(HttpStatus.CONFLICT).body("Conflict: Project is already registered!");
         }
@@ -38,12 +35,6 @@ public class ProjectController {
         BeanUtils.copyProperties(projectDTO, projectEntity);
         return ResponseEntity.status(HttpStatus.CREATED).body(projectService.save(projectEntity));
     }
-
-
-    /*@GetMapping
-    public ResponseEntity<Page<ProjectEntity>> getAllProjects(@PageableDefault(page = 0, size = 10, sort = "id", direction = Sort.Direction.ASC) Pageable pageable) {
-        return ResponseEntity.status(HttpStatus.OK).body(projectService.findAll(pageable));
-    }*/
 
     @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_USER')")
     @GetMapping
@@ -59,15 +50,6 @@ public class ProjectController {
         else return null;
     }
 
-    /*@GetMapping("/{id}")
-    public ResponseEntity<Object> getProjectById(@PathVariable(value = "id") UUID id) {
-        Optional<ProjectEntity> projectModelOptional = projectService.findById(id);
-        if(!projectModelOptional.isPresent()) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Project not found.");
-        }
-        return ResponseEntity.status(HttpStatus.OK).body(projectModelOptional.get());
-    }*/
-
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PutMapping("/{id}")
     public ResponseEntity<Object> updateProject(@PathVariable(value = "id") UUID id, @RequestBody @Valid ProjectDTO projectDTO) {
@@ -76,10 +58,6 @@ public class ProjectController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Project not found.");
         }
         ProjectEntity projectEntity = projectModelOptional.get();
-        //Opção 1: abaixo setar os campos que podem ser modificados!
-        //roleModel.setRoleTitle(roleDTO.getRoleTitle());
-
-        //Opção 2: inserir apenas o id que o restante dos campos são atualizados:
         BeanUtils.copyProperties(projectDTO, projectEntity);
         projectEntity.setId(projectModelOptional.get().getId());
 

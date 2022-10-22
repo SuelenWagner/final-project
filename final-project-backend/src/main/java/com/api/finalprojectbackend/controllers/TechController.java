@@ -27,9 +27,6 @@ public class TechController {
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PostMapping
     public ResponseEntity<Object> saveTech(@RequestBody @Valid TechDTO techDTO) {
-
-        //Seria legal criar uma classe de validação para as mensagens da aplicação
-        //TODO: ver a questão de letras maiúsculas e minúsculas
         if(techService.existsByName(techDTO.getName())) {
             return ResponseEntity.status(HttpStatus.CONFLICT).body("Conflict: Tech is already registered!");
         }
@@ -63,7 +60,6 @@ public class TechController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Tech not found.");
         }
         TechEntity techEntity = techModelOptional.get();
-        //abaixo setar os campos que podem ser modificados!
         techEntity.setName(techDTO.getName());
 
         return ResponseEntity.status(HttpStatus.OK).body(techService.save(techEntity));

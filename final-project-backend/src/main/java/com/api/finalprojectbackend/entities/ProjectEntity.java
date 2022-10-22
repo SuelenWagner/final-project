@@ -34,15 +34,12 @@ public class ProjectEntity implements Serializable {
     @Enumerated(EnumType.STRING)
     private ProjectStatus status;
 
-    //@ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.MERGE)
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "client_id")
     private ClientEntity client;
 
-    //Um projeto para muitos colaboradores
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "project")
     private List<EmployeeEntity> employees;
-
 
     public ProjectEntity() {
     }

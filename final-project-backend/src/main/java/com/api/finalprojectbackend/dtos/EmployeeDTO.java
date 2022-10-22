@@ -47,7 +47,8 @@ public class EmployeeDTO {
 
     private ProjectEntity project;
 
-    private RoleEntity role;
+    @NotNull
+    private List<RoleEntity> roles;
 
 
     public String getUsername() {
@@ -138,11 +139,11 @@ public class EmployeeDTO {
         this.project = project;
     }
 
-    public RoleEntity getRole() {
-        return role;
+    public List<RoleEntity> getRoles() {
+        return roles;
     }
 
-    public void setRole(RoleEntity role) {
-        this.role = role;
+    public void setRoles(List<RoleEntity> roles) {
+        this.roles = roles;
     }
 }

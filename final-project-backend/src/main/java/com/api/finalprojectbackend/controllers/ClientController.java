@@ -24,17 +24,9 @@ public class ClientController {
         this.clientService = clientService;
     }
 
-    /*@PostMapping
-    public ResponseEntity<Object> saveClient(@RequestBody @Valid ClientEntity clientEntity) {
-        return clientService.save(clientEntity);
-    }*/
-
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PostMapping
     public ResponseEntity<Object> saveClient(@RequestBody @Valid ClientDTO clientDTO) {
-
-        //Seria legal criar uma classe de validação para as mensagens da aplicação
-        //TODO: ver a questão de letras maiúsculas e minúsculas
         if(clientService.existsByName(clientDTO.getName())) {
             return ResponseEntity.status(HttpStatus.CONFLICT).body("Conflict: Client is already registered!");
         }
@@ -67,14 +59,6 @@ public class ClientController {
         if(!clientEntityOptional.isPresent()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Client not found.");
         }
-
-        //Opção 1: abaixo setar os campos que podem ser modificados!
-        //ClientEntity clientEntity = clientEntityOptional.get();
-        //clientEntity.setName(clientDTO.getName());
-        //clientEntity.setDescription(clientDTO.getDescription());
-        //clientEntity.setProjects(clientDTO.getProjects());
-
-        //Opção 2: inserir apenas o id que o restante dos campos são atualizados:
         ClientEntity clientEntity = new ClientEntity();
         BeanUtils.copyProperties(clientDTO, clientEntity);
         clientEntity.setId(clientEntityOptional.get().getId());

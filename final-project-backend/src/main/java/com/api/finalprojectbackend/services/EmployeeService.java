@@ -8,9 +8,9 @@ import javax.transaction.Transactional;
 import java.util.*;
 
 @Service
+@Transactional
 public class EmployeeService {
 
-    //service precisa acionar o repository
     @Autowired
     final EmployeeRepository employeeRepository;
 
@@ -23,36 +23,14 @@ public class EmployeeService {
         return employeeRepository.save(employeeEntity);
     }
 
-    //método declarado no repository
     public boolean existsByEmail(String email) {
         return employeeRepository.existsByEmail(email);
     }
-
-    /*public Page<EmployeeEntity> findAll(Pageable pageable) {
-        return employeeRepository.findAll(pageable).map(employeeEntity -> {
-            Optional.ofNullable(employeeEntity.getProject());
-            employeeEntity.setProject(new ProjectEntity());
-            Optional.ofNullable(employeeEntity.getTechs()).orElseGet(Collections::emptyList);
-            employeeEntity.setTechs(new ArrayList<>());
-            return employeeEntity;
-        });
-        //return employeeRepository.findAll(pageable);
-    }*/
 
     @Transactional
     public List<EmployeeEntity> findAll() {
         return employeeRepository.findAll();
     }
-
-    /*public Optional<EmployeeEntity> findById(UUID id) {
-        return employeeRepository.findById(id).map(employeeEntity -> {
-            Optional.ofNullable(employeeEntity.getProject());
-            employeeEntity.setProject(new ProjectEntity());
-            Optional.ofNullable(employeeEntity.getTechs()).orElseGet(Collections::emptyList);
-            employeeEntity.setTechs(new ArrayList<>());
-            return employeeEntity;
-        });
-    }*/
 
     @Transactional
     public Optional<EmployeeEntity> findById(UUID id) {
@@ -60,7 +38,7 @@ public class EmployeeService {
     }
 
     @Transactional
-    public void delete(EmployeeEntity roleEntity) {
-        employeeRepository.delete(roleEntity);
+    public void delete(EmployeeEntity employeeEntity) {
+        employeeRepository.delete(employeeEntity);
     }
 }
