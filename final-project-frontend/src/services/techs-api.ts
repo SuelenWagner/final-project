@@ -14,11 +14,17 @@ export const getAllTechs = () => {
     return http.get("/techs");
 };
 
+export const getTechById = (id: string) => {
+    return http.get(`/techs/${id}`);
+};
+
 export const createTech = (name: string) => {
     return http.post("/techs", {
         name
     });
 };
+
+//Falta o PUT
 
 export const deleteTech = (id: string) => {
     return http.delete(`/techs/${id}`);

@@ -1,32 +1,26 @@
-import React, { useState } from "react";
+import { useEffect, useState } from "react";
 import NavBar from "../components/NavBar";
 import {
   makeStyles,
   Container,
   Typography,
   TextField,
-  FormControl,
-  FormLabel,
-  FormControlLabel,
-  Radio,
-  RadioGroup,
   Button,
   Grid,
-  InputLabel,
-  Select,
-  MenuItem,
   List,
   ListItem,
-  ListItemAvatar,
-  Avatar,
   ListItemText,
   Divider,
 } from "@material-ui/core";
+import Toast from "../components/shared/Toast/Toast";
+import { EToastSeverity } from "../models/ToastSeverity";
+import { createClient, getClientById } from "../services/clients-api";
+import { iClients } from "../models/Clients";
+import { useHistory, useParams } from "react-router-dom";
 
 const useStyles = makeStyles((theme) => {
   return {
     page: {
-      //backgroundColor: "pink",
       marginTop: 30,
     },
     pageTitle: {
@@ -102,10 +96,8 @@ const useStyles = makeStyles((theme) => {
     },
     listData: {
       width: "100%",
-      //backgroundColor: "pink",
     },
-    listEmployeesName: {
-      display: "inline",
+    listDataText: {
       color: "#666",
     },
     buttonSubmit: {
@@ -115,13 +107,100 @@ const useStyles = makeStyles((theme) => {
   };
 });
 
+type ClientId = {
+  clientId: string;
+};
 export default function Client() {
   const classes = useStyles();
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
+  const [client, setClient] = useState({} as iClients);
+  const [isSnackbarOpen, setIsSnackbarOpen] = useState(false);
+  const [snackbarSeverity, setSnackbarSeverity] = useState(
+    EToastSeverity.SUCCESS
+  );
+  const [snackbarMessage, setSnackbarMessage] = useState("");
+  const history = useHistory();
+  const params: ClientId = useParams();
 
-  const handleSubmit = (e: { preventDefault: () => void }) => {
+  async function getClient(id: string) {
+    try {
+      const { data }: any = await getClientById(id);
+      setClient(data);
+      setDescription(data.description);
+      setName(data.name);
+    } catch {
+      handleSnackbar(EToastSeverity.ERROR, "Cliente não encontrado");
+    }
+  }
+
+  useEffect(() => {
+    if (params?.clientId) {
+      getClient(params.clientId);
+    }
+  }, [params]);
+
+  const handleSnackbar = (severity: EToastSeverity, message: string) => {
+    setSnackbarSeverity(severity);
+    setSnackbarMessage(message);
+    handleOpenSnackBar();
+  };
+
+  const handleOpenSnackBar = () => {
+    setIsSnackbarOpen(!isSnackbarOpen);
+  };
+
+  const handleSubmit = async (e: { preventDefault: () => void }) => {
     e.preventDefault();
+    const clientName = name.trim();
+    if (params?.clientId) {
+      editClient(clientName, description);
+    } else {
+      createNewClient(clientName, description);
+    }
+  };
+
+  const editClient = async (client: string, description: string) => {
+    try {
+      await editClient(client, description);
+      handleSnackbar(EToastSeverity.SUCCESS, "Cliente editado com sucesso!");
+      goToDashboardPage();
+    } catch (err) {
+      handleSnackbar(EToastSeverity.ERROR, "Erro ao editar cliente");
+    }
+  };
+
+  const createNewClient = async (newClient: string, description: string) => {
+    try {
+      await createClient(newClient, description);
+      clearForm();
+      handleSnackbar(
+        EToastSeverity.SUCCESS,
+        "Novo cliente cadastrado com sucesso!"
+      );
+      goToDashboardPage();
+    } catch (err) {
+      handleSnackbar(EToastSeverity.ERROR, "Erro ao cadastrar cliente");
+    }
+  };
+
+  const goToDashboardPage = () => {
+    setTimeout(() => {
+      history.push("/dashboard");
+    }, 3000);
+  };
+
+  const clearForm = () => {
+    setName("");
+    setDescription("");
+  };
+
+  const handleClientName = (name: string) => {
+    setName(name);
+  };
+
+  const handleClientDescription = (description: string) => {
+    setDescription(description);
   };
 
   return (
@@ -134,7 +213,8 @@ export default function Client() {
         <form noValidate autoComplete="off" onSubmit={handleSubmit}>
           <Grid container item xs={12} md={12}>
             <TextField
-              onChange={(e) => setName(e.target.value)}
+              onChange={(e) => handleClientName(e.target.value)}
+              value={name}
               label="Nome do Cliente"
               variant="outlined"
               className={classes.textfield}
@@ -144,7 +224,8 @@ export default function Client() {
             />
 
             <TextField
-              onChange={(e) => setDescription(e.target.value)}
+              onChange={(e) => handleClientDescription(e.target.value)}
+              value={description}
               className={classes.textfield}
               label="Descrição"
               placeholder="Insira aqui uma descrição sobre o cliente"
@@ -158,36 +239,42 @@ export default function Client() {
 
             <Grid container className={classes.buttonSubmit}>
               <Button type="submit" variant="outlined" color="primary">
-                Salvar
+                {client?.id ? "Editar" : "Salvar"}
               </Button>
             </Grid>
 
-            <Typography color="primary">Projetos deste cliente</Typography>
+            {client.projects ? (
+              <>
+                <Typography color="primary">
+                  Projetos vinculados a este cliente
+                </Typography>
 
-            <List className={classes.listData}>
-              <ListItem alignItems="center">
-                <ListItemText primary="Projeto 01" />
-              </ListItem>
-              <Divider variant="fullWidth" component="li" />
-              <ListItem alignItems="flex-start">
-                <ListItemText primary="Projeto 02" />
-              </ListItem>
-              <Divider variant="fullWidth" component="li" />
-              <ListItem alignItems="flex-start">
-                <ListItemText primary="Projeto 03" />
-              </ListItem>
-              <Divider variant="fullWidth" component="li" />
-              <ListItem alignItems="flex-start">
-                <ListItemText primary="Projeto 04" />
-              </ListItem>
-              <Divider variant="fullWidth" component="li" />
-              <ListItem alignItems="flex-start">
-                <ListItemText primary="Projeto 05" />
-              </ListItem>
-            </List>
+                <List className={classes.listData}>
+                  {client?.projects?.map((project: any) => (
+                    <ListItem alignItems="center" key={project.id}>
+                      <ListItemText
+                        primary={project.name}
+                        className={classes.listDataText}
+                      />
+                    </ListItem>
+                  ))}
+
+                  <Divider variant="fullWidth" component="li" />
+                </List>
+              </>
+            ) : (
+              <></>
+            )}
           </Grid>
         </form>
       </Container>
+
+      <Toast
+        severity={snackbarSeverity}
+        message={snackbarMessage}
+        isOpen={isSnackbarOpen}
+        handleSnackbar={handleOpenSnackBar}
+      />
     </div>
   );
 }

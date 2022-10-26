@@ -6,8 +6,8 @@ import "./App.css";
 import Project from "./pages/Project";
 import Employee from "./pages/Employee";
 import Client from "./pages/Client";
-import Position from "./pages/Position/Position";
-import Tech from "./pages/Tech/Tech";
+import Position from "./pages/Position";
+import Tech from "./pages/Tech";
 
 const theme = createTheme({
   palette: {
@@ -42,7 +42,7 @@ function App() {
           <Route path="/login">
             <Login />
           </Route>
-          <Route exact path="/">
+          <Route exact path="/dashboard">
             <Dashboard />
           </Route>
           <Route exact path="/project">
@@ -52,6 +52,9 @@ function App() {
             <Employee />
           </Route>
           <Route exact path="/client">
+            <Client />
+          </Route>
+          <Route path="/client/:clientId">
             <Client />
           </Route>
           <Route exact path="/position">

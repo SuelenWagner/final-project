@@ -14,17 +14,22 @@ export const getAllPositions = () => {
     return http.get("/positions");
 };
 
+
+export const getPositionById = (id: string) => {
+    return http.get(`/positions/${id}`);
+};
+
 export const createPosition = (name: string) => {
     return http.post("/positions", {
         name
     });
 };
 
-// export const updatePosition = (name : string) => {
+// export const updatePosition = (id: string, name : string) => {
 //     return http.put(`/positions/${id}`, {
 //         name
-//     })
-// }
+//     });
+// };
 
 export const deletePosition = (id: string) => {
     return http.delete(`/positions/${id}`);

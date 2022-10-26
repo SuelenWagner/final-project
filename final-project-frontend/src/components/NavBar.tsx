@@ -123,7 +123,7 @@ const NavBar = () => {
               <MenuItem className={classes.menuItem}>
                 <NavLink
                   exact
-                  to="/"
+                  to="/dashboard"
                   activeClassName="active"
                   className="navbar-item"
                 >
