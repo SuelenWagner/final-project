@@ -1,16 +1,24 @@
-import { iClients } from "./Clients";
+import { IClient } from "./Clients";
+import { IEmployee } from "./Employee";
 
-export interface iProjects {
+export enum EProjectStatus {
+    WAITING_START = "Aguardando Início",
+    IN_PROGRESS = "Em Progresso",
+    DONE = "Concluído",
+    CANCELED = "Cancelado"
+}
+
+export interface IProject {
     id: string;
     name: string;
     description: string;
-    startDate: Date;
-    finishDate: Date;
-    status: string;
-    client: iClients;
-
+    //startDate: Date | string;
+    //finishDate: Date | string;
+    status: EProjectStatus | string;
+    client?: IClient;
+    employees?: IEmployee[];
 }
 
-export interface iProjectsData {
-    data: iProjects[];
+export interface IProjectData {
+    data: IProject[];
 }

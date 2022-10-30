@@ -7,7 +7,6 @@ const useStyles = makeStyles((theme: Theme) =>
       display: "flex",
       flexWrap: "wrap",
       marginBottom: 40,
-      paddingLeft: 8,
     },
     textField: {
       width: 220,

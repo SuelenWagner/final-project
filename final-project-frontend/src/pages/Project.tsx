@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import NavBar from "../components/NavBar";
 import {
   makeStyles,
@@ -22,6 +22,18 @@ import {
   ListItemText,
   Divider,
 } from "@material-ui/core";
+import {
+  createProject,
+  getAllProjects,
+  getProjectById,
+  updateProject,
+} from "../services/projects-api";
+import Toast from "../components/shared/Toast/Toast";
+import { getAllClients } from "../services/clients-api";
+import { IClient } from "../models/Clients";
+import { IProject, EProjectStatus } from "../models/Projects";
+import { EToastSeverity } from "../models/ToastSeverity";
+import { useParams, useHistory } from "react-router-dom";
 
 const useStyles = makeStyles((theme) => {
   return {
@@ -59,7 +71,6 @@ const useStyles = makeStyles((theme) => {
     dateTextfield: {
       width: 220,
       marginBottom: 40,
-      marginRight: 40,
       marginLeft: 4,
       "& label": {
         color: "#666",
@@ -80,7 +91,7 @@ const useStyles = makeStyles((theme) => {
       },
     },
     selectStatus: {
-      width: 220,
+      width: 300,
       marginBottom: 40,
       "& label": {
         color: "#666",
@@ -108,320 +119,340 @@ const useStyles = makeStyles((theme) => {
       display: "inline",
       color: "#666",
     },
-    buttonSubmit: {
+    button: {
       fontSize: 14,
       justifyContent: "right",
+      marginBottom: 50,
+    },
+    buttonSubmit: {
+      color: "#3ada49",
+      border: "1px solid #3ada49",
+    },
+    buttonBack: {
+      marginRight: 50,
+    },
+    gridInline: {
+      display: "flex",
+      justifyContent: "space-between",
     },
   };
 });
 
+type ProjectId = {
+  projectId: string;
+};
+
 export default function Project() {
   const classes = useStyles();
-  const [title, setTitle] = useState("");
-  const [details, setDetails] = useState("");
-  const [titleError, setTitleError] = useState(false);
-  const [detailsError, setDetailsError] = useState(false);
-  const [status, setStatus] = React.useState("");
-  const [client, setClient] = React.useState("");
-  const [manager, setManager] = React.useState("");
+  const [name, setName] = useState("");
+  const [description, setDescription] = useState("");
+  const [status, setStatus] = useState("Em Progresso");
+  //const [startDate, setStartDate] = useState("");
+  //const [finishDate, setFinishDate] = useState("");
+  const [clients, setClients] = useState([]);
+  const [client, setClient] = useState({});
+  const [project, setProject] = useState({} as IProject);
+  const [projects, setProjects] = useState([]);
+  const [isSnackbarOpen, setIsSnackbarOpen] = useState(false);
+  const [snackbarSeverity, setSnackbarSeverity] = useState(
+    EToastSeverity.SUCCESS
+  );
+  const [snackbarMessage, setSnackbarMessage] = useState("");
+  const params: ProjectId = useParams();
+  const history = useHistory();
 
-  const handleStatusChange = (event: React.ChangeEvent<{ value: unknown }>) => {
-    setStatus(event.target.value as string);
+  async function getProject(id: string) {
+    try {
+      const { data }: any = await getProjectById(id);
+      setProject(data);
+      setName(data.name);
+      setDescription(data.description);
+      setStatus(data.status);
+      setClient(data.client);
+    } catch {
+      handleSnackbar(EToastSeverity.ERROR, "Projeto não encontrado");
+    }
+  }
+
+  useEffect(() => {
+    if (params?.projectId) {
+      getProject(params.projectId);
+    }
+  }, [params]);
+
+  const handleSnackbar = (severity: EToastSeverity, message: string) => {
+    setSnackbarSeverity(severity);
+    setSnackbarMessage(message);
+    handleOpenSnackBar();
   };
 
-  const handleClientChange = (event: React.ChangeEvent<{ value: unknown }>) => {
-    setClient(event.target.value as string);
+  const handleOpenSnackBar = () => {
+    setIsSnackbarOpen(!isSnackbarOpen);
   };
 
-  const handleManagerChange = (
-    event: React.ChangeEvent<{ value: unknown }>
-  ) => {
-    setManager(event.target.value as string);
-  };
-
-  const handleSubmit = (e: { preventDefault: () => void }) => {
+  const handleSubmit = async (e: any) => {
     e.preventDefault();
-    setTitleError(false);
-    setDetailsError(false);
+    e.stopPropagation();
 
-    if (title == "") {
-      setTitleError(true);
+    const projectName = name.trim();
+    if (params?.projectId) {
+      editProject(projectName, description);
+    } else {
+      createNewProject(projectName, description);
     }
+  };
 
-    if (details == "") {
-      setDetailsError(true);
+  const editProject = async (name: string, description: string) => {
+    try {
+      await updateProject(params.projectId, name, description);
+      handleSnackbar(EToastSeverity.SUCCESS, "Projeto editado com sucesso!");
+      goToDashboardPage();
+    } catch (err) {
+      handleSnackbar(EToastSeverity.ERROR, "Erro ao editar projeto");
     }
+  };
+
+  const createNewProject = async (newProject: string, description: string) => {
+    try {
+      await createProject(newProject, description);
+      clearForm();
+      handleSnackbar(
+        EToastSeverity.SUCCESS,
+        "Novo Projeto cadastrado com sucesso!"
+      );
+      goToDashboardPage();
+    } catch (err) {
+      handleSnackbar(EToastSeverity.ERROR, "Erro ao cadastrar projeto");
+    }
+  };
+
+  const goToDashboardPage = () => {
+    setTimeout(() => {
+      history.push("/dashboard");
+    }, 3000);
+  };
+
+  const goBackToDashboardPage = () => {
+    history.push("/dashboard");
+  };
+
+  const clearForm = () => {
+    setName("");
+    setDescription("");
+  };
+
+  // const handleStatusChange = (event: React.ChangeEvent<{ value: unknown }>) => {
+  //   setStatus(event.target.value as string);
+  // };
+
+  // const handleClientChange = (event: React.ChangeEvent<{ value: unknown }>) => {
+  //   setClient(event.target.value as string);
+  // };
+
+  // const handleManagerChange = (
+  //   event: React.ChangeEvent<{ value: unknown }>
+  // ) => {
+  //   setManager(event.target.value as string);
+  // };
+
+  // const handleSubmit = (e: { preventDefault: () => void }) => {
+  //   e.preventDefault();
+  //   setTitleError(false);
+  //   setDetailsError(false);
+
+  //   if (title === "" || details === "") setTitleError(true);
+  // };
+
+  const getClients = async () => {
+    try {
+      const { data } = await getAllClients();
+      setClients(data);
+    } catch (err) {
+      console.warn(err);
+    }
+  };
+
+  useEffect(() => {
+    getClients();
+  }, []);
+
+  const handleProjectName = (value: string) => {
+    setName(value);
+  };
+
+  const handleProjectDescription = (value: string) => {
+    setDescription(value);
+  };
+
+  const handleProjectClient = (value: any) => {
+    setClient(value);
+  };
+
+  const handleProjectStatus = (value: EProjectStatus) => {
+    setStatus(value);
   };
 
   return (
     <div>
       <NavBar />
       <Container maxWidth="lg" className={classes.page}>
-        <Typography color="secondary" className={classes.pageTitle}>
+        <Typography color="primary" className={classes.pageTitle}>
           Projeto
         </Typography>
         <form noValidate autoComplete="off" onSubmit={handleSubmit}>
-          <Grid container spacing={6}>
-            <Grid item xs={12} md={6} direction="column">
-              <TextField
-                onChange={(e) => setTitle(e.target.value)}
-                label="Nome do projeto"
-                variant="outlined"
-                className={classes.textfield}
-                color="primary"
-                fullWidth
-                required
-              />
+          <Grid item xs={12} md={12} direction="column">
+            <TextField
+              onChange={(e) => handleProjectName(e.target.value)}
+              value={name}
+              label="Nome do projeto"
+              variant="outlined"
+              className={classes.textfield}
+              color="primary"
+              fullWidth
+              required
+            />
 
-              <TextField
-                onChange={(e) => setDetails(e.target.value)}
-                label="Descrição do projeto"
-                placeholder="Este projeto se trata de um gerenciador de projetos..."
-                variant="outlined"
-                className={classes.textfield}
-                color="primary"
-                multiline
-                rows={4}
-                fullWidth
-                required
-              />
-
-              <FormControl
-                variant="outlined"
-                className={classes.textfield}
-                fullWidth
-                required
+            <TextField
+              onChange={(e) => handleProjectDescription(e.target.value)}
+              value={description}
+              label="Descrição do projeto"
+              placeholder="Este projeto se trata de um gerenciador de projetos..."
+              variant="outlined"
+              className={classes.textfield}
+              color="primary"
+              multiline
+              rows={4}
+              fullWidth
+              required
+            />
+            <FormControl
+              variant="outlined"
+              className={classes.textfield}
+              fullWidth
+            >
+              <InputLabel>Cliente</InputLabel>
+              <Select
+                value={client}
+                onChange={(e) => handleProjectClient(e.target.value)}
+                label="Client"
               >
-                <InputLabel>Cliente</InputLabel>
-                <Select
-                  value={client}
-                  onChange={handleClientChange}
-                  label="Client"
-                >
-                  <MenuItem value={10}>Cliente teste 01</MenuItem>
-                  <MenuItem value={20}>Cliente teste 02</MenuItem>
-                  <MenuItem value={30}>Cliente teste 03</MenuItem>
-                  <MenuItem value={40}>Cliente teste 04</MenuItem>
-                  <MenuItem value={50}>Cliente teste 05</MenuItem>
-                  <MenuItem value={60}>Cliente teste 06</MenuItem>
-                </Select>
-              </FormControl>
+                {clients &&
+                  clients.map((client: IClient) => (
+                    <MenuItem key={client.id} value={client.id}>
+                      {client.name}
+                    </MenuItem>
+                  ))}
+              </Select>
+            </FormControl>
 
+            <Grid container className={classes.gridInline}>
               <FormControl
                 variant="outlined"
-                className={classes.textfield}
+                required
                 fullWidth
-                required
-              >
-                <InputLabel>Gestor responsável</InputLabel>
-                <Select
-                  value={manager}
-                  onChange={handleManagerChange}
-                  label="Manager"
-                >
-                  <MenuItem value={10}>Gestor teste 01</MenuItem>
-                  <MenuItem value={20}>Gestor teste 02</MenuItem>
-                  <MenuItem value={30}>Gestor teste 03</MenuItem>
-                  <MenuItem value={40}>Gestor teste 04</MenuItem>
-                  <MenuItem value={50}>Gestor teste 05</MenuItem>
-                  <MenuItem value={60}>Gestor teste 06</MenuItem>
-                </Select>
-              </FormControl>
-
-              <FormControl
-                variant="outlined"
-                required
                 className={classes.selectStatus}
               >
-                <InputLabel>Status do projeto</InputLabel>
-                <Select
-                  value={status}
-                  onChange={handleStatusChange}
-                  label="Status"
-                >
-                  <MenuItem value={10}>Aguardando início</MenuItem>
-                  <MenuItem value={20}>Em andamento</MenuItem>
-                  <MenuItem value={30}>Cancelado</MenuItem>
-                  <MenuItem value={40}>Concluído</MenuItem>
+                <InputLabel>Status</InputLabel>
+                <Select value={status} label="Status">
+                  {projects &&
+                    projects.map((status: IProject) => (
+                      <MenuItem key={project.status} value={project.status}>
+                        {project.status}
+                      </MenuItem>
+                    ))}
+                  <MenuItem value={20}>Em andamento mock</MenuItem>
+                  <MenuItem value={30}>Cancelado mock</MenuItem>
+                  <MenuItem value={40}>Concluído mock</MenuItem>
                 </Select>
               </FormControl>
 
-              <Grid container spacing={1}>
-                <TextField
-                  label="Data de início"
-                  type="date"
-                  defaultValue="dd/MM/AAAA"
-                  variant="outlined"
-                  required
-                  className={classes.dateTextfield}
-                  InputLabelProps={{
-                    shrink: true,
-                  }}
-                />
-                <TextField
-                  label="Data de término"
-                  type="date"
-                  defaultValue="dd/MM/AAAA"
-                  variant="outlined"
-                  required
-                  className={classes.dateTextfield}
-                  InputLabelProps={{
-                    shrink: true,
-                  }}
-                />
-              </Grid>
-            </Grid>
-            <Grid item xs={12} md={6} direction="column">
-              <Typography color="secondary">
-                Colaboradores que trabalham neste projeto
-              </Typography>
+              <TextField
+                label="Data de início"
+                type="date"
+                defaultValue="dd/MM/AAAA"
+                variant="outlined"
+                className={classes.dateTextfield}
+                InputLabelProps={{
+                  shrink: true,
+                }}
+              />
 
-              <List className={classes.listEmployees}>
-                <ListItem alignItems="flex-start">
-                  <ListItemAvatar>
-                    <Avatar alt="Remy Sharp" src="/avatar-example.jpg" />
-                  </ListItemAvatar>
-                  <ListItemText
-                    primary="Nome completo do Colaborador 1 "
-                    secondary={
-                      <Typography
-                        component="span"
-                        variant="body2"
-                        className={classes.listEmployeesName}
-                        color="textPrimary"
-                      >
-                        Desenvolvedor Backend
-                      </Typography>
-                    }
-                  />
-                </ListItem>
-                <Divider variant="inset" component="li" />
-                <ListItem alignItems="flex-start">
-                  <ListItemAvatar>
-                    <Avatar
-                      alt="Nome completo do Colaborador"
-                      src="/avatar-example.jpg"
-                    />
-                  </ListItemAvatar>
-                  <ListItemText
-                    primary="Nome completo do Colaborador 2"
-                    secondary={
-                      <Typography
-                        component="span"
-                        variant="body2"
-                        className={classes.listEmployeesName}
-                        color="textPrimary"
-                      >
-                        Desenvolvedor Frontend
-                      </Typography>
-                    }
-                  />
-                </ListItem>
-                <Divider variant="inset" component="li" />
-                <ListItem alignItems="flex-start">
-                  <ListItemAvatar>
-                    <Avatar alt="Cindy Baker" src="/avatar-example.jpg" />
-                  </ListItemAvatar>
-                  <ListItemText
-                    primary="Nome completo do Colaborador 3"
-                    secondary={
-                      <Typography
-                        component="span"
-                        variant="body2"
-                        className={classes.listEmployeesName}
-                        color="textPrimary"
-                      >
-                        Analista de qualidade
-                      </Typography>
-                    }
-                  />
-                </ListItem>
-                <Divider variant="inset" component="li" />
-                <ListItem alignItems="flex-start">
-                  <ListItemAvatar>
-                    <Avatar alt="Cindy Baker" src="/avatar-example.jpg" />
-                  </ListItemAvatar>
-                  <ListItemText
-                    primary="Nome completo do Colaborador 4"
-                    secondary={
-                      <Typography
-                        component="span"
-                        variant="body2"
-                        className={classes.listEmployeesName}
-                        color="textPrimary"
-                      >
-                        DevOps
-                      </Typography>
-                    }
-                  />
-                </ListItem>
-                <Divider variant="inset" component="li" />
-                <ListItem alignItems="flex-start">
-                  <ListItemAvatar>
-                    <Avatar alt="Cindy Baker" src="/avatar-example.jpg" />
-                  </ListItemAvatar>
-                  <ListItemText
-                    primary="Nome completo do Colaborador 5"
-                    secondary={
-                      <Typography
-                        component="span"
-                        variant="body2"
-                        className={classes.listEmployeesName}
-                        color="textPrimary"
-                      >
-                        Scrum Master
-                      </Typography>
-                    }
-                  />
-                </ListItem>
-                <Divider variant="inset" component="li" />
-                <ListItem alignItems="flex-start">
-                  <ListItemAvatar>
-                    <Avatar alt="Cindy Baker" src="/avatar-example.jpg" />
-                  </ListItemAvatar>
-                  <ListItemText
-                    primary="Nome completo do Colaborador 6"
-                    secondary={
-                      <Typography
-                        component="span"
-                        variant="body2"
-                        className={classes.listEmployeesName}
-                        color="textPrimary"
-                      >
-                        Product Owner
-                      </Typography>
-                    }
-                  />
-                </ListItem>
-              </List>
-
-              <Grid container className={classes.buttonSubmit}>
-                <Button type="submit" variant="outlined" color="secondary">
-                  Salvar
-                </Button>
-              </Grid>
+              <TextField
+                label="Data de término"
+                type="date"
+                defaultValue="dd/MM/AAAA"
+                variant="outlined"
+                className={classes.dateTextfield}
+                InputLabelProps={{
+                  shrink: true,
+                }}
+              />
             </Grid>
+          </Grid>
+          <Grid container className={classes.button}>
+            <Button
+              variant="outlined"
+              color="secondary"
+              className={classes.buttonBack}
+              onClick={() => {
+                goBackToDashboardPage();
+              }}
+            >
+              Voltar ao dash
+            </Button>
+            <Button
+              type="submit"
+              variant="outlined"
+              className={classes.buttonSubmit}
+            >
+              {project?.id ? "Editar" : "Salvar"}
+            </Button>
+          </Grid>
+
+          <Grid item xs={12} md={12} direction="column">
+            <Typography color="primary">
+              Colaboradores que trabalham neste projeto
+            </Typography>
+
+            {project.employees ? (
+              <>
+                <List className={classes.listEmployees}>
+                  {project?.employees?.map((employee: any) => (
+                    <ListItem alignItems="flex-start" key={employee.id}>
+                      <ListItemAvatar>
+                        <Avatar>{employee.fullName[0].toUpperCase()}</Avatar>
+                      </ListItemAvatar>
+                      <ListItemText
+                        primary={employee.fullName}
+                        secondary={
+                          <Typography
+                            component="span"
+                            variant="body2"
+                            className={classes.listEmployeesName}
+                            color="textPrimary"
+                          >
+                            Desenvolvedor Backend
+                            {employee.position}
+                          </Typography>
+                        }
+                      />
+                    </ListItem>
+                  ))}
+                  <Divider variant="inset" component="li" />
+                </List>
+              </>
+            ) : (
+              <></>
+            )}
           </Grid>
         </form>
       </Container>
+      <Toast
+        severity={snackbarSeverity}
+        message={snackbarMessage}
+        isOpen={isSnackbarOpen}
+        handleSnackbar={handleOpenSnackBar}
+      />
     </div>
   );
 }
-
-const employeeList = [
-  {
-    name: "Nome completo do colaborador 1",
-    occupation: "Desenvolvedor Backend",
-  },
-  {
-    name: "Nome completo do colaborador 2",
-    occupation: "Desenvolvedor Frontend",
-  },
-  {
-    name: "Nome completo do colaborador 3",
-    occupation: "Analista de Qualidade",
-  },
-  { name: "Nome completo do colaborador 4", occupation: "Scrum Master" },
-  { name: "Nome completo do colaborador 5", occupation: "Product Owner" },
-  { name: "Nome completo do colaborador 6", occupation: "DevOps" },
-];

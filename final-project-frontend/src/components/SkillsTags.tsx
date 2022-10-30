@@ -51,7 +51,7 @@ export default function SkillsTags() {
           value.map((option: string, index: number) => (
             <Chip
               variant="outlined"
-              color="secondary"
+              color="primary"
               label={option}
               {...getTagProps({ index })}
             />

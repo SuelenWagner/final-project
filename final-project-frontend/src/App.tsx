@@ -15,10 +15,10 @@ const theme = createTheme({
       main: "#2FA4FF",
     },
     secondary: {
-      //main: "#fa91b1",
-      //main: "#3ada49",
+      main: "#fa91b1",
+      light: "#3ada49",
       //main: "#FF8F26",
-      main: "#FD5D90",
+      //main: "#FD5D90",
       //main: "#F86483",
       //main: "#666",
     },
@@ -48,7 +48,13 @@ function App() {
           <Route exact path="/project">
             <Project />
           </Route>
+          <Route exact path="/project/:projectId">
+            <Project />
+          </Route>
           <Route exact path="/employee">
+            <Employee />
+          </Route>
+          <Route path="/employee/:employeeId">
             <Employee />
           </Route>
           <Route exact path="/client">

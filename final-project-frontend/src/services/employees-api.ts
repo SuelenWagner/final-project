@@ -1,7 +1,7 @@
 import axios from "axios";
 import { environment } from "../environment/environment";
 import { iPositions } from "../models/Positions";
-import { iProjects } from "../models/Projects";
+import { IProject } from "../models/Projects";
 import { iTechs } from "../models/Techs";
 
 
@@ -39,7 +39,7 @@ export const getEmployeeById = (id: string) => {
     });
 };*/
 
-export const createEmployee = (username: string, password: string, fullName: string, birthDate: Date, email:string, startDate: Date, interesting: string, status: string, project: iProjects, position: iPositions, techs: iTechs) => {
+export const createEmployee = (username: string, password: string, fullName: string, birthDate: Date, email:string, startDate: Date, interesting: string, status: string, project: IProject, position: iPositions, techs: iTechs) => {
     return http.post("/employees", {
         username,
         password,

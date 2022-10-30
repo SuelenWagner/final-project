@@ -1,8 +1,9 @@
 import { iPositions } from "./Positions";
-import { iProjects } from "./Projects";
+import { IProject } from "./Projects";
 import { iTechs } from "./Techs";
 
-export interface iEmployees {
+export interface IEmployee {
+    id: string;
     username: string;
     password: string; 
     fullName: string; 
@@ -11,12 +12,12 @@ export interface iEmployees {
     startDate: Date; 
     interesting: string; 
     status: string;
-    project: iProjects; 
+    project: IProject; 
     position: iPositions; 
     techs: iTechs;
-
+    role: string;
 }
 
-export interface iEmployeesData {
-    data: iEmployees[];
+export interface IEmployeeData {
+    data: IEmployee[];
 }

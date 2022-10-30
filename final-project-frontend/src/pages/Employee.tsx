@@ -18,6 +18,9 @@ import {
   RadioGroup,
   Button,
   Grid,
+  Select,
+  InputLabel,
+  MenuItem,
 } from "@material-ui/core";
 import { useHistory } from "react-router-dom";
 
@@ -75,126 +78,232 @@ const useStyles = makeStyles({
   },
   radioStatus: {
     marginBottom: 40,
-    marginLeft: 50,
     "& label": {
       color: "#666",
     },
     "& label.Mui-focused": {
       color: "#666",
     },
+    "& .MuiRadio-colorSecondary.Mui-checked": {
+      color: "#2FA4FF",
+    },
   },
-  buttonSubmit: {
+  button: {
     fontSize: 14,
     justifyContent: "right",
+    marginBottom: 50,
+  },
+  buttonSubmit: {
+    color: "#3ada49",
+    border: "1px solid #3ada49",
+  },
+  buttonBack: {
+    marginRight: 50,
+  },
+  usernameForm: {
+    width: 450,
+    marginRight: 75,
+    marginBottom: 40,
+    "& label": {
+      color: "#666",
+    },
+    "& label.Mui-focused": {
+      color: "#666",
+    },
+    "& .MuiOutlinedInput-root": {
+      "& fieldset": {
+        borderColor: "#666",
+      },
+      "&:hover fieldset": {
+        borderColor: "#666",
+      },
+      "&.Mui-focused fieldset": {
+        borderColor: "#666",
+      },
+    },
+    "& .MuiInputBase-root": {
+      color: "#666",
+    },
+  },
+  grid1Inline: {
+    display: "flex",
+    justifyContent: "start",
+  },
+
+  grid2Inline: {
+    display: "flex",
+    justifyContent: "space-between",
+  },
+  grid3Inline: {
+    display: "flex",
+    justifyContent: "start",
+  },
+  formControl: {
+    width: 450,
+    marginRight: 75,
+    marginBottom: 40,
+    "& label": {
+      color: "#666",
+    },
+    "& label.Mui-focused": {
+      color: "#666",
+    },
+    "& .MuiOutlinedInput-root": {
+      "& fieldset": {
+        borderColor: "#666",
+      },
+      "&:hover fieldset": {
+        borderColor: "#666",
+      },
+      "&.Mui-focused fieldset": {
+        borderColor: "#666",
+      },
+    },
   },
 });
 
 export default function Employee() {
   const classes = useStyles();
-  const history = useHistory();
-  const [title, setTitle] = useState("");
-  const [details, setDetails] = useState("");
-  const [titleError, setTitleError] = useState(false);
-  const [detailsError, setDetailsError] = useState(false);
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const [nameError, setNameError] = useState(false);
+  const [emailError, setEmailError] = useState(false);
+  const [usernameError, setUsernameError] = useState(false);
   const [status, setStatus] = useState("active");
+  const history = useHistory();
 
   const handleSubmit = (e: { preventDefault: () => void }) => {
     e.preventDefault();
-    setTitleError(false);
-    setDetailsError(false);
+    setNameError(false);
+    setEmailError(false);
+    setUsernameError(false);
 
-    if (title == "") {
-      setTitleError(true);
+    if (name == "" && email == "" && username == "") {
+      setNameError(true);
+      setEmailError(true);
+      setUsernameError(true);
     }
+  };
 
-    if (details == "") {
-      setDetailsError(true);
-    }
+  const goBackToDashboardPage = () => {
+    history.push("/dashboard");
   };
 
   return (
     <div>
       <NavBar />
       <Container maxWidth="lg" className={classes.page}>
-        <Typography className={classes.pageTitle} color="secondary">
+        <Typography className={classes.pageTitle} color="primary">
           Colaborador
         </Typography>
         <Grid>
           <form noValidate autoComplete="off" onSubmit={handleSubmit}>
-            <Grid container spacing={6}>
-              <Grid item xs={12} md={6} direction="column">
+            <Grid container xs={12} md={12} direction="column">
+              <TextField
+                onChange={(e) => setName(e.target.value)}
+                className={classes.textfield}
+                label="Nome completo do colaborador"
+                variant="outlined"
+                color="primary"
+                fullWidth
+                required
+                error={nameError}
+              />
+
+              <TextField
+                onChange={(e) => setEmail(e.target.value)}
+                className={classes.textfield}
+                label="Email"
+                variant="outlined"
+                color="primary"
+                type="email"
+                required
+                error={emailError}
+              />
+              <Grid container className={classes.grid1Inline}>
                 <TextField
-                  onChange={(e) => setTitle(e.target.value)}
-                  className={classes.textfield}
-                  label="Nome completo do colaborador"
+                  onChange={(e) => setUsername(e.target.value)}
+                  className={classes.usernameForm}
+                  label="Usuário"
                   variant="outlined"
                   color="primary"
-                  fullWidth
                   required
-                  error={titleError}
+                  error={usernameError}
                 />
 
-                <Grid container spacing={2}>
-                  <BirthDate />
-                  <FormControl className={classes.radioStatus}>
-                    <FormLabel>Status</FormLabel>
-                    <RadioGroup
-                      value={status}
-                      onChange={(e) => setStatus(e.target.value)}
-                    >
-                      <Grid container spacing={1}>
-                        <FormControlLabel
-                          value="active"
-                          control={<Radio />}
-                          label="Ativo"
-                        />
-                        <FormControlLabel
-                          value="inactive"
-                          control={<Radio />}
-                          label="Inativo"
-                        />
-                      </Grid>
-                    </RadioGroup>
-                  </FormControl>
-                </Grid>
+                <TextField
+                  onChange={(e) => setPassword(e.target.value)}
+                  className={classes.usernameForm}
+                  label="Senha"
+                  variant="outlined"
+                  color="primary"
+                  required
+                  type="password"
+                />
+              </Grid>
 
+              <Grid container className={classes.grid2Inline}>
+                <BirthDate />
                 <StartDate />
+                <FormControl className={classes.radioStatus}>
+                  <FormLabel>Status</FormLabel>
+                  <RadioGroup
+                    value={status}
+                    onChange={(e) => setStatus(e.target.value)}
+                  >
+                    <Grid container>
+                      <FormControlLabel
+                        value="active"
+                        control={<Radio />}
+                        label="Ativo"
+                      />
+                      <FormControlLabel
+                        value="inactive"
+                        control={<Radio />}
+                        label="Inativo"
+                      />
+                    </Grid>
+                  </RadioGroup>
+                </FormControl>
+              </Grid>
 
-                <TextField
-                  onChange={(e) => setTitle(e.target.value)}
-                  className={classes.textfield}
-                  label="Email"
-                  variant="outlined"
-                  color="primary"
-                  type="email"
-                  fullWidth
-                  required
-                />
-
+              <Grid container className={classes.grid3Inline}>
+                <SelectProject />
                 <SelectOccupation />
               </Grid>
-              <Grid item xs={12} md={6} direction="column">
-                <SelectClient />
-                <SelectProject />
-                <SkillsTags />
+              <SkillsTags />
 
-                <TextField
-                  onChange={(e) => setDetails(e.target.value)}
-                  className={classes.textfield}
-                  label="Interesses"
-                  placeholder="Insira aqui interesses de aprender ou ensinar"
+              <TextField
+                className={classes.textfield}
+                label="Interesses"
+                placeholder="Insira aqui interesses de aprender ou ensinar"
+                variant="outlined"
+                color="primary"
+                multiline
+                rows={4}
+                fullWidth
+              />
+
+              <Grid container className={classes.button}>
+                <Button
                   variant="outlined"
-                  color="primary"
-                  multiline
-                  rows={4}
-                  fullWidth
-                />
-
-                <Grid container className={classes.buttonSubmit}>
-                  <Button type="submit" variant="outlined" color="secondary">
-                    Salvar
-                  </Button>
-                </Grid>
+                  color="secondary"
+                  className={classes.buttonBack}
+                  onClick={() => {
+                    goBackToDashboardPage();
+                  }}
+                >
+                  Voltar ao dash
+                </Button>
+                <Button
+                  type="submit"
+                  variant="outlined"
+                  className={classes.buttonSubmit}
+                >
+                  Salvar
+                </Button>
               </Grid>
             </Grid>
           </form>

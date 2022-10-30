@@ -8,6 +8,8 @@ import Select from "@material-ui/core/Select";
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     formControl: {
+      width: 450,
+      marginRight: 75,
       marginBottom: 40,
       "& label": {
         color: "#666",
@@ -39,29 +41,22 @@ export default function SelectProject() {
   };
 
   return (
-    <div>
-      <FormControl
-        variant="outlined"
-        className={classes.formControl}
-        required
-        fullWidth
+    <FormControl variant="outlined" className={classes.formControl}>
+      <InputLabel id="demo-simple-select-outlined-label">Projeto</InputLabel>
+      <Select
+        labelId="demo-simple-select-outlined-label"
+        id="demo-simple-select-outlined"
+        value={project}
+        onChange={handleChange}
+        label="Projeto"
       >
-        <InputLabel id="demo-simple-select-outlined-label">Projeto</InputLabel>
-        <Select
-          labelId="demo-simple-select-outlined-label"
-          id="demo-simple-select-outlined"
-          value={project}
-          onChange={handleChange}
-          label="Projeto"
-        >
-          <MenuItem value={10}>Projeto teste 01</MenuItem>
-          <MenuItem value={20}>Projeto teste 02</MenuItem>
-          <MenuItem value={30}>Projeto teste 03</MenuItem>
-          <MenuItem value={40}>Projeto teste 04</MenuItem>
-          <MenuItem value={50}>Projeto teste 05</MenuItem>
-          <MenuItem value={60}>Projeto teste 06</MenuItem>
-        </Select>
-      </FormControl>
-    </div>
+        <MenuItem value={10}>Projeto teste 01</MenuItem>
+        <MenuItem value={20}>Projeto teste 02</MenuItem>
+        <MenuItem value={30}>Projeto teste 03</MenuItem>
+        <MenuItem value={40}>Projeto teste 04</MenuItem>
+        <MenuItem value={50}>Projeto teste 05</MenuItem>
+        <MenuItem value={60}>Projeto teste 06</MenuItem>
+      </Select>
+    </FormControl>
   );
 }

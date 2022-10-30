@@ -11,6 +11,10 @@
   
 }
 
+body {
+  padding-top: 70px;
+}
+
 .navbar-item {
   color: #666666;
   text-decoration: none;

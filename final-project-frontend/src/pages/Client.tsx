@@ -14,8 +14,12 @@ import {
 } from "@material-ui/core";
 import Toast from "../components/shared/Toast/Toast";
 import { EToastSeverity } from "../models/ToastSeverity";
-import { createClient, getClientById } from "../services/clients-api";
-import { iClients } from "../models/Clients";
+import {
+  createClient,
+  getClientById,
+  updateClient,
+} from "../services/clients-api";
+import { IClient } from "../models/Clients";
 import { useHistory, useParams } from "react-router-dom";
 
 const useStyles = makeStyles((theme) => {
@@ -100,9 +104,17 @@ const useStyles = makeStyles((theme) => {
     listDataText: {
       color: "#666",
     },
-    buttonSubmit: {
+    button: {
       fontSize: 14,
       justifyContent: "right",
+      marginBottom: 50,
+    },
+    buttonSubmit: {
+      color: "#3ada49",
+      border: "1px solid #3ada49",
+    },
+    buttonBack: {
+      marginRight: 50,
     },
   };
 });
@@ -114,7 +126,7 @@ export default function Client() {
   const classes = useStyles();
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
-  const [client, setClient] = useState({} as iClients);
+  const [client, setClient] = useState({} as IClient);
   const [isSnackbarOpen, setIsSnackbarOpen] = useState(false);
   const [snackbarSeverity, setSnackbarSeverity] = useState(
     EToastSeverity.SUCCESS
@@ -138,6 +150,7 @@ export default function Client() {
     if (params?.clientId) {
       getClient(params.clientId);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [params]);
 
   const handleSnackbar = (severity: EToastSeverity, message: string) => {
@@ -150,8 +163,10 @@ export default function Client() {
     setIsSnackbarOpen(!isSnackbarOpen);
   };
 
-  const handleSubmit = async (e: { preventDefault: () => void }) => {
+  const handleSubmit = async (e: any) => {
     e.preventDefault();
+    e.stopPropagation();
+
     const clientName = name.trim();
     if (params?.clientId) {
       editClient(clientName, description);
@@ -162,7 +177,7 @@ export default function Client() {
 
   const editClient = async (client: string, description: string) => {
     try {
-      await editClient(client, description);
+      await updateClient(params.clientId, client, description);
       handleSnackbar(EToastSeverity.SUCCESS, "Cliente editado com sucesso!");
       goToDashboardPage();
     } catch (err) {
@@ -188,6 +203,10 @@ export default function Client() {
     setTimeout(() => {
       history.push("/dashboard");
     }, 3000);
+  };
+
+  const goBackToDashboardPage = () => {
+    history.push("/dashboard");
   };
 
   const clearForm = () => {
@@ -237,8 +256,22 @@ export default function Client() {
               required
             />
 
-            <Grid container className={classes.buttonSubmit}>
-              <Button type="submit" variant="outlined" color="primary">
+            <Grid container className={classes.button}>
+              <Button
+                variant="outlined"
+                color="secondary"
+                className={classes.buttonBack}
+                onClick={() => {
+                  goBackToDashboardPage();
+                }}
+              >
+                Voltar ao dash
+              </Button>
+              <Button
+                type="submit"
+                variant="outlined"
+                className={classes.buttonSubmit}
+              >
                 {client?.id ? "Editar" : "Salvar"}
               </Button>
             </Grid>

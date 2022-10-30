@@ -21,7 +21,7 @@ import { NavLink } from "react-router-dom";
 const useStyles = makeStyles((theme) => {
   return {
     appbar: {
-      position: "sticky",
+      position: "fixed",
       backgroundColor: "#fff",
       boxShadow: "0 1px 6px 1px lightGray",
     },
@@ -64,7 +64,6 @@ const useStyles = makeStyles((theme) => {
 });
 
 const pages = ["Dashboard", "Projetos", "Colaboradores"];
-
 const settings = ["Minhas infos", "Logout"];
 
 const NavBar = () => {
@@ -96,7 +95,7 @@ const NavBar = () => {
     <AppBar className={classes.appbar} elevation={1}>
       <Container maxWidth="xl">
         <Toolbar disableGutters>
-          <PoolRoundedIcon className={classes.appBarLogo} />
+          <PoolRoundedIcon className={classes.appBarLogo}></PoolRoundedIcon>
           <Typography
             // noWrap -> comentado, pois acaba por cortar o L do Pool na tela
             noWrap
@@ -137,7 +136,7 @@ const NavBar = () => {
                   activeClassName="active"
                   className="navbar-item"
                 >
-                  Projetos
+                  Projeto
                 </NavLink>
               </MenuItem>
               <MenuItem className={classes.menuItem}>
@@ -146,7 +145,7 @@ const NavBar = () => {
                   activeClassName="active"
                   className="navbar-item"
                 >
-                  Colaboradores
+                  Colaborador
                 </NavLink>
               </MenuItem>
               <MenuItem className={classes.menuItem}>
@@ -155,7 +154,7 @@ const NavBar = () => {
                   activeClassName="active"
                   className="navbar-item"
                 >
-                  Clientes
+                  Cliente
                 </NavLink>
               </MenuItem>
               <MenuItem className={classes.menuItem}>
@@ -184,7 +183,7 @@ const NavBar = () => {
             component="div"
             className={classes.appBarPersonName}
           >
-            Reginaldo Jamirinho Ximira
+            Reginaldo Gerente Empresa 1
           </Typography>
           <Box
             sx={{

@@ -1,12 +1,12 @@
-import { iProjects } from "./Projects";
+import { IProject } from "./Projects";
 
-export interface iClients {
+export interface IClient {
     id: string;
     name: string;
     description: string;
-    projects: iProjects[];
+    projects?: IProject[];
 }
 
-export interface iClientsData {
-    data: iClients[];
+export interface IClientData {
+    data: IClient[];
 }

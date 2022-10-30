@@ -24,7 +24,6 @@ export const createClient = (name: string, description: string) => {
     });
 };
 
-//Falta o PUT
 export const updateClient = (id: string, name : string, description: string) => {
     return http.put(`/clients/${id}`, {
         name,
