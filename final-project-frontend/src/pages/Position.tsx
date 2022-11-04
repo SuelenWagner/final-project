@@ -136,14 +136,13 @@ export default function Position() {
   const [positions, setPositions] = useState([] as IPosition[]);
   const [selectedPosition, setSelectedPosition] = useState({} as IPosition);
   const [filteredPositions, setFilteredPositions] = useState([] as IPosition[]);
+  const [isPositionModalOpen, setPositionModalOpen] = useState(false);
+  const history = useHistory();
   const [isSnackbarOpen, setIsSnackbarOpen] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState("");
   const [snackbarSeverity, setSnackbarSeverity] = useState(
     EToastSeverity.SUCCESS
   );
-  const [snackbarMessage, setSnackbarMessage] = useState("");
-  const [isPositionModalOpen, setPositionModalOpen] = useState(false);
-
-  const history = useHistory();
 
   async function getPositions() {
     try {
@@ -183,7 +182,13 @@ export default function Position() {
       );
     } catch (err) {
       handleSnackbar(EToastSeverity.ERROR, "Erro ao cadastrar cargo");
+      console.error(err);
     }
+  };
+
+  const clearForm = () => {
+    setNewName("");
+    setName("");
   };
 
   const handleDeletePosition = async (id: string) => {
@@ -195,11 +200,6 @@ export default function Position() {
     } catch (err) {
       console.error(err);
     }
-  };
-
-  const clearForm = () => {
-    setNewName("");
-    setName("");
   };
 
   const handleSnackbar = (severity: EToastSeverity, message: string) => {
@@ -226,13 +226,13 @@ export default function Position() {
     setName(name);
   };
 
-  const goBackToDashboardPage = () => {
-    history.push("/dashboard");
-  };
-
   const handleOpenPositionModal = (position: IPosition) => {
     setPositionModalOpen(true);
     setSelectedPosition(position);
+  };
+
+  const goBackToDashboardPage = () => {
+    history.push("/dashboard");
   };
 
   return (

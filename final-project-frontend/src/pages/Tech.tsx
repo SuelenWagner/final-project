@@ -23,6 +23,7 @@ import DeleteIcon from "@material-ui/icons/Delete";
 import EditIcon from "@material-ui/icons/Edit";
 import Toast from "../components/shared/Toast/Toast";
 import { useHistory } from "react-router-dom";
+import TechModal from "../components/TechModal";
 
 const useStyles = makeStyles((theme) => {
   return {
@@ -117,15 +118,14 @@ export default function Tech() {
   const [techs, setTechs] = useState([] as ITech[]);
   const [newName, setNewName] = useState("");
   const [filteredTechs, setFilteredTechs] = useState([] as ITech[]);
+  const [selectedTech, setSelectedTech] = useState({} as ITech);
+  const [isTechModalOpen, setTechModalOpen] = useState(false);
+  const history = useHistory();
   const [isSnackbarOpen, setIsSnackbarOpen] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState("");
   const [snackbarSeverity, setSnackbarSeverity] = useState(
     EToastSeverity.SUCCESS
   );
-  const [snackbarMessage, setSnackbarMessage] = useState("");
-  const [open, setOpen] = React.useState(false);
-  const handleOpen = () => setOpen(true);
-  const handleClose = () => setOpen(false);
-  const history = useHistory();
 
   async function getTechs() {
     try {
@@ -145,13 +145,19 @@ export default function Tech() {
     getTechs();
   }, []);
 
+  useEffect(() => {
+    if (!isTechModalOpen) {
+      getTechs();
+    }
+  }, [isTechModalOpen]);
+
   const handleSubmit = async (e: { preventDefault: () => void }) => {
     e.preventDefault();
-    const newTechs = name.trim();
+    const newTech = newName.trim();
 
     try {
-      await createTech(newTechs);
-      setName("");
+      await createTech(newTech);
+      clearForm();
       getTechs();
       handleSnackbar(
         EToastSeverity.SUCCESS,
@@ -163,24 +169,15 @@ export default function Tech() {
     }
   };
 
-  const handleNewTechs = (newName: string) => {
-    setNewName(newName);
-  };
-
-  const handleEditTech = (newName: string) => {
-    const aaa = filteredTechs.filter((fp) => fp.name === newName);
-    console.log(aaa);
-    //   try {
-    //     await updateTech(name);
-    //     getTechs();
-    //   } catch (err) {
-    //     console.error(err);
-    //   }
+  const clearForm = () => {
+    setNewName("");
+    setName("");
   };
 
   const handleDeleteTech = async (id: string) => {
     try {
       await deleteTech(id);
+      clearForm();
       handleSnackbar(
         EToastSeverity.WARNING,
         "Tecnologia deletada com sucesso!"
@@ -201,18 +198,23 @@ export default function Tech() {
     setIsSnackbarOpen(!isSnackbarOpen);
   };
 
-  const handleTechs = (name: string) => {
+  const filterTechs = (name: string) => {
     if (name.length > 0) {
-      const filteredTechnologies = techs.filter((t) =>
-        t.name.trim().includes(name)
+      const filteredTechs = techs.filter((p) =>
+        p.name.toLowerCase().trim().includes(name.toLowerCase())
       );
-      const technologies = filteredTechnologies;
+      const technologies = filteredTechs;
       setFilteredTechs(technologies);
     } else {
       setFilteredTechs(techs);
     }
-
+    setNewName(name);
     setName(name);
+  };
+
+  const handleOpenTechModal = (tech: ITech) => {
+    setTechModalOpen(true);
+    setSelectedTech(tech);
   };
 
   const goBackToDashboardPage = () => {
@@ -230,7 +232,7 @@ export default function Tech() {
           <Grid container item xs={12} md={12}>
             <Grid container>
               <TextField
-                onChange={(e) => handleTechs(e.target.value)}
+                onChange={(e) => filterTechs(e.target.value)}
                 value={name}
                 label="Cadastre ou filtre por tecnologias, skills, idiomas entre outros"
                 variant="outlined"
@@ -258,15 +260,6 @@ export default function Tech() {
                   Salvar
                 </Button>
               </Grid>
-
-              {/* <Button
-                type="submit"
-                variant="outlined"
-                className={classes.buttonSubmit}
-                disabled={name === ""}
-              >
-                Salvar
-              </Button>*/}
             </Grid>
 
             <List className={classes.listData}>
@@ -278,41 +271,13 @@ export default function Tech() {
                         primary={tech.name}
                         className={classes.listDataText}
                       />
-                      <IconButton onClick={() => handleOpen()}>
-                        <EditIcon className={classes.editIcon} />
-                      </IconButton>
-
-                      <Modal
-                        open={open}
-                        onClose={handleClose}
-                        className={classes.editModal}
-                        BackdropProps={{
-                          style: {
-                            backgroundColor: "rgba(120, 120, 120, 0.04)",
-                          },
+                      <IconButton
+                        onClick={() => {
+                          handleOpenTechModal(tech);
                         }}
                       >
-                        <Box className={classes.editModalBox}>
-                          <TextField
-                            onChange={(e) => handleEditTech(e.target.value)}
-                            value={name}
-                            label="Alterar tech"
-                            variant="outlined"
-                            className={classes.textfield}
-                            color="primary"
-                            fullWidth
-                            required
-                          />
-                          <Button
-                            type="submit"
-                            variant="outlined"
-                            className={classes.editModalButtonSave}
-                          >
-                            Salvar alterações
-                          </Button>
-                        </Box>
-                      </Modal>
-
+                        <EditIcon className={classes.editIcon} />
+                      </IconButton>
                       <IconButton onClick={() => handleDeleteTech(tech.id)}>
                         <DeleteIcon className={classes.deleteIcon} />
                       </IconButton>
@@ -320,6 +285,12 @@ export default function Tech() {
                     <Divider variant="fullWidth" component="li" />
                   </div>
                 ))}
+
+              <TechModal
+                tech={selectedTech}
+                setTechModalOpen={setTechModalOpen}
+                isTechModalOpen={isTechModalOpen}
+              />
             </List>
           </Grid>
         </form>
