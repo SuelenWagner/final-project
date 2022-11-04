@@ -141,14 +141,14 @@ export default function Login() {
             </Button>
             <div style={{ height: 20 }} />
           </div>
-          <Grid container justify="center" spacing={2}>
+          {/* <Grid container justify="center" spacing={2}>
             <Grid item>
               <Button color="primary" className={classes.btnRegister}>
                 Cadastre-se
               </Button>
             </Grid>
           </Grid>
-          <div />
+          <div /> */}
         </Grid>
       </Grid>
     </div>

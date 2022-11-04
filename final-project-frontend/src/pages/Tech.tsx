@@ -14,16 +14,19 @@ import {
   ListItemText,
   Divider,
   IconButton,
+  Modal,
+  Box,
 } from "@material-ui/core";
 import { getAllTechs, createTech, deleteTech } from "../services/techs-api";
 import { iTechs } from "../models/Techs";
-import DeleteOutlineIcon from "@material-ui/icons/DeleteOutline";
+import DeleteIcon from "@material-ui/icons/Delete";
+import EditIcon from "@material-ui/icons/Edit";
 import Toast from "../components/shared/Toast/Toast";
+import { useHistory } from "react-router-dom";
 
 const useStyles = makeStyles((theme) => {
   return {
     page: {
-      //backgroundColor: "pink",
       marginTop: 30,
     },
     pageTitle: {
@@ -60,9 +63,50 @@ const useStyles = makeStyles((theme) => {
     listDataText: {
       color: "#666",
     },
+    editModal: {
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
+    },
+    editModalBox: {
+      padding: 30,
+      justifyContent: "center",
+      alignItems: "center",
+      display: "flex",
+      height: 250,
+      minWidth: 400,
+      width: 600,
+      backgroundColor: "#fff",
+      borderRadius: "5px",
+      flexWrap: "wrap",
+    },
+    editModalButtonSave: {
+      fontSize: 14,
+      color: "#3ada49",
+      border: "1px solid #3ada49",
+      justifyContent: "end",
+      marginLeft: "auto",
+      display: "flex",
+    },
+    button: {
+      fontSize: 14,
+      justifyContent: "right",
+      marginBottom: 50,
+    },
     buttonSubmit: {
       fontSize: 14,
       justifyContent: "right",
+      color: "#3ada49",
+      border: "1px solid #3ada49",
+    },
+    buttonBack: {
+      marginRight: 50,
+    },
+    editIcon: {
+      color: "#2FA4FF",
+    },
+    deleteIcon: {
+      color: "#F86483",
     },
   };
 });
@@ -71,12 +115,17 @@ export default function Tech() {
   const classes = useStyles();
   const [name, setName] = useState("");
   const [techs, setTechs] = useState([] as iTechs[]);
+  const [newName, setNewName] = useState("");
   const [filteredTechs, setFilteredTechs] = useState([] as iTechs[]);
   const [isSnackbarOpen, setIsSnackbarOpen] = useState(false);
   const [snackbarSeverity, setSnackbarSeverity] = useState(
     EToastSeverity.SUCCESS
   );
   const [snackbarMessage, setSnackbarMessage] = useState("");
+  const [open, setOpen] = React.useState(false);
+  const handleOpen = () => setOpen(true);
+  const handleClose = () => setOpen(false);
+  const history = useHistory();
 
   async function getTechs() {
     try {
@@ -112,6 +161,21 @@ export default function Tech() {
       handleSnackbar(EToastSeverity.ERROR, "Erro ao cadastrar tecnologia");
       console.error(err);
     }
+  };
+
+  const handleNewTechs = (newName: string) => {
+    setNewName(newName);
+  };
+
+  const handleEditTech = (newName: string) => {
+    const aaa = filteredTechs.filter((fp) => fp.name === newName);
+    console.log(aaa);
+    //   try {
+    //     await updateTech(name);
+    //     getTechs();
+    //   } catch (err) {
+    //     console.error(err);
+    //   }
   };
 
   const handleDeleteTech = async (id: string) => {
@@ -151,6 +215,10 @@ export default function Tech() {
     setName(name);
   };
 
+  const goBackToDashboardPage = () => {
+    history.push("/dashboard");
+  };
+
   return (
     <div>
       <NavBar />
@@ -160,7 +228,7 @@ export default function Tech() {
         </Typography>
         <form noValidate autoComplete="off" onSubmit={handleSubmit}>
           <Grid container item xs={12} md={12}>
-            <Grid container className={classes.buttonSubmit}>
+            <Grid container>
               <TextField
                 onChange={(e) => handleTechs(e.target.value)}
                 value={name}
@@ -171,14 +239,34 @@ export default function Tech() {
                 fullWidth
                 required
               />
-              <Button
+              <Grid container className={classes.button}>
+                <Button
+                  variant="outlined"
+                  color="secondary"
+                  className={classes.buttonBack}
+                  onClick={() => {
+                    goBackToDashboardPage();
+                  }}
+                >
+                  Voltar ao dash
+                </Button>
+                <Button
+                  type="submit"
+                  variant="outlined"
+                  className={classes.buttonSubmit}
+                >
+                  Salvar
+                </Button>
+              </Grid>
+
+              {/* <Button
                 type="submit"
                 variant="outlined"
-                color="primary"
+                className={classes.buttonSubmit}
                 disabled={name === ""}
               >
                 Salvar
-              </Button>
+              </Button>*/}
             </Grid>
 
             <List className={classes.listData}>
@@ -190,8 +278,43 @@ export default function Tech() {
                         primary={tech.name}
                         className={classes.listDataText}
                       />
+                      <IconButton onClick={() => handleOpen()}>
+                        <EditIcon className={classes.editIcon} />
+                      </IconButton>
+
+                      <Modal
+                        open={open}
+                        onClose={handleClose}
+                        className={classes.editModal}
+                        BackdropProps={{
+                          style: {
+                            backgroundColor: "rgba(120, 120, 120, 0.04)",
+                          },
+                        }}
+                      >
+                        <Box className={classes.editModalBox}>
+                          <TextField
+                            onChange={(e) => handleEditTech(e.target.value)}
+                            value={name}
+                            label="Alterar tech"
+                            variant="outlined"
+                            className={classes.textfield}
+                            color="primary"
+                            fullWidth
+                            required
+                          />
+                          <Button
+                            type="submit"
+                            variant="outlined"
+                            className={classes.editModalButtonSave}
+                          >
+                            Salvar alterações
+                          </Button>
+                        </Box>
+                      </Modal>
+
                       <IconButton onClick={() => handleDeleteTech(tech.id)}>
-                        <DeleteOutlineIcon />
+                        <DeleteIcon className={classes.deleteIcon} />
                       </IconButton>
                     </ListItem>
                     <Divider variant="fullWidth" component="li" />

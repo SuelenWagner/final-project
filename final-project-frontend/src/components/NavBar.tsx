@@ -10,13 +10,12 @@ import {
   MenuItem,
   Tooltip,
   Grid,
+  Avatar,
 } from "@material-ui/core";
 import PoolRoundedIcon from "@material-ui/icons/PoolRounded";
 import AccountCircleIcon from "@material-ui/icons/AccountCircle";
 import { makeStyles } from "@material-ui/core";
 import { NavLink } from "react-router-dom";
-
-// FIXME: AJUSTAR A POSITION PARA QUE TEXTO NAO FIQUE ABAIXO DA NAVBAR -> tem a ver com a toolbar!
 
 const useStyles = makeStyles((theme) => {
   return {
@@ -48,8 +47,8 @@ const useStyles = makeStyles((theme) => {
       fontSize: 40,
     },
     appBarUserLogo: {
-      color: "#2FA4FF",
-      fontSize: 40,
+      color: "#fff",
+      backgroundColor: "#2FA4FF",
     },
     appBarMenu: {
       transform: "translateX(10px) translateY(50px)",
@@ -131,6 +130,15 @@ const NavBar = () => {
               </MenuItem>
               <MenuItem className={classes.menuItem}>
                 <NavLink
+                  to="/client"
+                  activeClassName="active"
+                  className="navbar-item"
+                >
+                  Cliente
+                </NavLink>
+              </MenuItem>
+              <MenuItem className={classes.menuItem}>
+                <NavLink
                   exact
                   to="/project"
                   activeClassName="active"
@@ -146,15 +154,6 @@ const NavBar = () => {
                   className="navbar-item"
                 >
                   Colaborador
-                </NavLink>
-              </MenuItem>
-              <MenuItem className={classes.menuItem}>
-                <NavLink
-                  to="/client"
-                  activeClassName="active"
-                  className="navbar-item"
-                >
-                  Cliente
                 </NavLink>
               </MenuItem>
               <MenuItem className={classes.menuItem}>
@@ -183,7 +182,7 @@ const NavBar = () => {
             component="div"
             className={classes.appBarPersonName}
           >
-            Reginaldo Gerente Empresa 1
+            Colaborador 2 dos Santos da Silva
           </Typography>
           <Box
             sx={{
@@ -199,7 +198,7 @@ const NavBar = () => {
           >
             <Tooltip title="Expandir opções">
               <IconButton onClick={handleOpenUserMenu}>
-                <AccountCircleIcon className={classes.appBarUserLogo} />
+                <Avatar className={classes.appBarUserLogo}>C</Avatar>
               </IconButton>
             </Tooltip>
             <Menu

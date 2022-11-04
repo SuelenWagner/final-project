@@ -62,6 +62,7 @@ export default function SelectOccupation() {
         <MenuItem value={40}>DevOps</MenuItem>
         <MenuItem value={50}>Scrum Master</MenuItem>
         <MenuItem value={60}>Product Owner</MenuItem>
+        <MenuItem value={60}>Gestor técnico</MenuItem>
       </Select>
     </FormControl>
   );

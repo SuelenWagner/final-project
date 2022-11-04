@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import NavBar from "../components/NavBar";
 import { EToastSeverity } from "../models/ToastSeverity";
 
@@ -21,14 +21,15 @@ import {
   deletePosition,
 } from "../services/positions-api";
 import { iPositions } from "../models/Positions";
-import DeleteOutlineIcon from "@material-ui/icons/DeleteOutline";
+import DeleteIcon from "@material-ui/icons/Delete";
 import EditIcon from "@material-ui/icons/Edit";
 import Toast from "../components/shared/Toast/Toast";
+import { useHistory } from "react-router-dom";
+import PositionModal from "../components/PositionModal";
 
 const useStyles = makeStyles((theme) => {
   return {
     page: {
-      //backgroundColor: "pink",
       marginTop: 30,
     },
     pageTitle: {
@@ -71,9 +72,59 @@ const useStyles = makeStyles((theme) => {
       marginTop: "20px",
       marginBottom: "20px",
     },
+    editModal: {
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
+      color: "#666",
+    },
+    editModalBox: {
+      padding: 30,
+      justifyContent: "center",
+      alignItems: "center",
+      display: "flex",
+      height: 250,
+      minWidth: 400,
+      width: 600,
+      backgroundColor: "#fff",
+      borderRadius: "5px",
+      flexWrap: "wrap",
+    },
+    editModalButtonSave: {
+      fontSize: 14,
+      color: "#3ada49",
+      border: "1px solid #3ada49",
+      justifyContent: "end",
+      marginLeft: "auto",
+      display: "flex",
+    },
+    editModalButtonBack: {
+      fontSize: 14,
+      color: "#2FA4FF",
+      border: "1px solid #2FA4FF",
+      justifyContent: "start",
+      marginLeft: "auto",
+      display: "flex",
+    },
+    button: {
+      fontSize: 14,
+      justifyContent: "space-between",
+      marginBottom: 50,
+    },
     buttonSubmit: {
       fontSize: 14,
       justifyContent: "right",
+      color: "#3ada49",
+      border: "1px solid #3ada49",
+    },
+    buttonBack: {
+      marginRight: 50,
+    },
+    editIcon: {
+      color: "#2FA4FF",
+    },
+    deleteIcon: {
+      color: "#F86483",
     },
   };
 });
@@ -83,6 +134,7 @@ export default function Position() {
   const [name, setName] = useState("");
   const [newName, setNewName] = useState("");
   const [positions, setPositions] = useState([] as iPositions[]);
+  const [selectedPosition, setSelectedPosition] = useState({} as iPositions);
   const [filteredPositions, setFilteredPositions] = useState(
     [] as iPositions[]
   );
@@ -91,6 +143,9 @@ export default function Position() {
     EToastSeverity.SUCCESS
   );
   const [snackbarMessage, setSnackbarMessage] = useState("");
+  const [isPositionModalOpen, setPositionModalOpen] = useState(false);
+
+  const history = useHistory();
 
   async function getPositions() {
     try {
@@ -110,13 +165,19 @@ export default function Position() {
     getPositions();
   }, []);
 
+  useEffect(() => {
+    if (!isPositionModalOpen) {
+      getPositions();
+    }
+  }, [isPositionModalOpen]);
+
   const handleSubmit = async (e: { preventDefault: () => void }) => {
     e.preventDefault();
     const newPosition = newName.trim();
 
     try {
       await createPosition(newPosition);
-      setNewName("");
+      clearForm();
       getPositions();
       handleSnackbar(
         EToastSeverity.SUCCESS,
@@ -124,28 +185,8 @@ export default function Position() {
       );
     } catch (err) {
       handleSnackbar(EToastSeverity.ERROR, "Erro ao cadastrar cargo");
-      console.error(err);
     }
   };
-
-  //UPDATE - PUT
-  // const handleSubmit = async (e: { preventDefault: () => void }) => {
-  //   e.preventDefault();
-  //   const newPosition = name.trim();
-
-  //   try {
-  //     await createPosition(newPosition);
-  //     setName("");
-  //     getPositions();
-  //     handleSnackbar(
-  //       EToastSeverity.SUCCESS,
-  //       "Novo cargo cadastrado com sucesso!"
-  //     );
-  //   } catch (err) {
-  //     handleSnackbar(EToastSeverity.ERROR, "Erro ao cadastrar cargo");
-  //     console.error(err);
-  //   }
-  // };
 
   const handleDeletePosition = async (id: string) => {
     try {
@@ -176,26 +217,24 @@ export default function Position() {
   const filterPositions = (name: string) => {
     if (name.length > 0) {
       const filteredPositions = positions.filter((p) =>
-        p.name.trim().includes(name)
+        p.name.toLowerCase().trim().includes(name.toLowerCase())
       );
       const pos = filteredPositions;
       setFilteredPositions(pos);
     } else {
       setFilteredPositions(positions);
     }
+    setNewName(name);
     setName(name);
   };
 
-  const handleNewPositions = (newName: string) => {
-    setNewName(newName);
+  const goBackToDashboardPage = () => {
+    history.push("/dashboard");
   };
 
-  const handleEditPosition = (newName: string) => {
-    // debugger;
-    const aaa = filteredPositions.filter((fp) => fp.name === newName);
-    console.log(aaa);
-    // setName(newName);
-    // console.log(filteredPositions.filter((p) => p.id === id));
+  const handleOpenPositionModal = (position: iPositions) => {
+    setPositionModalOpen(true);
+    setSelectedPosition(position);
   };
 
   return (
@@ -203,42 +242,43 @@ export default function Position() {
       <NavBar />
       <Container maxWidth="lg" className={classes.page}>
         <Typography color="primary" className={classes.pageTitle}>
-          Cargos de trabalho
+          Cargo
         </Typography>
         <form noValidate autoComplete="off" onSubmit={handleSubmit}>
           <Grid container item xs={12} md={12}>
-            <Grid container className={classes.buttonSubmit}>
+            <Grid container>
               <TextField
-                onChange={(e) => handleNewPositions(e.target.value)}
-                label="Cadastre um novo um cargo"
+                onChange={(e) => filterPositions(e.target.value)}
+                label="Cadastre ou filtre por um cargo"
                 variant="outlined"
                 className={classes.textfield}
                 color="primary"
                 fullWidth
                 required
-                value={newName}
-              />
-
-              <Button
-                type="submit"
-                variant="outlined"
-                color="primary"
-                disabled={newName === ""}
-              >
-                Salvar
-              </Button>
-
-              <TextField
-                onChange={(e) => filterPositions(e.target.value)}
-                label="Pesquise por um cargo"
-                variant="outlined"
-                className={classes.search}
-                color="primary"
                 value={name}
               />
-            </Grid>
 
-            {/* <List className={classes.listData}>
+              <Grid container className={classes.button}>
+                <Button
+                  variant="outlined"
+                  color="secondary"
+                  className={classes.buttonBack}
+                  onClick={() => {
+                    goBackToDashboardPage();
+                  }}
+                >
+                  Voltar ao dash
+                </Button>
+                <Button
+                  type="submit"
+                  variant="outlined"
+                  className={classes.buttonSubmit}
+                >
+                  Salvar
+                </Button>
+              </Grid>
+            </Grid>
+            <List className={classes.listData}>
               {positions &&
                 filteredPositions.map((position: iPositions) => (
                   <div key={position.id}>
@@ -247,51 +287,33 @@ export default function Position() {
                         primary={position.name}
                         className={classes.listDataText}
                       />
-                      <IconButton>
-                        <EditIcon />
+                      <IconButton
+                        onClick={() => {
+                          handleOpenPositionModal(position);
+                        }}
+                      >
+                        <EditIcon className={classes.editIcon} />
                       </IconButton>
+
                       <IconButton
                         onClick={() => handleDeletePosition(position.id)}
                       >
-                        <DeleteOutlineIcon />
+                        <DeleteIcon className={classes.deleteIcon} />
                       </IconButton>
                     </ListItem>
                     <Divider variant="fullWidth" component="li" />
                   </div>
                 ))}
-            </List> */}
-            <List className={classes.listData}>
-              {positions &&
-                filteredPositions.map((position: iPositions) => (
-                  <div key={position.id}>
-                    <ListItem alignItems="center">
-                      <TextField
-                        onChange={(e) => handleEditPosition(e.target.value)}
-                        value={position.name}
-                        variant="standard"
-                        className={classes.listData}
-                        color="primary"
-                        disabled
-                      />
-                      <IconButton
-                        disabled={false}
-                        onClick={() => handleEditPosition(position.id)}
-                      >
-                        <EditIcon />
-                      </IconButton>
-                      <IconButton
-                        onClick={() => handleDeletePosition(position.id)}
-                      >
-                        <DeleteOutlineIcon />
-                      </IconButton>
-                    </ListItem>
-                  </div>
-                ))}
+
+              <PositionModal
+                position={selectedPosition}
+                setModalPositionOpen={setPositionModalOpen}
+                isPositionModalOpen={isPositionModalOpen}
+              />
             </List>
           </Grid>
         </form>
       </Container>
-
       <Toast
         severity={snackbarSeverity}
         message={snackbarMessage}

@@ -9,7 +9,6 @@ const http = axios.create({
     }
 });
 
-
 export const getAllTechs = () => {
     return http.get("/techs");
 };
@@ -24,7 +23,11 @@ export const createTech = (name: string) => {
     });
 };
 
-//Falta o PUT
+export const updateTech = (id: string, name: string) => {
+    return http.put(`/techs/${id}`, {
+        name
+    });
+};
 
 export const deleteTech = (id: string) => {
     return http.delete(`/techs/${id}`);

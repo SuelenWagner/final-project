@@ -113,11 +113,12 @@ const useStyles = makeStyles((theme) => {
     },
     listEmployees: {
       width: "100%",
+      color: "#666",
       //backgroundColor: "pink",
     },
-    listEmployeesName: {
+    listEmployeesOccupation: {
       display: "inline",
-      color: "#666",
+      color: "#a1a1a1",
     },
     button: {
       fontSize: 14,
@@ -135,6 +136,10 @@ const useStyles = makeStyles((theme) => {
       display: "flex",
       justifyContent: "space-between",
     },
+    employeeAvatar: {
+      color: "#fff",
+      backgroundColor: "#2FA4FF",
+    },
   };
 });
 
@@ -146,7 +151,7 @@ export default function Project() {
   const classes = useStyles();
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
-  const [status, setStatus] = useState("Em Progresso");
+  const [status, setStatus] = useState("");
   //const [startDate, setStartDate] = useState("");
   //const [finishDate, setFinishDate] = useState("");
   const [clients, setClients] = useState([]);
@@ -288,7 +293,7 @@ export default function Project() {
     setClient(value);
   };
 
-  const handleProjectStatus = (value: EProjectStatus) => {
+  const handleProjectStatus = (value: any) => {
     setStatus(value);
   };
 
@@ -346,7 +351,7 @@ export default function Project() {
             </FormControl>
 
             <Grid container className={classes.gridInline}>
-              <FormControl
+              {/* <FormControl
                 variant="outlined"
                 required
                 fullWidth
@@ -357,10 +362,30 @@ export default function Project() {
                   {projects &&
                     projects.map((status: IProject) => (
                       <MenuItem key={project.status} value={project.status}>
-                        {project.status}
+                        {project.status.}
                       </MenuItem>
                     ))}
                   <MenuItem value={20}>Em andamento mock</MenuItem>
+                  <MenuItem value={30}>Cancelado mock</MenuItem>
+                  <MenuItem value={40}>Concluído mock</MenuItem>
+                </Select>
+              </FormControl> */}
+
+              <FormControl
+                variant="outlined"
+                required
+                fullWidth
+                className={classes.selectStatus}
+              >
+                <InputLabel>Status</InputLabel>
+                <Select
+                  value={status}
+                  label="Status"
+                  onChange={(e) => handleProjectStatus(e.target.value)}
+                >
+                  <MenuItem>Em andamento</MenuItem>
+
+                  <MenuItem value={20}>Em andamento</MenuItem>
                   <MenuItem value={30}>Cancelado mock</MenuItem>
                   <MenuItem value={40}>Concluído mock</MenuItem>
                 </Select>
@@ -405,7 +430,7 @@ export default function Project() {
               variant="outlined"
               className={classes.buttonSubmit}
             >
-              {project?.id ? "Editar" : "Salvar"}
+              {project?.id ? "Salvar alterações" : "Salvar"}
             </Button>
           </Grid>
 
@@ -413,7 +438,7 @@ export default function Project() {
             <Typography color="primary">
               Colaboradores que trabalham neste projeto
             </Typography>
-
+            {/* 
             {project.employees ? (
               <>
                 <List className={classes.listEmployees}>
@@ -443,7 +468,95 @@ export default function Project() {
               </>
             ) : (
               <></>
-            )}
+            )} */}
+
+            <List className={classes.listEmployees}>
+              <ListItem alignItems="flex-start">
+                <ListItemAvatar>
+                  <Avatar className={classes.employeeAvatar}>C</Avatar>
+                </ListItemAvatar>
+                <ListItemText
+                  primary="Colaborador 1 dos Santos da Silva"
+                  secondary={
+                    <Typography
+                      component="span"
+                      variant="body2"
+                      className={classes.listEmployeesOccupation}
+                      color="textPrimary"
+                    >
+                      Gestor técnico
+                    </Typography>
+                  }
+                />
+              </ListItem>
+              <Divider variant="inset" component="li" />
+            </List>
+
+            <List className={classes.listEmployees}>
+              <ListItem alignItems="flex-start">
+                <ListItemAvatar>
+                  <Avatar className={classes.employeeAvatar}>C</Avatar>
+                </ListItemAvatar>
+                <ListItemText
+                  primary="Colaborador 2 dos Santos da Silva"
+                  secondary={
+                    <Typography
+                      component="span"
+                      variant="body2"
+                      className={classes.listEmployeesOccupation}
+                      color="textPrimary"
+                    >
+                      Desenvolvedor(a) Backend
+                    </Typography>
+                  }
+                />
+              </ListItem>
+              <Divider variant="inset" component="li" />
+            </List>
+
+            <List className={classes.listEmployees}>
+              <ListItem alignItems="flex-start">
+                <ListItemAvatar>
+                  <Avatar className={classes.employeeAvatar}>C</Avatar>
+                </ListItemAvatar>
+                <ListItemText
+                  primary="Colaborador 3 dos Santos da Silva"
+                  secondary={
+                    <Typography
+                      component="span"
+                      variant="body2"
+                      className={classes.listEmployeesOccupation}
+                      color="textPrimary"
+                    >
+                      Desenvolvedor(a) Frontend
+                    </Typography>
+                  }
+                />
+              </ListItem>
+              <Divider variant="inset" component="li" />
+            </List>
+
+            <List className={classes.listEmployees}>
+              <ListItem alignItems="flex-start">
+                <ListItemAvatar>
+                  <Avatar className={classes.employeeAvatar}>C</Avatar>
+                </ListItemAvatar>
+                <ListItemText
+                  primary="Colaborador 4 dos Santos da Silva"
+                  secondary={
+                    <Typography
+                      component="span"
+                      variant="body2"
+                      className={classes.listEmployeesOccupation}
+                      color="textPrimary"
+                    >
+                      QA
+                    </Typography>
+                  }
+                />
+              </ListItem>
+              <Divider variant="inset" component="li" />
+            </List>
           </Grid>
         </form>
       </Container>

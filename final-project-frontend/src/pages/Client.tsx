@@ -272,7 +272,7 @@ export default function Client() {
                 variant="outlined"
                 className={classes.buttonSubmit}
               >
-                {client?.id ? "Editar" : "Salvar"}
+                {client?.id ? "Salvar alterações" : "Salvar"}
               </Button>
             </Grid>
 

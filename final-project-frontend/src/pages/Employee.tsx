@@ -210,6 +210,7 @@ export default function Employee() {
                 fullWidth
                 required
                 error={nameError}
+                disabled
               />
 
               <TextField
@@ -221,6 +222,7 @@ export default function Employee() {
                 type="email"
                 required
                 error={emailError}
+                disabled
               />
               <Grid container className={classes.grid1Inline}>
                 <TextField
@@ -231,6 +233,7 @@ export default function Employee() {
                   color="primary"
                   required
                   error={usernameError}
+                  disabled
                 />
 
                 <TextField
@@ -258,11 +261,13 @@ export default function Employee() {
                         value="active"
                         control={<Radio />}
                         label="Ativo"
+                        disabled
                       />
                       <FormControlLabel
                         value="inactive"
                         control={<Radio />}
                         label="Inativo"
+                        disabled
                       />
                     </Grid>
                   </RadioGroup>
@@ -302,7 +307,7 @@ export default function Employee() {
                   variant="outlined"
                   className={classes.buttonSubmit}
                 >
-                  Salvar
+                  Salvar alterações
                 </Button>
               </Grid>
             </Grid>

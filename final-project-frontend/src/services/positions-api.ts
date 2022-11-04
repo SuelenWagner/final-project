@@ -9,7 +9,6 @@ const http = axios.create({
     }
 });
 
-
 export const getAllPositions = () => {
     return http.get("/positions");
 };
@@ -25,11 +24,11 @@ export const createPosition = (name: string) => {
     });
 };
 
-// export const updatePosition = (id: string, name : string) => {
-//     return http.put(`/positions/${id}`, {
-//         name
-//     });
-// };
+export const updatePosition = (id: string, name : string) => {
+    return http.put(`/positions/${id}`, {
+        name
+    });
+};
 
 export const deletePosition = (id: string) => {
     return http.delete(`/positions/${id}`);
