@@ -1,8 +1,8 @@
-export interface iTechs {
+export interface ITech {
     id: string;
     name: string;
 }
 
-export interface iTechsData {
-    data: iTechs[];
+export interface ITechData {
+    data: ITech[];
 }

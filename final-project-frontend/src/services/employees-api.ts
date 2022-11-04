@@ -1,8 +1,8 @@
 import axios from "axios";
 import { environment } from "../environment/environment";
-import { iPositions } from "../models/Positions";
+import { IPosition } from "../models/Positions";
 import { IProject } from "../models/Projects";
-import { iTechs } from "../models/Techs";
+import { ITech } from "../models/Techs";
 
 
 const http = axios.create({
@@ -39,7 +39,7 @@ export const getEmployeeById = (id: string) => {
     });
 };*/
 
-export const createEmployee = (username: string, password: string, fullName: string, birthDate: Date, email:string, startDate: Date, interesting: string, status: string, project: IProject, position: iPositions, techs: iTechs) => {
+export const createEmployee = (username: string, password: string, fullName: string, birthDate: Date, email:string, startDate: Date, interesting: string, status: string, project: IProject, position: IPosition, techs: ITech) => {
     return http.post("/employees", {
         username,
         password,

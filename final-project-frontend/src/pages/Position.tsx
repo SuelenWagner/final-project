@@ -20,7 +20,7 @@ import {
   createPosition,
   deletePosition,
 } from "../services/positions-api";
-import { iPositions } from "../models/Positions";
+import { IPosition } from "../models/Positions";
 import DeleteIcon from "@material-ui/icons/Delete";
 import EditIcon from "@material-ui/icons/Edit";
 import Toast from "../components/shared/Toast/Toast";
@@ -133,11 +133,9 @@ export default function Position() {
   const classes = useStyles();
   const [name, setName] = useState("");
   const [newName, setNewName] = useState("");
-  const [positions, setPositions] = useState([] as iPositions[]);
-  const [selectedPosition, setSelectedPosition] = useState({} as iPositions);
-  const [filteredPositions, setFilteredPositions] = useState(
-    [] as iPositions[]
-  );
+  const [positions, setPositions] = useState([] as IPosition[]);
+  const [selectedPosition, setSelectedPosition] = useState({} as IPosition);
+  const [filteredPositions, setFilteredPositions] = useState([] as IPosition[]);
   const [isSnackbarOpen, setIsSnackbarOpen] = useState(false);
   const [snackbarSeverity, setSnackbarSeverity] = useState(
     EToastSeverity.SUCCESS
@@ -232,7 +230,7 @@ export default function Position() {
     history.push("/dashboard");
   };
 
-  const handleOpenPositionModal = (position: iPositions) => {
+  const handleOpenPositionModal = (position: IPosition) => {
     setPositionModalOpen(true);
     setSelectedPosition(position);
   };
@@ -280,7 +278,7 @@ export default function Position() {
             </Grid>
             <List className={classes.listData}>
               {positions &&
-                filteredPositions.map((position: iPositions) => (
+                filteredPositions.map((position: IPosition) => (
                   <div key={position.id}>
                     <ListItem alignItems="center">
                       <ListItemText

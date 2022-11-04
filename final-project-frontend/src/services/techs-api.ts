@@ -1,6 +1,5 @@
 import axios from "axios";
 import { environment } from "../environment/environment";
-//import { iTechs, iTechsData } from "../models/Techs";
 
 const http = axios.create({
     baseURL: environment.baseUrl,

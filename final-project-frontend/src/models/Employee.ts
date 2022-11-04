@@ -1,6 +1,6 @@
-import { iPositions } from "./Positions";
+import { IPosition } from "./Positions";
 import { IProject } from "./Projects";
-import { iTechs } from "./Techs";
+import { ITech } from "./Techs";
 
 export interface IEmployee {
     id: string;
@@ -13,8 +13,8 @@ export interface IEmployee {
     interesting: string; 
     status: string;
     project: IProject; 
-    position: iPositions; 
-    techs: iTechs;
+    position: IPosition; 
+    techs: ITech;
     role: string;
 }
 

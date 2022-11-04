@@ -18,7 +18,7 @@ import {
   Box,
 } from "@material-ui/core";
 import { getAllTechs, createTech, deleteTech } from "../services/techs-api";
-import { iTechs } from "../models/Techs";
+import { ITech } from "../models/Techs";
 import DeleteIcon from "@material-ui/icons/Delete";
 import EditIcon from "@material-ui/icons/Edit";
 import Toast from "../components/shared/Toast/Toast";
@@ -90,7 +90,7 @@ const useStyles = makeStyles((theme) => {
     },
     button: {
       fontSize: 14,
-      justifyContent: "right",
+      justifyContent: "space-between",
       marginBottom: 50,
     },
     buttonSubmit: {
@@ -114,9 +114,9 @@ const useStyles = makeStyles((theme) => {
 export default function Tech() {
   const classes = useStyles();
   const [name, setName] = useState("");
-  const [techs, setTechs] = useState([] as iTechs[]);
+  const [techs, setTechs] = useState([] as ITech[]);
   const [newName, setNewName] = useState("");
-  const [filteredTechs, setFilteredTechs] = useState([] as iTechs[]);
+  const [filteredTechs, setFilteredTechs] = useState([] as ITech[]);
   const [isSnackbarOpen, setIsSnackbarOpen] = useState(false);
   const [snackbarSeverity, setSnackbarSeverity] = useState(
     EToastSeverity.SUCCESS
@@ -271,7 +271,7 @@ export default function Tech() {
 
             <List className={classes.listData}>
               {techs &&
-                filteredTechs.map((tech: iTechs) => (
+                filteredTechs.map((tech: ITech) => (
                   <div key={tech.id}>
                     <ListItem alignItems="center">
                       <ListItemText

@@ -1,8 +1,8 @@
-export interface iPositions {
+export interface IPosition {
     id: string;
     name: string;
 }
 
-export interface iPositionsData {
-    data: iPositions[];
+export interface IPositionData {
+    data: IPosition[];
 }

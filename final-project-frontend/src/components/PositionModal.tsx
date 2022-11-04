@@ -1,6 +1,6 @@
 import { useEffect, useLayoutEffect, useState } from "react";
 import { TextField, Button, Modal, Box, makeStyles } from "@material-ui/core";
-import { iPositions } from "../models/Positions";
+import { IPosition } from "../models/Positions";
 import { updatePosition } from "../services/positions-api";
 
 const useStyles = makeStyles((theme) => {
@@ -60,7 +60,7 @@ const useStyles = makeStyles((theme) => {
 interface IPositionModal {
   isPositionModalOpen: boolean;
   setModalPositionOpen: Function;
-  position: iPositions;
+  position: IPosition;
 }
 
 export default function PositionModal({

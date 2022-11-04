@@ -1,6 +1,6 @@
 import axios from "axios";
 import { environment } from "../environment/environment";
-import { iPositions, iPositionsData } from "../models/Positions";
+import { IPosition, IPositionData } from "../models/Positions";
 
 const http = axios.create({
     baseURL: environment.baseUrl,
