@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import NavBar from "../components/NavBar";
 import { EToastSeverity } from "../models/ToastSeverity";
-
+import Toast from "../components/shared/Toast/Toast";
 import {
   makeStyles,
   Container,
@@ -21,7 +21,6 @@ import { getAllTechs, createTech, deleteTech } from "../services/techs-api";
 import { ITech } from "../models/Techs";
 import DeleteIcon from "@material-ui/icons/Delete";
 import EditIcon from "@material-ui/icons/Edit";
-import Toast from "../components/shared/Toast/Toast";
 import { useHistory } from "react-router-dom";
 import TechModal from "../components/TechModal";
 
@@ -240,6 +239,7 @@ export default function Tech() {
                 color="primary"
                 fullWidth
                 required
+                inputProps={{ maxLength: 100 }}
               />
               <Grid container className={classes.button}>
                 <Button

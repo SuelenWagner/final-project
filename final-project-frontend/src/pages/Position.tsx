@@ -254,6 +254,7 @@ export default function Position() {
                 fullWidth
                 required
                 value={name}
+                inputProps={{ maxLength: 50 }}
               />
 
               <Grid container className={classes.button}>
