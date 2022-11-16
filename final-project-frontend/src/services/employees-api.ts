@@ -22,6 +22,20 @@ export const getEmployeeById = (id: string) => {
     return http.get(`/employees/${id}`);
 };
 
+export const createEmployee = (username: string, password: string, fullName: string, birthDate: string, email:string, startDate: string, interesting: string, status: string, role: string) => {
+    return http.post("/employees", {
+        username,
+        password,
+        fullName,
+        birthDate,
+        email,
+        startDate,
+        interesting,
+        status,
+        role
+    });
+};
+
 /*export const createEmployee = (username: string, password: string, fullName: string, birthDate: Date, email:string, startDate: Date, interesting: string, status: string, project: iProjects, position: iPositions, techs: iTechs, roles: iRoles) => {
     return http.post("/employees", {
         username,
@@ -39,8 +53,24 @@ export const getEmployeeById = (id: string) => {
     });
 };*/
 
-export const createEmployee = (username: string, password: string, fullName: string, birthDate: Date, email:string, startDate: Date, interesting: string, status: string, project: IProject, position: IPosition, techs: ITech) => {
-    return http.post("/employees", {
+// export const createEmployee = (username: string, password: string, fullName: string, birthDate: Date, email:string, startDate: Date, interesting: string, status: string, project: IProject, position: IPosition, techs: ITech) => {
+//     return http.post("/employees", {
+//         username,
+//         password,
+//         fullName,
+//         birthDate,
+//         email,
+//         startDate,
+//         interesting,
+//         status,
+//         project,
+//         position,
+//         techs
+//     });
+// };
+
+export const updateEmployee = (id: string, username : string, password: string, fullName: string, birthDate: string, email: string, startDate: string, interesting: string, status: string, role: string) => {
+    return http.put(`/employees/${id}`, {
         username,
         password,
         fullName,
@@ -49,17 +79,9 @@ export const createEmployee = (username: string, password: string, fullName: str
         startDate,
         interesting,
         status,
-        project,
-        position,
-        techs
+        role
     });
 };
-
-// export const updatePosition = (id: string, name : string) => {
-//     return http.put(`/positions/${id}`, {
-//         name
-//     });
-// };
 
 export const deleteEmployee = (id: string) => {
     return http.delete(`/employees/${id}`);

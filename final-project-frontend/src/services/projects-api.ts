@@ -1,7 +1,6 @@
 import axios from "axios";
 import { environment } from "../environment/environment";
 import { IClient } from "../models/Clients";
-import { EProjectStatus } from "../models/Projects";
 
 const http = axios.create({
     baseURL: environment.baseUrl,
@@ -18,17 +17,25 @@ export const getProjectById = (id: string) => {
     return http.get(`/projects/${id}`);
 };
 
-export const createProject = (name: String, description: String) => {
+export const createProject = (name: String, description: String, startDate: string, finishDate: string, status: string, client: IClient) => {
     return http.post("/projects", {
         name,
-        description
+        description,
+        startDate,
+        finishDate,
+        status,
+        client
     });
 };
 
-export const updateProject = (id: string, name: String, description: String) => {
+export const updateProject = (id: string, name: String, description: String, startDate: string, finishDate: string, status: string, client: IClient) => {
     return http.put(`/projects/${id}`, {
         name,
-        description
+        description,
+        startDate,
+        finishDate,
+        status,
+        client
     });
 };
 

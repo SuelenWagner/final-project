@@ -11,6 +11,9 @@ import Tech from "./pages/Tech";
 
 const theme = createTheme({
   palette: {
+    action: {
+      disabled: "lightGray",
+    },
     primary: {
       main: "#2FA4FF",
     },

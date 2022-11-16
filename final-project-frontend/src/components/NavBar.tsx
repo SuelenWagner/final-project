@@ -11,11 +11,15 @@ import {
   Tooltip,
   Grid,
   Avatar,
+  Badge,
+  ListItem,
 } from "@material-ui/core";
 import PoolRoundedIcon from "@material-ui/icons/PoolRounded";
 import AccountCircleIcon from "@material-ui/icons/AccountCircle";
+import NotificationsIcon from "@material-ui/icons/Notifications";
 import { makeStyles } from "@material-ui/core";
 import { NavLink } from "react-router-dom";
+import { List } from "@material-ui/icons";
 
 const useStyles = makeStyles((theme) => {
   return {
@@ -50,6 +54,12 @@ const useStyles = makeStyles((theme) => {
       color: "#fff",
       backgroundColor: "#2FA4FF",
     },
+    appBarNotifications: {
+      "& .MuiBadge-badge": {
+        color: "#fff",
+        backgroundColor: "#FD5D90",
+      },
+    },
     appBarMenu: {
       transform: "translateX(10px) translateY(50px)",
     },
@@ -64,16 +74,21 @@ const useStyles = makeStyles((theme) => {
 
 const pages = ["Dashboard", "Projetos", "Colaboradores"];
 const settings = ["Minhas infos", "Logout"];
+const notificationRender = [
+  "Sinbarilio se interessou pelo projeto TorneiraFeet",
+  "Maique Taison se interessou pelo projeto TorneiraFeet",
+];
 
 const NavBar = () => {
   const classes = useStyles();
-
   const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(
     null
   );
   const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(
     null
   );
+  const [anchorElUserNotification, setAnchorElUserNotification] =
+    React.useState<null | HTMLElement>(null);
 
   const handleOpenNavMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorElNav(event.currentTarget);
@@ -82,12 +97,20 @@ const NavBar = () => {
     setAnchorElUser(event.currentTarget);
   };
 
+  const handleOpenNotification = (event: React.MouseEvent<HTMLElement>) => {
+    setAnchorElUserNotification(event.currentTarget);
+  };
+
   const handleCloseNavMenu = () => {
     setAnchorElNav(null);
   };
 
   const handleCloseUserMenu = () => {
     setAnchorElUser(null);
+  };
+
+  const handleCloseNotification = () => {
+    setAnchorElUserNotification(null);
   };
 
   return (
@@ -104,6 +127,73 @@ const NavBar = () => {
           >
             My Talent Pool
           </Typography>
+
+          {/* Tentando fazer a notificação */}
+          <Box
+            sx={{
+              flexGrow: 0,
+              display: {
+                xs: "flex",
+                sm: "flex",
+                md: "flex",
+                lg: "flex",
+                xl: "flex",
+              },
+            }}
+          >
+            <Tooltip title="Notificações de interesses nos projetos">
+              <IconButton
+                // onClick={() => {
+                //   console.log("click no interesse!");
+                // }}
+                onClick={handleOpenNotification}
+              >
+                <Badge
+                  badgeContent={5}
+                  max={99}
+                  className={classes.appBarNotifications}
+                >
+                  <NotificationsIcon color="primary" />
+                </Badge>
+              </IconButton>
+            </Tooltip>
+            <Menu
+              id="notification-appbar"
+              anchorEl={anchorElUserNotification}
+              // anchorOrigin={{
+              //   vertical: "top",
+              //   horizontal: "center",
+              // }}
+              keepMounted
+              // transformOrigin={{
+              //   vertical: "bottom",
+              //   horizontal: "center",
+              // }}
+              open={Boolean(anchorElUserNotification)}
+              onClose={handleCloseNotification}
+              className={classes.appBarMenu}
+            >
+              {notificationRender.map((notificationRender) => (
+                <MenuItem
+                  key={notificationRender}
+                  onClick={handleCloseNotification}
+                >
+                  <Typography className={classes.appBarMenuList}>
+                    {notificationRender}
+                  </Typography>
+                </MenuItem>
+              ))}
+            </Menu>
+            {/* <div>
+              <List>
+                <ListItem>
+                  <Typography>
+                    Sinbaril dos Santos da Silva se interessou pelo Projeto 1
+                  </Typography>
+                </ListItem>
+              </List>
+            </div> */}
+          </Box>
 
           <Box
             sx={{
@@ -184,6 +274,7 @@ const NavBar = () => {
           >
             Colaborador 2 dos Santos da Silva
           </Typography>
+
           <Box
             sx={{
               flexGrow: 0,
@@ -198,7 +289,9 @@ const NavBar = () => {
           >
             <Tooltip title="Expandir opções">
               <IconButton onClick={handleOpenUserMenu}>
-                <Avatar className={classes.appBarUserLogo}>C</Avatar>
+                <Avatar className={classes.appBarUserLogo}>
+                  C{/* {employee.fullName[0].toUpperCase()} */}
+                </Avatar>
               </IconButton>
             </Tooltip>
             <Menu

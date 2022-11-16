@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import NavBar from "../components/NavBar";
 import {
   makeStyles,
@@ -31,14 +31,13 @@ import {
 import Toast from "../components/shared/Toast/Toast";
 import { getAllClients } from "../services/clients-api";
 import { IClient } from "../models/Clients";
-import { IProject, EProjectStatus } from "../models/Projects";
+import { IProject } from "../models/Projects";
 import { EToastSeverity } from "../models/ToastSeverity";
 import { useParams, useHistory } from "react-router-dom";
 
 const useStyles = makeStyles((theme) => {
   return {
     page: {
-      //backgroundColor: "pink",
       marginTop: 30,
     },
     pageTitle: {
@@ -122,7 +121,7 @@ const useStyles = makeStyles((theme) => {
     },
     button: {
       fontSize: 14,
-      justifyContent: "right",
+      justifyContent: "space-between",
       marginBottom: 50,
     },
     buttonSubmit: {
@@ -147,15 +146,22 @@ type ProjectId = {
   projectId: string;
 };
 
+const STATUS = [
+  { key: "WAITING_START", value: "Aguardando início" },
+  { key: "IN_PROGRESS", value: "Em andamento" },
+  { key: "DONE", value: "Concluído" },
+  { key: "CANCELED", value: "Cancelado" },
+];
+
 export default function Project() {
   const classes = useStyles();
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
+  const [startDate, setStartDate] = useState("");
+  const [finishDate, setFinishDate] = useState("");
   const [status, setStatus] = useState("");
-  //const [startDate, setStartDate] = useState("");
-  //const [finishDate, setFinishDate] = useState("");
-  const [clients, setClients] = useState([]);
   const [client, setClient] = useState({});
+  const [clients, setClients] = useState([]);
   const [project, setProject] = useState({} as IProject);
   const [projects, setProjects] = useState([]);
   const [isSnackbarOpen, setIsSnackbarOpen] = useState(false);
@@ -169,20 +175,33 @@ export default function Project() {
   async function getProject(id: string) {
     try {
       const { data }: any = await getProjectById(id);
-      setProject(data);
-      setName(data.name);
-      setDescription(data.description);
-      setStatus(data.status);
-      setClient(data.client);
+      console.log(data);
+      setData(data);
     } catch {
       handleSnackbar(EToastSeverity.ERROR, "Projeto não encontrado");
     }
   }
 
+  const setData = (data: any) => {
+    setProject(data);
+    setName(data.name);
+    setDescription(data.description);
+
+    const startDateFormatted = data.startDate.slice(0, 10);
+    const finishDateFormatted = data.finishDate.slice(0, 10);
+
+    setStartDate(startDateFormatted);
+    setFinishDate(finishDateFormatted);
+    setStatus(data.status);
+    setClient(data.client);
+    console.log(data);
+  };
+
   useEffect(() => {
     if (params?.projectId) {
       getProject(params.projectId);
     }
+    getClients();
   }, [params]);
 
   const handleSnackbar = (severity: EToastSeverity, message: string) => {
@@ -201,15 +220,44 @@ export default function Project() {
 
     const projectName = name.trim();
     if (params?.projectId) {
-      editProject(projectName, description);
+      editProject(
+        projectName,
+        description,
+        startDate,
+        finishDate,
+        status,
+        client
+      );
     } else {
-      createNewProject(projectName, description);
+      createNewProject(
+        projectName,
+        description,
+        startDate,
+        finishDate,
+        status,
+        client
+      );
     }
   };
 
-  const editProject = async (name: string, description: string) => {
+  const editProject = async (
+    name: string,
+    description: string,
+    startDate: string,
+    finishDate: string,
+    status: any,
+    client: any
+  ) => {
     try {
-      await updateProject(params.projectId, name, description);
+      await updateProject(
+        params.projectId,
+        name,
+        description,
+        startDate,
+        finishDate,
+        status,
+        client
+      );
       handleSnackbar(EToastSeverity.SUCCESS, "Projeto editado com sucesso!");
       goToDashboardPage();
     } catch (err) {
@@ -217,9 +265,23 @@ export default function Project() {
     }
   };
 
-  const createNewProject = async (newProject: string, description: string) => {
+  const createNewProject = async (
+    newProject: string,
+    description: string,
+    startDate: string,
+    finishDate: string,
+    status: any,
+    client: any
+  ) => {
     try {
-      await createProject(newProject, description);
+      await createProject(
+        newProject,
+        description,
+        startDate,
+        finishDate,
+        status,
+        client
+      );
       clearForm();
       handleSnackbar(
         EToastSeverity.SUCCESS,
@@ -244,33 +306,15 @@ export default function Project() {
   const clearForm = () => {
     setName("");
     setDescription("");
+    setStartDate("");
+    setFinishDate("");
+    setStatus("");
   };
-
-  // const handleStatusChange = (event: React.ChangeEvent<{ value: unknown }>) => {
-  //   setStatus(event.target.value as string);
-  // };
-
-  // const handleClientChange = (event: React.ChangeEvent<{ value: unknown }>) => {
-  //   setClient(event.target.value as string);
-  // };
-
-  // const handleManagerChange = (
-  //   event: React.ChangeEvent<{ value: unknown }>
-  // ) => {
-  //   setManager(event.target.value as string);
-  // };
-
-  // const handleSubmit = (e: { preventDefault: () => void }) => {
-  //   e.preventDefault();
-  //   setTitleError(false);
-  //   setDetailsError(false);
-
-  //   if (title === "" || details === "") setTitleError(true);
-  // };
 
   const getClients = async () => {
     try {
       const { data } = await getAllClients();
+      console.log(data);
       setClients(data);
     } catch (err) {
       console.warn(err);
@@ -278,8 +322,20 @@ export default function Project() {
   };
 
   useEffect(() => {
-    getClients();
-  }, []);
+    console.log(project.id);
+    // console.log(clients);
+
+    const proj = clients.filter((client: any) => {
+      //return client.projects.includes(project);
+      return client.projects.find((p: any) => {
+        // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+        p.id === project.id;
+      });
+    });
+
+    console.log(proj);
+    //console.log(proj.includes(project));
+  }, [clients, project]);
 
   const handleProjectName = (value: string) => {
     setName(value);
@@ -289,12 +345,20 @@ export default function Project() {
     setDescription(value);
   };
 
-  const handleProjectClient = (value: any) => {
-    setClient(value);
+  const handleProjectStartDate = (date: string) => {
+    setStartDate(date);
   };
 
-  const handleProjectStatus = (value: any) => {
+  const handleProjectFinishDate = (date: string) => {
+    setFinishDate(date);
+  };
+
+  const handleProjectStatus = (value: string) => {
     setStatus(value);
+  };
+
+  const handleProjectClient = (value: any) => {
+    setClient(value);
   };
 
   return (
@@ -351,26 +415,6 @@ export default function Project() {
             </FormControl>
 
             <Grid container className={classes.gridInline}>
-              {/* <FormControl
-                variant="outlined"
-                required
-                fullWidth
-                className={classes.selectStatus}
-              >
-                <InputLabel>Status</InputLabel>
-                <Select value={status} label="Status">
-                  {projects &&
-                    projects.map((status: IProject) => (
-                      <MenuItem key={project.status} value={project.status}>
-                        {project.status.}
-                      </MenuItem>
-                    ))}
-                  <MenuItem value={20}>Em andamento mock</MenuItem>
-                  <MenuItem value={30}>Cancelado mock</MenuItem>
-                  <MenuItem value={40}>Concluído mock</MenuItem>
-                </Select>
-              </FormControl> */}
-
               <FormControl
                 variant="outlined"
                 required
@@ -381,33 +425,40 @@ export default function Project() {
                 <Select
                   value={status}
                   label="Status"
-                  onChange={(e) => handleProjectStatus(e.target.value)}
+                  onChange={(e) =>
+                    handleProjectStatus(e.target.value as string)
+                  }
                 >
-                  <MenuItem>Em andamento</MenuItem>
-
-                  <MenuItem value={20}>Em andamento</MenuItem>
-                  <MenuItem value={30}>Cancelado mock</MenuItem>
-                  <MenuItem value={40}>Concluído mock</MenuItem>
+                  {projects &&
+                    STATUS.map((status: any) => (
+                      <MenuItem key={status.key} value={status.key}>
+                        {status.value}
+                      </MenuItem>
+                    ))}
                 </Select>
               </FormControl>
 
               <TextField
                 label="Data de início"
                 type="date"
-                defaultValue="dd/MM/AAAA"
+                defaultValue={startDate}
+                value={startDate}
                 variant="outlined"
                 className={classes.dateTextfield}
                 InputLabelProps={{
                   shrink: true,
                 }}
+                onChange={(e) => handleProjectStartDate(e.target.value)}
               />
 
               <TextField
                 label="Data de término"
                 type="date"
-                defaultValue="dd/MM/AAAA"
+                value={finishDate}
+                defaultValue={finishDate}
                 variant="outlined"
                 className={classes.dateTextfield}
+                onChange={(e) => handleProjectFinishDate(e.target.value)}
                 InputLabelProps={{
                   shrink: true,
                 }}
@@ -435,17 +486,18 @@ export default function Project() {
           </Grid>
 
           <Grid item xs={12} md={12} direction="column">
-            <Typography color="primary">
-              Colaboradores que trabalham neste projeto
-            </Typography>
-            {/* 
             {project.employees ? (
               <>
+                <Typography color="primary">
+                  Colaboradores que trabalham neste projeto
+                </Typography>
                 <List className={classes.listEmployees}>
                   {project?.employees?.map((employee: any) => (
                     <ListItem alignItems="flex-start" key={employee.id}>
                       <ListItemAvatar>
-                        <Avatar>{employee.fullName[0].toUpperCase()}</Avatar>
+                        <Avatar className={classes.employeeAvatar}>
+                          {employee.fullName[0].toUpperCase()}
+                        </Avatar>
                       </ListItemAvatar>
                       <ListItemText
                         primary={employee.fullName}
@@ -453,10 +505,9 @@ export default function Project() {
                           <Typography
                             component="span"
                             variant="body2"
-                            className={classes.listEmployeesName}
+                            className={classes.listEmployeesOccupation}
                             color="textPrimary"
                           >
-                            Desenvolvedor Backend
                             {employee.position}
                           </Typography>
                         }
@@ -468,95 +519,7 @@ export default function Project() {
               </>
             ) : (
               <></>
-            )} */}
-
-            <List className={classes.listEmployees}>
-              <ListItem alignItems="flex-start">
-                <ListItemAvatar>
-                  <Avatar className={classes.employeeAvatar}>C</Avatar>
-                </ListItemAvatar>
-                <ListItemText
-                  primary="Colaborador 1 dos Santos da Silva"
-                  secondary={
-                    <Typography
-                      component="span"
-                      variant="body2"
-                      className={classes.listEmployeesOccupation}
-                      color="textPrimary"
-                    >
-                      Gestor técnico
-                    </Typography>
-                  }
-                />
-              </ListItem>
-              <Divider variant="inset" component="li" />
-            </List>
-
-            <List className={classes.listEmployees}>
-              <ListItem alignItems="flex-start">
-                <ListItemAvatar>
-                  <Avatar className={classes.employeeAvatar}>C</Avatar>
-                </ListItemAvatar>
-                <ListItemText
-                  primary="Colaborador 2 dos Santos da Silva"
-                  secondary={
-                    <Typography
-                      component="span"
-                      variant="body2"
-                      className={classes.listEmployeesOccupation}
-                      color="textPrimary"
-                    >
-                      Desenvolvedor(a) Backend
-                    </Typography>
-                  }
-                />
-              </ListItem>
-              <Divider variant="inset" component="li" />
-            </List>
-
-            <List className={classes.listEmployees}>
-              <ListItem alignItems="flex-start">
-                <ListItemAvatar>
-                  <Avatar className={classes.employeeAvatar}>C</Avatar>
-                </ListItemAvatar>
-                <ListItemText
-                  primary="Colaborador 3 dos Santos da Silva"
-                  secondary={
-                    <Typography
-                      component="span"
-                      variant="body2"
-                      className={classes.listEmployeesOccupation}
-                      color="textPrimary"
-                    >
-                      Desenvolvedor(a) Frontend
-                    </Typography>
-                  }
-                />
-              </ListItem>
-              <Divider variant="inset" component="li" />
-            </List>
-
-            <List className={classes.listEmployees}>
-              <ListItem alignItems="flex-start">
-                <ListItemAvatar>
-                  <Avatar className={classes.employeeAvatar}>C</Avatar>
-                </ListItemAvatar>
-                <ListItemText
-                  primary="Colaborador 4 dos Santos da Silva"
-                  secondary={
-                    <Typography
-                      component="span"
-                      variant="body2"
-                      className={classes.listEmployeesOccupation}
-                      color="textPrimary"
-                    >
-                      QA
-                    </Typography>
-                  }
-                />
-              </ListItem>
-              <Divider variant="inset" component="li" />
-            </List>
+            )}
           </Grid>
         </form>
       </Container>

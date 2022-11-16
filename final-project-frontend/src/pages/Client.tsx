@@ -106,7 +106,7 @@ const useStyles = makeStyles((theme) => {
     },
     button: {
       fontSize: 14,
-      justifyContent: "right",
+      justifyContent: "space-between",
       marginBottom: 50,
     },
     buttonSubmit: {

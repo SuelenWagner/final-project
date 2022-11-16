@@ -113,7 +113,6 @@ const useStyles = makeStyles((theme) => {
     },
     buttonSubmit: {
       fontSize: 14,
-      justifyContent: "right",
       color: "#3ada49",
       border: "1px solid #3ada49",
     },

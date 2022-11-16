@@ -7,11 +7,11 @@ export interface IEmployee {
     username: string;
     password: string; 
     fullName: string; 
-    birthDate: Date;
+    birthDate: Date | string;
     email:string;
-    startDate: Date; 
+    startDate: Date | string; 
     interesting: string; 
-    status: string;
+    status: any;
     project: IProject; 
     position: IPosition; 
     techs: ITech;

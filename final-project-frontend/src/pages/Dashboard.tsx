@@ -29,6 +29,7 @@ import { IProject } from "../models/Projects";
 import Project from "./Project";
 import { IEmployee } from "../models/Employee";
 import { getAllEmployees } from "../services/employees-api";
+import { EProjectStatus } from "../models/Projects";
 
 const useStyles = makeStyles((theme) => {
   return {
@@ -114,6 +115,27 @@ export default function Dashboard() {
   const [projects, setProjects] = useState([] as IProject[]);
   const [employees, setEmployees] = useState([] as IEmployee[]);
   const history = useHistory();
+  // const projectStatus = EProjectStatus;
+  //tentando abaixo fazer o filtro de clientes, projetos e colabs:
+  //const [clientName, setClientName] = useState("" as IClient[]);
+  //const [projectName, setProjectName] = useState("" as IProject[]);
+  //const [employeeName, setEmployeeName] = useState("" as IEmployee[]);
+  //const [filteredDash, setFilteredDash] = useState([] as IDash[]);
+
+  function getProjectStatus(status: string) {
+    switch (status) {
+      case EProjectStatus.CANCELED:
+        return "Cancelado";
+      case EProjectStatus.DONE:
+        return "Concluído";
+      case EProjectStatus.IN_PROGRESS:
+        return "Em andamento";
+      case EProjectStatus.WAITING_START:
+        return "Aguardando início";
+      default:
+        return status;
+    }
+  }
 
   async function getClients() {
     try {
@@ -151,6 +173,20 @@ export default function Dashboard() {
     getEmployees();
   }, []);
 
+  // const filterDash = (clientName: string, projectName: string, employeeName: string) => {
+  //   if (clientName.length > 0) || (projectName.length > 0) || (employeeName.length > 0){
+  //     const filteredDash = dash.filter((p) =>
+  //       p.clientName.toLowerCase().trim().includes(clientName.toLowerCase())
+  //     );
+  //     const dashboard = filteredDash;
+  //     setFilteredDash(dashboard);
+  //   } else {
+  //     setFilteredDasH(dash);
+  //   }
+  //   setNewName(name);
+  //   setName(name);
+  // };
+
   const handleClient = () => {
     history.push("/client");
   };
@@ -163,12 +199,15 @@ export default function Dashboard() {
     history.push("/employee");
   };
 
+  const handleInterestProject = () => {};
+
   return (
     <div>
       <NavBar />
       <Container maxWidth="lg" className={classes.page}>
         <div className={classes.search}>
           <TextField
+            // onChange={(e) => filterDash(e.target.value)}
             className={classes.textfield}
             label="Pesquisar"
             placeholder="Pesquise por clientes, projetos ou colaboradores"
@@ -224,6 +263,7 @@ export default function Dashboard() {
               </Card>
             ))}
           </Grid>
+
           <Grid item xs={9} md={3} direction="column">
             <Tooltip title="Cadastrar um novo projeto">
               <Button
@@ -238,7 +278,7 @@ export default function Dashboard() {
                 Projeto
               </Button>
             </Tooltip>
-            {/* {projects.map((project: IProject) => (
+            {projects.map((project: IProject) => (
               <Card elevation={1} className={classes.card} key={project.id}>
                 <CardHeader
                   action={
@@ -253,17 +293,11 @@ export default function Dashboard() {
                       </IconButton>
                     </Tooltip>
                   }
-                  title={
-                    <Typography gutterBottom>
-                      Nome do Projeto nome do projeto nome do projeto
-                    </Typography>
-                  }
+                  title={<Typography gutterBottom>{project.name}</Typography>}
                 />
                 <CardContent>
                   <Typography noWrap variant="body2" color="textSecondary">
-                    Descrição do projeto 1 Descrição do projeto 1 Descrição do
-                    projeto 1 Descrição do projeto 1 Descrição do projeto 1
-                    Descrição do projeto 1.
+                    {project.description}
                   </Typography>
                   <Divider className={classes.divider} />
                   <Grid container className={classes.gridInline}>
@@ -272,167 +306,27 @@ export default function Dashboard() {
                       color="textSecondary"
                       className={classes.statusLabel}
                     >
-                      Status: {project.status}
+                      Status: {getProjectStatus(project.status)}
                     </Typography>
                     <Tooltip title="Me interessei pelo projeto!">
                       <IconButton
-                        onClick={() => {
-                          console.log("click no interesse!");
-                        }}
+                        // onClick={() => {
+                        //   console.log("click no interesse!");
+                        // }}
+                        onClick={handleInterestProject}
+                        disabled={
+                          project.status === "CANCELED" ||
+                          project.status === "DONE"
+                        }
+                        className={classes.star}
                       >
-                        <StarOutlineOutlinedIcon className={classes.star} />
+                        <StarOutlineOutlinedIcon />
                       </IconButton>
                     </Tooltip>
                   </Grid>
                 </CardContent>
               </Card>
-            ))} */}
-
-            <Card elevation={1} className={classes.card}>
-              <CardHeader
-                action={
-                  <Tooltip title="Editar projeto">
-                    <IconButton size="medium">
-                      <EditIcon color="primary" />
-                    </IconButton>
-                  </Tooltip>
-                }
-                title={<Typography gutterBottom>Projeto 1</Typography>}
-              />
-              <CardContent>
-                <Typography noWrap variant="body2" color="textSecondary">
-                  Descrição do projeto 1 em construção.
-                </Typography>
-                <Divider className={classes.divider} />
-                <Grid container className={classes.gridInline}>
-                  <Typography
-                    variant="body2"
-                    color="textSecondary"
-                    className={classes.statusLabel}
-                  >
-                    Status: Aguardando início
-                  </Typography>
-                  <Tooltip title="Me interessei pelo projeto!">
-                    <IconButton
-                      onClick={() => {
-                        console.log("click no interesse!");
-                      }}
-                    >
-                      <StarOutlineOutlinedIcon className={classes.star} />
-                    </IconButton>
-                  </Tooltip>
-                </Grid>
-              </CardContent>
-            </Card>
-
-            <Card elevation={1} className={classes.card}>
-              <CardHeader
-                action={
-                  <Tooltip title="Editar projeto">
-                    <IconButton size="medium">
-                      <EditIcon color="primary" />
-                    </IconButton>
-                  </Tooltip>
-                }
-                title={
-                  <Typography gutterBottom>
-                    Projeto 2 que possui o nome do projeto grande
-                  </Typography>
-                }
-              />
-              <CardContent>
-                <Typography noWrap variant="body2" color="textSecondary">
-                  Descrição do projeto 2 Descrição do projeto 2 Descrição do
-                  projeto 2 Descrição do projeto 2 Descrição do projeto 2
-                  Descrição do projeto 2 Descrição do projeto 2 Descrição do
-                  projeto 2 Descrição do projeto 2 Descrição do projeto 2
-                  Descrição do projeto 2 Descrição do projeto 2 Descrição do
-                  projeto 2 Descrição do projeto 2 Descrição do projeto 2
-                  Descrição do projeto 2 Descrição do projeto 2 Descrição do
-                  projeto 2.
-                </Typography>
-                <Divider className={classes.divider} />
-                <Grid container className={classes.gridInline}>
-                  <Typography
-                    variant="body2"
-                    color="textSecondary"
-                    className={classes.statusLabel}
-                  >
-                    Status: Em progresso
-                  </Typography>
-                  <Tooltip title="Me interessei pelo projeto!">
-                    <IconButton
-                      onClick={() => {
-                        console.log("click no interesse!");
-                      }}
-                    >
-                      <StarIcon className={classes.star} />
-                    </IconButton>
-                  </Tooltip>
-                </Grid>
-              </CardContent>
-            </Card>
-
-            <Card elevation={1} className={classes.card}>
-              <CardHeader
-                action={
-                  <Tooltip title="Editar projeto">
-                    <IconButton size="medium">
-                      <EditIcon color="primary" />
-                    </IconButton>
-                  </Tooltip>
-                }
-                title={<Typography gutterBottom>Projeto 3</Typography>}
-              />
-              <CardContent>
-                <Typography noWrap variant="body2" color="textSecondary">
-                  Descrição do projeto 3 Descrição do projeto 3 Descrição do
-                  projeto 3 Descrição do projeto 3 Descrição do projeto 3
-                  Descrição do projeto 3.
-                </Typography>
-                <Divider className={classes.divider} />
-                <Grid container className={classes.gridInline}>
-                  <Typography
-                    variant="body2"
-                    color="textSecondary"
-                    className={classes.statusLabel}
-                  >
-                    Status: Concluído
-                  </Typography>
-                </Grid>
-              </CardContent>
-            </Card>
-
-            <Card elevation={1} className={classes.card}>
-              <CardHeader
-                action={
-                  <Tooltip title="Editar projeto">
-                    <IconButton size="medium">
-                      <EditIcon color="primary" />
-                    </IconButton>
-                  </Tooltip>
-                }
-                title={<Typography gutterBottom>Projeto 4</Typography>}
-              />
-              <CardContent>
-                <Typography noWrap variant="body2" color="textSecondary">
-                  Descrição do projeto 4 Descrição do projeto 4 Descrição do
-                  projeto 4 Descrição do projeto 4 Descrição do projeto 4
-                  Descrição do projeto 4 Descrição do projeto 4 Descrição do
-                  projeto 4.
-                </Typography>
-                <Divider className={classes.divider} />
-                <Grid container className={classes.gridInline}>
-                  <Typography
-                    variant="body2"
-                    color="textSecondary"
-                    className={classes.statusLabel}
-                  >
-                    Status: Cancelado
-                  </Typography>
-                </Grid>
-              </CardContent>
-            </Card>
+            ))}
           </Grid>
           <Grid item xs={9} md={3} direction="column">
             <Tooltip title="Cadastrar um novo colaborador">
@@ -448,7 +342,7 @@ export default function Dashboard() {
                 Colaborador
               </Button>
             </Tooltip>
-            {/* {employees.map((employee: IEmployee) => (
+            {employees.map((employee: IEmployee) => (
               <Card elevation={1} className={classes.card} key={employee.id}>
                 <CardHeader
                   action={
@@ -463,21 +357,17 @@ export default function Dashboard() {
                       </IconButton>
                     </Tooltip>
                   }
-                  title={
-                    <Typography>
-                      Bindulina dos Santos Silveira Machado
-                    </Typography>
-                  }
+                  title={<Typography>{employee.fullName}</Typography>}
                   subheader={
                     <Typography variant="body2" color="textSecondary">
-                      Desenvolvedor(a) Backend
+                      Desenvolvedor(a) Backend mockado
                     </Typography>
                   }
                 />
               </Card>
-            ))} */}
+            ))}
 
-            <Card elevation={1} className={classes.card}>
+            {/* <Card elevation={1} className={classes.card}>
               <CardHeader
                 action={
                   <Tooltip title="Editar colaborador">
@@ -495,67 +385,7 @@ export default function Dashboard() {
                   </Typography>
                 }
               />
-            </Card>
-
-            <Card elevation={1} className={classes.card}>
-              <CardHeader
-                action={
-                  <Tooltip title="Editar colaborador">
-                    <IconButton size="medium">
-                      <EditIcon color="primary" />
-                    </IconButton>
-                  </Tooltip>
-                }
-                title={
-                  <Typography>Colaborador 2 dos Santos da Silva</Typography>
-                }
-                subheader={
-                  <Typography variant="body2" color="textSecondary">
-                    Desenvolvedor(a) Backend
-                  </Typography>
-                }
-              />
-            </Card>
-
-            <Card elevation={1} className={classes.card}>
-              <CardHeader
-                action={
-                  <Tooltip title="Editar colaborador">
-                    <IconButton size="medium">
-                      <EditIcon color="primary" />
-                    </IconButton>
-                  </Tooltip>
-                }
-                title={
-                  <Typography>Colaborador 3 dos Santos da Silva</Typography>
-                }
-                subheader={
-                  <Typography variant="body2" color="textSecondary">
-                    Desenvolvedor(a) Frontend
-                  </Typography>
-                }
-              />
-            </Card>
-
-            <Card elevation={1} className={classes.card}>
-              <CardHeader
-                action={
-                  <Tooltip title="Editar colaborador">
-                    <IconButton size="medium">
-                      <EditIcon color="primary" />
-                    </IconButton>
-                  </Tooltip>
-                }
-                title={
-                  <Typography>Colaborador 4 dos Santos da Silva</Typography>
-                }
-                subheader={
-                  <Typography variant="body2" color="textSecondary">
-                    QA
-                  </Typography>
-                }
-              />
-            </Card>
+            </Card> */}
           </Grid>
         </Grid>
       </Container>
