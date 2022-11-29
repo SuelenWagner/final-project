@@ -9,7 +9,7 @@ public class FinalProjectBackendApplication {
 
 	public static void main(String[] args) {
 		SpringApplication.run(FinalProjectBackendApplication.class, args);
-		System.out.println(new BCryptPasswordEncoder().encode("senha123"));
+		//System.out.println(new BCryptPasswordEncoder().encode("senha123"));
 
 	}
 

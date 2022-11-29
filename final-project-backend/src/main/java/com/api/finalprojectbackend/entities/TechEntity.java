@@ -1,6 +1,7 @@
 package com.api.finalprojectbackend.entities;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.*;
+
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.List;
@@ -8,6 +9,9 @@ import java.util.UUID;
 
 @Entity
 @Table(name = "tb_tech")
+@JsonIdentityInfo(
+        generator = ObjectIdGenerators.PropertyGenerator.class,
+       property = "id")
 public class TechEntity implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -47,7 +51,7 @@ public class TechEntity implements Serializable {
         this.name = name;
     }
 
-    @JsonIgnore
+    //@JsonBackReference(value="employee-tech")
     public List<EmployeeEntity> getEmployees() {
         return employees;
     }

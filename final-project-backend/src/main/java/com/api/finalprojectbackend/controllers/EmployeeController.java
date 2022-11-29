@@ -4,9 +4,11 @@ import com.api.finalprojectbackend.dtos.EmployeeDTO;
 import com.api.finalprojectbackend.entities.EmployeeEntity;
 import com.api.finalprojectbackend.services.EmployeeService;
 import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.util.List;
@@ -14,11 +16,15 @@ import java.util.Optional;
 import java.util.UUID;
 
 @RestController
-@CrossOrigin(origins = "*", maxAge = 3600)
+@CrossOrigin(origins = "http://localhost:3000", maxAge = 3600, allowCredentials = "true")
+//@CrossOrigin(origins = "*", maxAge = 3600)
 @RequestMapping("/api/v1/employees")
 public class EmployeeController {
 
     final EmployeeService employeeService;
+
+    @Autowired
+    PasswordEncoder passwordEncoder;
 
     public EmployeeController(EmployeeService employeeService) {
         this.employeeService = employeeService;
@@ -33,6 +39,7 @@ public class EmployeeController {
 
         EmployeeEntity employeeEntity = new EmployeeEntity();
         BeanUtils.copyProperties(employeeDTO, employeeEntity);
+        employeeEntity.setPassword(passwordEncoder.encode(employeeEntity.getPassword()));
         return ResponseEntity.status(HttpStatus.CREATED).body(employeeService.save(employeeEntity));
     }
 

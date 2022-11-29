@@ -8,7 +8,7 @@ import java.util.List;
 public class ClientDTO {
 
     @NotBlank
-    @Size(max = 40)
+    @Size(max = 50)
     private String name;
 
     @NotBlank

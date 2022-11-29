@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
@@ -26,15 +27,15 @@ public class ProjectEntity implements Serializable {
     private String description;
 
     @Temporal(TemporalType.DATE)
-    private Date startDate;
+    private Calendar startDate;
 
     @Temporal(TemporalType.DATE)
-    private Date finishDate;
+    private Calendar finishDate;
 
     @Enumerated(EnumType.STRING)
     private ProjectStatus status;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(cascade = CascadeType.MERGE)
     @JoinColumn(name = "client_id")
     private ClientEntity client;
 
@@ -44,7 +45,7 @@ public class ProjectEntity implements Serializable {
     public ProjectEntity() {
     }
 
-    public ProjectEntity(UUID id, String name, String description, Date startDate, Date finishDate,
+    public ProjectEntity(UUID id, String name, String description, Calendar startDate, Calendar finishDate,
                          ProjectStatus status, ClientEntity client, List<EmployeeEntity> employees) {
         this.id = id;
         this.name = name;
@@ -80,19 +81,19 @@ public class ProjectEntity implements Serializable {
         this.description = description;
     }
 
-    public Date getStartDate() {
+    public Calendar getStartDate() {
         return startDate;
     }
 
-    public void setStartDate(Date startDate) {
+    public void setStartDate(Calendar startDate) {
         this.startDate = startDate;
     }
 
-    public Date getFinishDate() {
+    public Calendar getFinishDate() {
         return finishDate;
     }
 
-    public void setFinishDate(Date finishDate) {
+    public void setFinishDate(Calendar finishDate) {
         this.finishDate = finishDate;
     }
 

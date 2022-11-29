@@ -22,7 +22,7 @@ public class ClientEntity implements Serializable {
     @Column(nullable = false, length = 1000)
     private String description;
 
-    @OneToMany(fetch = FetchType.EAGER, mappedBy = "client")
+    @OneToMany(mappedBy = "client", fetch = FetchType.EAGER)
     private List<ProjectEntity> projects;
 
     public ClientEntity() {

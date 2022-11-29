@@ -5,25 +5,30 @@ import com.api.finalprojectbackend.entities.EmployeeEntity;
 import com.api.finalprojectbackend.enums.ProjectStatus;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
 public class ProjectDTO {
 
     @NotBlank
-    @Size(max = 40)
+    @Size(max = 50)
     private String name;
 
     @NotBlank
     @Size(max = 1000)
     private String description;
 
-    private Date startDate;
+    @Temporal(TemporalType.DATE)
+    private Calendar startDate;
 
-    private Date finishDate;
+    @Temporal(TemporalType.DATE)
+    private Calendar finishDate;
 
     @NotNull
     @Enumerated(EnumType.STRING)
@@ -49,19 +54,19 @@ public class ProjectDTO {
         this.description = description;
     }
 
-    public Date getStartDate() {
+    public Calendar getStartDate() {
         return startDate;
     }
 
-    public void setStartDate(Date startDate) {
+    public void setStartDate(Calendar startDate) {
         this.startDate = startDate;
     }
 
-    public Date getFinishDate() {
+    public Calendar getFinishDate() {
         return finishDate;
     }
 
-    public void setFinishDate(Date finishDate) {
+    public void setFinishDate(Calendar finishDate) {
         this.finishDate = finishDate;
     }
     

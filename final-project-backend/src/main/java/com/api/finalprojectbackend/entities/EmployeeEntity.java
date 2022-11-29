@@ -1,8 +1,8 @@
 package com.api.finalprojectbackend.entities;
 
 import com.api.finalprojectbackend.enums.EmployeeStatus;
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.api.finalprojectbackend.enums.Role;
+import com.fasterxml.jackson.annotation.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import javax.persistence.*;
@@ -11,7 +11,10 @@ import java.util.*;
 
 @Entity
 @Table(name = "tb_employee")
-public class EmployeeEntity implements UserDetails, Serializable {
+@JsonIdentityInfo(
+        generator = ObjectIdGenerators.PropertyGenerator.class,
+        property = "id")
+public class EmployeeEntity implements UserDetails, Serializable{
 
     private static final long serialVersionUID = 1L;
 
@@ -22,7 +25,7 @@ public class EmployeeEntity implements UserDetails, Serializable {
     @Column(nullable = false, unique = true)
     private String username;
 
-    @Column(nullable = false)
+    @Column(nullable = false, length= 40)
     private String password;
 
     @Column(nullable = false, length = 150)
@@ -58,9 +61,14 @@ public class EmployeeEntity implements UserDetails, Serializable {
     @JoinTable(name = "tb_employees_roles",
             joinColumns = @JoinColumn(name = "employee_id"),
             inverseJoinColumns = @JoinColumn(name = "role_id"))
-    private List<RoleEntity> roles;
+    private Set<RoleEntity> roles;
 
-    @ManyToMany
+    /*@ManyToOne
+    @JoinColumn(name = "role_id")
+    private RoleEntity role;*/
+
+
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "tb_employee_techs", joinColumns = @JoinColumn(
             name = "employee_id", referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(name = "tech_id", referencedColumnName = "id"))
@@ -71,7 +79,7 @@ public class EmployeeEntity implements UserDetails, Serializable {
 
     public EmployeeEntity(UUID id, String username, String password, String fullName, Date birthDate,
                           String email, Date startDate, String interesting, EmployeeStatus status,
-                          ProjectEntity project, PositionEntity position, List<RoleEntity> roles,
+                          ProjectEntity project, PositionEntity position, Set<RoleEntity> roles,
                           List<TechEntity> techs) {
         this.id = id;
         this.username = username;
@@ -205,16 +213,19 @@ public class EmployeeEntity implements UserDetails, Serializable {
         this.position = position;
     }
 
-    @JsonIgnore
-    public List<RoleEntity> getRoles() {
+    //@JsonIgnore
+    //@JsonManagedReference
+    //@JsonManagedReference(value="employee-role")
+    public Set<RoleEntity> getRoles() {
         return roles;
     }
 
-    public void setRoles(List<RoleEntity> roles) {
+    public void setRoles(Set<RoleEntity> roles) {
         this.roles = roles;
     }
 
-    @JsonIgnore
+    //@JsonIgnore
+    //@JsonManagedReference(value="employee-tech")
     public List<TechEntity> getTechs() {
         return techs;
     }

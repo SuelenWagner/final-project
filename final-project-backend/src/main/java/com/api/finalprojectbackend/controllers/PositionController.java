@@ -24,7 +24,7 @@ public class PositionController {
         this.positionService = positionService;
     }
 
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    //@PreAuthorize("hasRole('ROLE_ADMIN')")
     @PostMapping
     public ResponseEntity<Object> savePosition(@RequestBody @Valid PositionDTO positionDTO) {
         if(positionService.existsByName(positionDTO.getname())) {
@@ -36,13 +36,13 @@ public class PositionController {
         return ResponseEntity.status(HttpStatus.CREATED).body(positionService.save(positionEntity));
     }
 
-    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_USER')")
+    //@PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_USER')")
     @GetMapping
     public ResponseEntity<List<PositionEntity>> getAllPositions() {
         return ResponseEntity.status(HttpStatus.OK).body(positionService.findAll());
     }
 
-    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_USER')")
+    //@PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_USER')")
     @GetMapping("/{id}")
     public ResponseEntity<Object> getPositionById(@PathVariable(value = "id") UUID id) {
         Optional<PositionEntity> positionModelOptional = positionService.findById(id);
@@ -52,7 +52,7 @@ public class PositionController {
         return ResponseEntity.status(HttpStatus.OK).body(positionModelOptional.get());
     }
 
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    //@PreAuthorize("hasRole('ROLE_ADMIN')")
     @PutMapping("/{id}")
     public ResponseEntity<Object> updatePosition(@PathVariable(value = "id") UUID id, @RequestBody @Valid PositionDTO positionDTO) {
         Optional<PositionEntity> positionModelOptional = positionService.findById(id);
@@ -66,7 +66,7 @@ public class PositionController {
         return ResponseEntity.status(HttpStatus.OK).body(positionService.save(positionEntity));
     }
 
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    //@PreAuthorize("hasRole('ROLE_ADMIN')")
     @DeleteMapping("/{id}")
     public ResponseEntity<Object> deletePosition(@PathVariable(value = "id") UUID id) {
         Optional<PositionEntity> positionModelOptional = positionService.findById(id);

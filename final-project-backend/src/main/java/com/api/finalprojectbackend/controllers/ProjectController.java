@@ -24,7 +24,7 @@ public class ProjectController {
         this.projectService = projectService;
     }
 
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    //@PreAuthorize("hasRole('ROLE_ADMIN')")
     @PostMapping
     public ResponseEntity<Object> saveProject(@RequestBody @Valid ProjectDTO projectDTO) {
         if(projectService.existsByName(projectDTO.getName())) {
@@ -36,13 +36,13 @@ public class ProjectController {
         return ResponseEntity.status(HttpStatus.CREATED).body(projectService.save(projectEntity));
     }
 
-    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_USER')")
+    //@PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_USER')")
     @GetMapping
     public List<ProjectEntity> getProjects() {
         return projectService.findAll();
     }
 
-    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_USER')")
+    //@PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_USER')")
     @GetMapping("/{id}")
     public ProjectEntity getProjectById(@PathVariable(value = "id") UUID id) {
         if(projectService.findById(id).isPresent())
@@ -50,7 +50,7 @@ public class ProjectController {
         else return null;
     }
 
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    //@PreAuthorize("hasRole('ROLE_ADMIN')")
     @PutMapping("/{id}")
     public ResponseEntity<Object> updateProject(@PathVariable(value = "id") UUID id, @RequestBody @Valid ProjectDTO projectDTO) {
         Optional<ProjectEntity> projectModelOptional = projectService.findById(id);
@@ -64,7 +64,7 @@ public class ProjectController {
         return ResponseEntity.status(HttpStatus.OK).body(projectService.save(projectEntity));
     }
 
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    //@PreAuthorize("hasRole('ROLE_ADMIN')")
     @DeleteMapping("/{id}")
     public ResponseEntity<Object> deleteProject(@PathVariable(value = "id") UUID id) {
         Optional<ProjectEntity> projectModelOptional = projectService.findById(id);

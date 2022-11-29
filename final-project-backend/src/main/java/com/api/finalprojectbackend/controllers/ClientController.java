@@ -36,7 +36,7 @@ public class ClientController {
         return ResponseEntity.status(HttpStatus.CREATED).body(clientService.save(clientEntity));
     }
 
-    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_USER')")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_USER')")
     @GetMapping
     public ResponseEntity<List<ClientEntity>> getAllClients() {
         return ResponseEntity.status(HttpStatus.OK).body(clientService.findAll());

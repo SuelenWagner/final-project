@@ -12,6 +12,7 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
 public class EmployeeDTO {
 
@@ -21,6 +22,7 @@ public class EmployeeDTO {
 
     @NotNull
     @NotBlank
+    @Size(max = 50)
     private String password;
 
     @NotNull
@@ -48,8 +50,10 @@ public class EmployeeDTO {
     private ProjectEntity project;
 
     @NotNull
-    private List<RoleEntity> roles;
+    private Set<RoleEntity> roles;
 
+    //@NotNull
+    //private RoleEntity role;
 
     public String getUsername() {
         return username;
@@ -139,11 +143,11 @@ public class EmployeeDTO {
         this.project = project;
     }
 
-    public List<RoleEntity> getRoles() {
+    public Set<RoleEntity> getRoles() {
         return roles;
     }
 
-    public void setRoles(List<RoleEntity> roles) {
+    public void setRoles(Set<RoleEntity> roles) {
         this.roles = roles;
     }
 }
