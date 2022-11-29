@@ -30,6 +30,7 @@ import Project from "./Project";
 import { IEmployee } from "../models/Employee";
 import { getAllEmployees } from "../services/employees-api";
 import { EProjectStatus } from "../models/Projects";
+import useStore from "../stores/useStore";
 
 const useStyles = makeStyles((theme) => {
   return {
@@ -115,6 +116,7 @@ export default function Dashboard() {
   const [projects, setProjects] = useState([] as IProject[]);
   const [employees, setEmployees] = useState([] as IEmployee[]);
   const history = useHistory();
+  const { setUser } = useStore();
   // const projectStatus = EProjectStatus;
   //tentando abaixo fazer o filtro de clientes, projetos e colabs:
   //const [clientName, setClientName] = useState("" as IClient[]);

@@ -1,4 +1,9 @@
-import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
+import {
+  BrowserRouter as Router,
+  Switch,
+  Route,
+  Redirect,
+} from "react-router-dom";
 import { createTheme, ThemeProvider } from "@material-ui/core";
 import Dashboard from "./pages/Dashboard";
 import Login from "./pages/Login";
@@ -42,6 +47,7 @@ function App() {
     <ThemeProvider theme={theme}>
       <Router>
         <Switch>
+          <Redirect exact from="/" to="/login" />
           <Route path="/login">
             <Login />
           </Route>

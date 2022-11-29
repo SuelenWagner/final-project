@@ -75,8 +75,8 @@ const useStyles = makeStyles((theme) => {
 const pages = ["Dashboard", "Projetos", "Colaboradores"];
 const settings = ["Minhas infos", "Logout"];
 const notificationRender = [
-  "Sinbarilio se interessou pelo projeto TorneiraFeet",
-  "Maique Taison se interessou pelo projeto TorneiraFeet",
+  "Colaborador 1 dos Santos da Silva se interessou pelo projeto Projeto 1",
+  "Colaborador 2 dos Santos da Silva se interessou pelo projeto Projeto 3",
 ];
 
 const NavBar = () => {
