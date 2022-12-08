@@ -14,7 +14,8 @@ import java.util.Optional;
 import java.util.UUID;
 
 @RestController
-@CrossOrigin(origins = "*", maxAge = 3600)
+@CrossOrigin(origins = "http://localhost:3000", maxAge = 3600, allowCredentials = "true")
+//@CrossOrigin(origins = "*", maxAge = 3600)
 @RequestMapping("/api/v1/techs")
 public class TechController {
 
@@ -24,7 +25,7 @@ public class TechController {
         this.techService = techService;
     }
 
-    //@PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PostMapping
     public ResponseEntity<Object> saveTech(@RequestBody @Valid TechDTO techDTO) {
         if(techService.existsByName(techDTO.getName())) {
@@ -36,13 +37,13 @@ public class TechController {
         return ResponseEntity.status(HttpStatus.CREATED).body(techService.save(techEntity));
     }
 
-    //@PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_USER')")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_USER')")
     @GetMapping
     public ResponseEntity<List<TechEntity>> getAllTechs() {
         return ResponseEntity.status(HttpStatus.OK).body(techService.findAll());
     }
 
-    //@PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_USER')")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_USER')")
     @GetMapping("/{id}")
     public ResponseEntity<Object> getTechById(@PathVariable(value = "id") UUID id) {
         Optional<TechEntity> techModelOptional = techService.findById(id);
@@ -52,7 +53,7 @@ public class TechController {
         return ResponseEntity.status(HttpStatus.OK).body(techModelOptional.get());
     }
 
-    //@PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PutMapping("/{id}")
     public ResponseEntity<Object> updateTech(@PathVariable(value = "id") UUID id, @RequestBody @Valid TechDTO techDTO) {
         Optional<TechEntity> techModelOptional = techService.findById(id);
@@ -65,7 +66,7 @@ public class TechController {
         return ResponseEntity.status(HttpStatus.OK).body(techService.save(techEntity));
     }
 
-    //@PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @DeleteMapping("/{id}")
     public ResponseEntity<Object> deleteTech(@PathVariable(value = "id") UUID id) {
         Optional<TechEntity> techModelOptional = techService.findById(id);

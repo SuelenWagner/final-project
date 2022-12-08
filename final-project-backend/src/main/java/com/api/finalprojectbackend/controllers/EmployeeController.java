@@ -69,6 +69,7 @@ public class EmployeeController {
         EmployeeEntity employeeEntity = employeeModelOptional.get();
         BeanUtils.copyProperties(employeeDTO, employeeEntity);
         employeeEntity.setId(employeeModelOptional.get().getId());
+        employeeEntity.setPassword(passwordEncoder.encode(employeeEntity.getPassword()));
 
         return ResponseEntity.status(HttpStatus.OK).body(employeeService.save(employeeEntity));
     }

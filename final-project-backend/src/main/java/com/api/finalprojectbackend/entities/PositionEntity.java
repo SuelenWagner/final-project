@@ -1,6 +1,9 @@
 package com.api.finalprojectbackend.entities;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.List;
@@ -8,6 +11,9 @@ import java.util.UUID;
 
 @Entity
 @Table(name = "tb_position")
+@JsonIdentityInfo(
+        generator = ObjectIdGenerators.PropertyGenerator.class,
+        property = "id")
 public class PositionEntity implements Serializable {
 
     private static final long serialVersionUID = 1L;

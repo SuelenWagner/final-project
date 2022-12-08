@@ -22,7 +22,6 @@ public class EmployeeDTO {
 
     @NotNull
     @NotBlank
-    @Size(max = 50)
     private String password;
 
     @NotNull

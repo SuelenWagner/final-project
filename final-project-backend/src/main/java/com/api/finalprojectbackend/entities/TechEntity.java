@@ -9,9 +9,9 @@ import java.util.UUID;
 
 @Entity
 @Table(name = "tb_tech")
-@JsonIdentityInfo(
+/*@JsonIdentityInfo(
         generator = ObjectIdGenerators.PropertyGenerator.class,
-       property = "id")
+       property = "id")*/
 public class TechEntity implements Serializable {
 
     private static final long serialVersionUID = 1L;

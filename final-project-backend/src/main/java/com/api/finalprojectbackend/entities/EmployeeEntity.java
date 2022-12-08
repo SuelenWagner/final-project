@@ -25,7 +25,7 @@ public class EmployeeEntity implements UserDetails, Serializable{
     @Column(nullable = false, unique = true)
     private String username;
 
-    @Column(nullable = false, length= 40)
+    @Column(nullable = false)
     private String password;
 
     @Column(nullable = false, length = 150)

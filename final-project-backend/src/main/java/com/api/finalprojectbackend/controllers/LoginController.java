@@ -24,12 +24,14 @@ public class LoginController {
     public ResponseEntity<HttpStatus> login(@RequestBody EmployeeEntity employeeEntity) throws Exception {
         Authentication authentication;
             try{
-                authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(employeeEntity.getUsername(), employeeEntity.getPassword()));
+                authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(employeeEntity.getUsername(), employeeEntity.getPassword(), employeeEntity.getAuthorities()));
                 SecurityContextHolder.getContext().setAuthentication(authentication);
+
             } catch (BadCredentialsException e) {
                 throw new Exception("Invalid credentials");
             }
 
             return new ResponseEntity<HttpStatus>(HttpStatus.OK);
+
     }
 }

@@ -14,7 +14,8 @@ import java.util.Optional;
 import java.util.UUID;
 
 @RestController
-@CrossOrigin(origins = "*", maxAge = 3600)
+@CrossOrigin(origins = "http://localhost:3000", maxAge = 3600, allowCredentials = "true")
+//@CrossOrigin(origins = "*", maxAge = 3600)
 @RequestMapping("/api/v1/clients")
 public class ClientController {
 
