@@ -14,7 +14,7 @@ import java.util.*;
 @JsonIdentityInfo(
         generator = ObjectIdGenerators.PropertyGenerator.class,
         property = "id")
-public class EmployeeEntity implements UserDetails, Serializable{
+public class EmployeeEntity implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
@@ -61,7 +61,7 @@ public class EmployeeEntity implements UserDetails, Serializable{
     @JoinTable(name = "tb_employees_roles",
             joinColumns = @JoinColumn(name = "employee_id"),
             inverseJoinColumns = @JoinColumn(name = "role_id"))
-    private Set<RoleEntity> roles;
+    private Collection<RoleEntity> roles = new ArrayList<>();
 
     /*@ManyToOne
     @JoinColumn(name = "role_id")
@@ -72,15 +72,15 @@ public class EmployeeEntity implements UserDetails, Serializable{
     @JoinTable(name = "tb_employee_techs", joinColumns = @JoinColumn(
             name = "employee_id", referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(name = "tech_id", referencedColumnName = "id"))
-    private List<TechEntity> techs;
+    private Set<TechEntity> techs;
 
     public EmployeeEntity() {
     }
 
     public EmployeeEntity(UUID id, String username, String password, String fullName, Date birthDate,
                           String email, Date startDate, String interesting, EmployeeStatus status,
-                          ProjectEntity project, PositionEntity position, Set<RoleEntity> roles,
-                          List<TechEntity> techs) {
+                          ProjectEntity project, PositionEntity position, Collection<RoleEntity> roles,
+                          Set<TechEntity> techs) {
         this.id = id;
         this.username = username;
         this.password = password;
@@ -96,7 +96,7 @@ public class EmployeeEntity implements UserDetails, Serializable{
         this.techs = techs;
     }
 
-    @Override
+    /*@Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return this.roles;
     }
@@ -129,7 +129,7 @@ public class EmployeeEntity implements UserDetails, Serializable{
     @Override
     public String getPassword() {
         return this.password;
-    }
+    }*/
 
     public UUID getId() {
         return id;
@@ -139,10 +139,17 @@ public class EmployeeEntity implements UserDetails, Serializable{
         this.id = id;
     }
 
+    public String getUsername() {
+        return this.username;
+    }
+
     public void setUsername(String username) {
         this.username = username;
     }
 
+    public String getPassword() {
+        return this.password;
+    }
     public void setPassword(String password) {
         this.password = password;
     }
@@ -216,21 +223,21 @@ public class EmployeeEntity implements UserDetails, Serializable{
     //@JsonIgnore
     //@JsonManagedReference
     //@JsonManagedReference(value="employee-role")
-    public Set<RoleEntity> getRoles() {
+    public Collection<RoleEntity> getRoles() {
         return roles;
     }
 
-    public void setRoles(Set<RoleEntity> roles) {
+    public void setRoles(Collection<RoleEntity> roles) {
         this.roles = roles;
     }
 
     //@JsonIgnore
     //@JsonManagedReference(value="employee-tech")
-    public List<TechEntity> getTechs() {
+    public Set<TechEntity> getTechs() {
         return techs;
     }
 
-    public void setTechs(List<TechEntity> techs) {
+    public void setTechs(Set<TechEntity> techs) {
         this.techs = techs;
     }
 }

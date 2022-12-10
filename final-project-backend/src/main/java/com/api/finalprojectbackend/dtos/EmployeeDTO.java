@@ -10,6 +10,7 @@ import javax.persistence.Enumerated;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
@@ -44,12 +45,12 @@ public class EmployeeDTO {
 
     private PositionEntity position;
 
-    private List<TechEntity> techs;
+    private Set<TechEntity> techs;
 
     private ProjectEntity project;
 
     @NotNull
-    private Set<RoleEntity> roles;
+    private Collection<RoleEntity> roles;
 
     //@NotNull
     //private RoleEntity role;
@@ -126,11 +127,11 @@ public class EmployeeDTO {
         this.position = position;
     }
 
-    public List<TechEntity> getTechs() {
+    public Set<TechEntity> getTechs() {
         return techs;
     }
 
-    public void setTechs(List<TechEntity> techs) {
+    public void setTechs(Set<TechEntity> techs) {
         this.techs = techs;
     }
 
@@ -142,11 +143,11 @@ public class EmployeeDTO {
         this.project = project;
     }
 
-    public Set<RoleEntity> getRoles() {
+    public Collection<RoleEntity> getRoles() {
         return roles;
     }
 
-    public void setRoles(Set<RoleEntity> roles) {
+    public void setRoles(Collection<RoleEntity> roles) {
         this.roles = roles;
     }
 }

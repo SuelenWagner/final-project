@@ -3,6 +3,7 @@ package com.api.finalprojectbackend.security;
 import java.util.Arrays;
 import java.util.Collections;
 
+import lombok.RequiredArgsConstructor;
 import org.apache.catalina.filters.CorsFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.AutoConfigureOrder;
@@ -15,15 +16,19 @@ import org.springframework.core.Ordered;
 import org.springframework.core.env.Environment;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.session.HttpSessionEventPublisher;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.web.cors.CorsConfiguration;
@@ -41,13 +46,14 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 @Configuration
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true)
+@RequiredArgsConstructor
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
-    @Autowired
+    /*@Autowired
     private UserDetailsServiceImpl userDetailsService;
 
     @Autowired
-    private CustomAuthenticationProvider authenticationProvider;
+    private CustomAuthenticationProvider authenticationProvider;*/
 
    /* public WebSecurityConfig(UserDetailsServiceImpl userDetailsService) {
         this.userDetailsService = userDetailsService;
@@ -66,6 +72,50 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         return http.build();
     }*/
 
+    private final UserDetailsService userDetailsService;
+
+    @Autowired
+    PasswordEncoder passwordEncoder;
+
+    @Override
+    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+        auth.userDetailsService(userDetailsService).passwordEncoder(passwordEncoder);
+    }
+
+    @Override
+    protected void configure(HttpSecurity http) throws Exception {
+
+        CustomAuthenticationFilter customAuthenticationFilter = new CustomAuthenticationFilter(authenticationManagerBean());
+        customAuthenticationFilter.setFilterProcessesUrl("/api/v1/login");
+
+        http.csrf().disable();
+        http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+        http.authorizeHttpRequests().antMatchers(HttpMethod.POST,"/api/v1/login/**", "/api/v1/token/refresh**").permitAll();
+        http.authorizeHttpRequests().anyRequest().authenticated();
+        http.addFilter(customAuthenticationFilter);
+        http.addFilterBefore(new CustomAuthotizationFilter(), UsernamePasswordAuthenticationFilter.class);
+
+                //.authorizeHttpRequests()
+                //.antMatchers(HttpMethod.POST,"/api/v1/login").permitAll()
+                //.anyRequest().authenticated()
+                //.anyRequest().permitAll()
+                //.and().cors()
+                //.and().csrf().disable();
+
+                //.logout()
+                //.logoutSuccessUrl("/")
+                //.invalidateHttpSession(true)
+                //.deleteCookies("JSESSIONID");
+                //.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.ALWAYS).maximumSessions(2);
+                //.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS); SEM O STATELESS PERMITE CRIR O JSESSIONID
+    }
+
+    @Bean
+    @Override
+    public AuthenticationManager authenticationManagerBean() throws Exception {
+        return super.authenticationManagerBean();
+    }
+
     @Bean
     CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
@@ -81,45 +131,17 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         return source;
     }
 
-    @Override
-    protected void configure(HttpSecurity http) throws Exception {
-        http
-                .authorizeHttpRequests()
-                .antMatchers(HttpMethod.POST,"/api/v1/login").permitAll()
-                .anyRequest().authenticated()
-                //.anyRequest().permitAll()
-                .and().cors()
-                .and().csrf().disable();
-
-                //.logout()
-                //.logoutSuccessUrl("/")
-                //.invalidateHttpSession(true)
-                //.deleteCookies("JSESSIONID");
-                //.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.ALWAYS).maximumSessions(2);
-                //.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS); SEM O STATELESS PERMITE CRIR O JSESSIONID
-    }
 
     /*@Bean
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
-    }*/
-
-    @Bean
     public HttpSessionEventPublisher httpSessionEventPublisher() {
         return new HttpSessionEventPublisher();
-    }
+    }*/
 
-    @Override
-    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        //auth.userDetailsService(userDetailsService).passwordEncoder(passwordEncoder());
-        auth.authenticationProvider(authenticationProvider).eraseCredentials(false);
-    }
-
-    @Bean
+    /*@Bean
     @Override
     public AuthenticationManager authenticationManagerBean() throws Exception {
         return super.authenticationManagerBean();
-    }
+    }*/
 
 
     //@Autowired

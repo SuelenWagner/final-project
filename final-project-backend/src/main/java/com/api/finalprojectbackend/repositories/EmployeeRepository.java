@@ -7,6 +7,8 @@ import java.util.UUID;
 
 public interface EmployeeRepository extends JpaRepository<EmployeeEntity, UUID> {
 
-    Optional<EmployeeEntity> findByUsername(String username);
+    //Optional<EmployeeEntity> findByUsername(String username);
+
+    EmployeeEntity findByUsername(String username);
     boolean existsByEmail(String email);
 }

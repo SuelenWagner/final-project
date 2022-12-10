@@ -13,7 +13,7 @@ import java.util.UUID;
 /*@JsonIdentityInfo(
         generator = ObjectIdGenerators.PropertyGenerator.class,
         property = "id")*/
-public class RoleEntity implements GrantedAuthority, Serializable {
+public class RoleEntity implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
@@ -21,20 +21,17 @@ public class RoleEntity implements GrantedAuthority, Serializable {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private UUID id;
 
-    @Enumerated(EnumType.STRING)
+    //@Enumerated(EnumType.STRING)
     @Column(nullable = false, unique = true)
-    private Role role;
+    private String role;
 
     @ManyToMany(mappedBy = "roles", fetch=FetchType.EAGER)
     private List<EmployeeEntity> employees;
 
-    /*@OneToMany(mappedBy = "role", fetch = FetchType.EAGER)
-    private List<EmployeeEntity> employees;*/
-
-    @Override
+    /*@Override
     public String getAuthority() {
         return this.role.toString();
-    }
+    }*/
 
     public UUID getId() {
         return id;
@@ -44,15 +41,15 @@ public class RoleEntity implements GrantedAuthority, Serializable {
         this.id = id;
     }
 
-    public Role getRole() {
+    public String getRole() {
         return role;
     }
 
-    public void setRole(Role role) {
+    public void setRole(String role) {
         this.role = role;
     }
 
-    @JsonBackReference(value="employee-role")
+    //@JsonBackReference(value="employee-role")
     public List<EmployeeEntity> getEmployees() {
         return employees;
     }
