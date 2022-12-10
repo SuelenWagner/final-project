@@ -2,7 +2,7 @@ package com.api.finalprojectbackend.dtos;
 
 import com.api.finalprojectbackend.entities.ClientEntity;
 import com.api.finalprojectbackend.entities.EmployeeEntity;
-import com.api.finalprojectbackend.enums.ProjectStatus;
+import com.api.finalprojectbackend.enums.EProjectStatus;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.Temporal;
@@ -11,7 +11,6 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 
 public class ProjectDTO {
@@ -32,7 +31,7 @@ public class ProjectDTO {
 
     @NotNull
     @Enumerated(EnumType.STRING)
-    private ProjectStatus status;
+    private EProjectStatus status;
 
     private ClientEntity client;
 
@@ -70,11 +69,11 @@ public class ProjectDTO {
         this.finishDate = finishDate;
     }
     
-    public ProjectStatus getStatus() {
+    public EProjectStatus getStatus() {
         return status;
     }
 
-    public void setStatus(ProjectStatus status) {
+    public void setStatus(EProjectStatus status) {
         this.status = status;
     }
 

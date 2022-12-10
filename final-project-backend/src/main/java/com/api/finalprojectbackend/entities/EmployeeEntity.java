@@ -1,7 +1,6 @@
 package com.api.finalprojectbackend.entities;
 
-import com.api.finalprojectbackend.enums.EmployeeStatus;
-import com.api.finalprojectbackend.enums.Role;
+import com.api.finalprojectbackend.enums.EEmployeeStatus;
 import com.fasterxml.jackson.annotation.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -14,7 +13,7 @@ import java.util.*;
 @JsonIdentityInfo(
         generator = ObjectIdGenerators.PropertyGenerator.class,
         property = "id")
-public class EmployeeEntity implements UserDetails, Serializable{
+public class EmployeeEntity implements Serializable{
 
     private static final long serialVersionUID = 1L;
 
@@ -47,7 +46,7 @@ public class EmployeeEntity implements UserDetails, Serializable{
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private EmployeeStatus status;
+    private EEmployeeStatus status;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "project_id")
@@ -61,12 +60,7 @@ public class EmployeeEntity implements UserDetails, Serializable{
     @JoinTable(name = "tb_employees_roles",
             joinColumns = @JoinColumn(name = "employee_id"),
             inverseJoinColumns = @JoinColumn(name = "role_id"))
-    private Set<RoleEntity> roles;
-
-    /*@ManyToOne
-    @JoinColumn(name = "role_id")
-    private RoleEntity role;*/
-
+    private Set<RoleEntity> roles = new HashSet<>();
 
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "tb_employee_techs", joinColumns = @JoinColumn(
@@ -78,7 +72,7 @@ public class EmployeeEntity implements UserDetails, Serializable{
     }
 
     public EmployeeEntity(UUID id, String username, String password, String fullName, Date birthDate,
-                          String email, Date startDate, String interesting, EmployeeStatus status,
+                          String email, Date startDate, String interesting, EEmployeeStatus status,
                           ProjectEntity project, PositionEntity position, Set<RoleEntity> roles,
                           List<TechEntity> techs) {
         this.id = id;
@@ -96,7 +90,7 @@ public class EmployeeEntity implements UserDetails, Serializable{
         this.techs = techs;
     }
 
-    @Override
+    /*@Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return this.roles;
     }
@@ -129,7 +123,7 @@ public class EmployeeEntity implements UserDetails, Serializable{
     @Override
     public String getPassword() {
         return this.password;
-    }
+    }*/
 
     public UUID getId() {
         return id;
@@ -138,11 +132,15 @@ public class EmployeeEntity implements UserDetails, Serializable{
     public void setId(UUID id) {
         this.id = id;
     }
-
+    public String getUsername() {
+        return this.username;
+    }
     public void setUsername(String username) {
         this.username = username;
     }
-
+    public String getPassword() {
+        return this.password;
+    }
     public void setPassword(String password) {
         this.password = password;
     }
@@ -187,11 +185,11 @@ public class EmployeeEntity implements UserDetails, Serializable{
         this.interesting = interesting;
     }
 
-    public EmployeeStatus getStatus() {
+    public EEmployeeStatus getStatus() {
         return status;
     }
 
-    public void setStatus(EmployeeStatus status) {
+    public void setStatus(EEmployeeStatus status) {
         this.status = status;
     }
 

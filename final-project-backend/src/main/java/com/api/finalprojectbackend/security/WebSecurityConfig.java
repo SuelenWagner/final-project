@@ -24,6 +24,7 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.session.HttpSessionEventPublisher;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.web.cors.CorsConfiguration;
@@ -40,79 +41,31 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @Configuration
 @EnableWebSecurity
-@EnableGlobalMethodSecurity(prePostEnabled = true)
+@EnableGlobalMethodSecurity(
+        // securedEnabled = true,
+        // jsr250Enabled = true,
+        prePostEnabled = true)
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
     private UserDetailsServiceImpl userDetailsService;
 
     @Autowired
-    private CustomAuthenticationProvider authenticationProvider;
-
-   /* public WebSecurityConfig(UserDetailsServiceImpl userDetailsService) {
-        this.userDetailsService = userDetailsService;
-    }*/
-
-    /*@Bean
-    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        http
-                .httpBasic()
-                .and()
-                .authorizeHttpRequests()
-                .antMatchers("/api/v1/login").permitAll()
-                .anyRequest().authenticated()
-                .and()
-                .csrf().disable();
-        return http.build();
-    }*/
+    private AuthEntryPointJwt unauthorizedHandler;
 
     @Bean
-    CorsConfigurationSource corsConfigurationSource() {
-        CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(Arrays.asList("http://localhost:3000"));
-        configuration.setAllowedMethods(Arrays.asList("GET","POST","PATCH", "PUT", "DELETE", "OPTIONS", "HEAD"));
-        configuration.setAllowCredentials(true);
-        configuration.setAllowedHeaders(Arrays.asList("Authorization", "Requestor-Type"));
-        configuration.addAllowedHeader("Content-Type");
-        configuration.setExposedHeaders(Arrays.asList("X-Get-Header"));
-        configuration.setMaxAge(3600L);
-        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("/**", configuration);
-        return source;
-    }
-
-    @Override
-    protected void configure(HttpSecurity http) throws Exception {
-        http
-                .authorizeHttpRequests()
-                .antMatchers(HttpMethod.POST,"/api/v1/login").permitAll()
-                .anyRequest().authenticated()
-                //.anyRequest().permitAll()
-                .and().cors()
-                .and().csrf().disable();
-
-                //.logout()
-                //.logoutSuccessUrl("/")
-                //.invalidateHttpSession(true)
-                //.deleteCookies("JSESSIONID");
-                //.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.ALWAYS).maximumSessions(2);
-                //.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS); SEM O STATELESS PERMITE CRIR O JSESSIONID
-    }
-
-    /*@Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
-    }*/
+    }
 
     @Bean
-    public HttpSessionEventPublisher httpSessionEventPublisher() {
-        return new HttpSessionEventPublisher();
+    public AuthTokenFilter authenticationJwtTokenFilter() {
+        return new AuthTokenFilter();
     }
 
     @Override
-    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        //auth.userDetailsService(userDetailsService).passwordEncoder(passwordEncoder());
-        auth.authenticationProvider(authenticationProvider).eraseCredentials(false);
+    public void configure(AuthenticationManagerBuilder authenticationManagerBuilder) throws Exception {
+        authenticationManagerBuilder.userDetailsService(userDetailsService).passwordEncoder(passwordEncoder());
     }
 
     @Bean
@@ -121,29 +74,22 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         return super.authenticationManagerBean();
     }
 
-
-    //@Autowired
-    //private Environment env;
-
-    /*@Override
+    @Override
     protected void configure(HttpSecurity http) throws Exception {
-        if(Arrays.asList(env.getActiveProfiles()).contains("test")) {
-            http.headers().frameOptions().disable();
-        }
+        http.cors().and().csrf().disable()
+                .exceptionHandling().authenticationEntryPoint(unauthorizedHandler).and()
+                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
+                .authorizeRequests().antMatchers("/api/v1/login/**").permitAll()
+                .antMatchers("/api/v1/**").permitAll()
+                .anyRequest().authenticated();
 
-        http.cors().and().csrf().disable();
-        http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
-        http.authorizeRequests().anyRequest().permitAll();
+        http.addFilterBefore(authenticationJwtTokenFilter(), UsernamePasswordAuthenticationFilter.class);
+    }
+
+
+    /*@Bean
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
     }*/
-
-     /*@Bean
-    CorsConfigurationSource corsConfigurationSource() {
-        CorsConfiguration configuration = new CorsConfiguration().applyPermitDefaultValues();
-        configuration.setAllowedMethods(Arrays.asList("POST", "GET", "PUT", "DELETE", "OPTIONS"));
-        final UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("/**", configuration);
-        return source;
-    }*/
-
 
 }

@@ -1,6 +1,6 @@
 package com.api.finalprojectbackend.enums;
 
-public enum EmployeeStatus {
+public enum EEmployeeStatus {
     ACTIVE,
     INACTIVE
 }

@@ -1,12 +1,11 @@
 package com.api.finalprojectbackend.entities;
 
-import com.api.finalprojectbackend.enums.ProjectStatus;
+import com.api.finalprojectbackend.enums.EProjectStatus;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
@@ -33,7 +32,7 @@ public class ProjectEntity implements Serializable {
     private Calendar finishDate;
 
     @Enumerated(EnumType.STRING)
-    private ProjectStatus status;
+    private EProjectStatus status;
 
     @ManyToOne(cascade = CascadeType.MERGE)
     @JoinColumn(name = "client_id")
@@ -46,7 +45,7 @@ public class ProjectEntity implements Serializable {
     }
 
     public ProjectEntity(UUID id, String name, String description, Calendar startDate, Calendar finishDate,
-                         ProjectStatus status, ClientEntity client, List<EmployeeEntity> employees) {
+                         EProjectStatus status, ClientEntity client, List<EmployeeEntity> employees) {
         this.id = id;
         this.name = name;
         this.description = description;
@@ -97,11 +96,11 @@ public class ProjectEntity implements Serializable {
         this.finishDate = finishDate;
     }
 
-    public ProjectStatus getStatus() {
+    public EProjectStatus getStatus() {
         return status;
     }
 
-    public void setStatus(ProjectStatus status) {
+    public void setStatus(EProjectStatus status) {
         this.status = status;
     }
 

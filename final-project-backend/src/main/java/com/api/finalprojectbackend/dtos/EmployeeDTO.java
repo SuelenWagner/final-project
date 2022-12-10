@@ -4,7 +4,7 @@ import com.api.finalprojectbackend.entities.ProjectEntity;
 import com.api.finalprojectbackend.entities.PositionEntity;
 import com.api.finalprojectbackend.entities.RoleEntity;
 import com.api.finalprojectbackend.entities.TechEntity;
-import com.api.finalprojectbackend.enums.EmployeeStatus;
+import com.api.finalprojectbackend.enums.EEmployeeStatus;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.validation.constraints.NotBlank;
@@ -40,7 +40,7 @@ public class EmployeeDTO {
     private String interesting;
 
     @Enumerated(EnumType.STRING)
-    private EmployeeStatus status;
+    private EEmployeeStatus status;
 
     private PositionEntity position;
 
@@ -110,11 +110,11 @@ public class EmployeeDTO {
         this.interesting = interesting;
     }
 
-    public EmployeeStatus getStatus() {
+    public EEmployeeStatus getStatus() {
         return status;
     }
 
-    public void setStatus(EmployeeStatus status) {
+    public void setStatus(EEmployeeStatus status) {
         this.status = status;
     }
 

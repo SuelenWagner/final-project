@@ -1,6 +1,6 @@
 package com.api.finalprojectbackend.entities;
 
-import com.api.finalprojectbackend.enums.Role;
+import com.api.finalprojectbackend.enums.ERole;
 import com.fasterxml.jackson.annotation.*;
 import org.springframework.security.core.GrantedAuthority;
 import javax.persistence.*;
@@ -13,7 +13,7 @@ import java.util.UUID;
 /*@JsonIdentityInfo(
         generator = ObjectIdGenerators.PropertyGenerator.class,
         property = "id")*/
-public class RoleEntity implements GrantedAuthority, Serializable {
+public class RoleEntity implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
@@ -23,17 +23,14 @@ public class RoleEntity implements GrantedAuthority, Serializable {
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, unique = true)
-    private Role role;
+    private ERole name;
 
     @ManyToMany(mappedBy = "roles", fetch=FetchType.EAGER)
     private List<EmployeeEntity> employees;
 
-    /*@OneToMany(mappedBy = "role", fetch = FetchType.EAGER)
-    private List<EmployeeEntity> employees;*/
 
-    @Override
-    public String getAuthority() {
-        return this.role.toString();
+    public RoleEntity() {
+
     }
 
     public UUID getId() {
@@ -44,15 +41,15 @@ public class RoleEntity implements GrantedAuthority, Serializable {
         this.id = id;
     }
 
-    public Role getRole() {
-        return role;
+    public ERole getName() {
+        return name;
     }
 
-    public void setRole(Role role) {
-        this.role = role;
+    public void setName(ERole name) {
+        this.name = name;
     }
 
-    @JsonBackReference(value="employee-role")
+    //@JsonBackReference(value="employee-role")
     public List<EmployeeEntity> getEmployees() {
         return employees;
     }
